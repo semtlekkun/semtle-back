@@ -1,1 +1,1 @@
-### 셈틀꾼 프로젝트 백엔드 
+# Semtle project
