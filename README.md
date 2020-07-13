@@ -1,1 +1,1 @@
-# semtle-backend code
+# 셈틀꾼 프로젝트 백엔드 
