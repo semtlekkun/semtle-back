@@ -4,4 +4,11 @@
 2. 작성한 함수 파일은 반드시 js라는 폴더에 넣기!
 
 ## set up
-  npm install
+```
+npm install
+```
+
+## 실행
+```
+node index.js
+```
