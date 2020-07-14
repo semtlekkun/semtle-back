@@ -12,6 +12,8 @@ app.use((req,res,next)=>{
 })
 const calcRouter = require('./router/calc');
 app.use('/calc',calcRouter);
+const qnaRouter = require('./router/QnA');
+app.use('/qna',qnaRouter);
 
 app.listen(80, function(){
     console.log("App is running on port 80");
