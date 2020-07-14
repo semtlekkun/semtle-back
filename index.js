@@ -1,6 +1,8 @@
 const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
+var connect = require('./schemas');
+connect();
 
 app.use(bodyParser.json());
 
