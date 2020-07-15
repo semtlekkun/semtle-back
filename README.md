@@ -10,5 +10,6 @@ npm install
 
 ## 실행
 ```
-node index.js
+node .
+또는 node index.js
 ```
