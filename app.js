@@ -1,6 +1,8 @@
 const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
+const port = process.env.PORT || 80
+
 var connect = require('./schemas');
 connect();
 
@@ -20,11 +22,10 @@ app.all('/*',(req,res,next)=>{
     next();
 });
 
-const calcRouter = require('./router/calc');
-app.use('/calc',calcRouter);
-const qnaRouter = require('./router/QnA');
-app.use('/qna',qnaRouter);
+const routers = require('./router');
 
-app.listen(80, function(){
-    console.log("App is running on port 80");
+app.use('/api',routers);
+
+app.listen(port, function(){
+    console.log(`App is running on port ${port}`);
 });
