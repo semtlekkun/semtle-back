@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const Recruit = require('../schemas/recruit');
+const Student = require('../schemas/student');
+
 
 router.get('/list', (req, res) => {
     Recruit.find({}, { date: false, contents: false })
@@ -17,14 +19,42 @@ router.get('/list', (req, res) => {
 router.get('/detail/:id', (req, res) => {
 
     var _id = req.params.id;
-    Recruit.findOne({ _id: _id }, { _id: false })
+    var nick;
+    var studentCode;
+    Recruit.findOne({ _id: _id })
         .then((recruitList) => {
-            res.json({ status: "SUCCESS", recruitList: recruitList });
+            studentCode = recruitList.writer;
+            studentCode *= 1;
+            Student.findOne({ studentCode: studentCode })
+                .then((studentList) => {
+                    nick = studentList.nick;
+                    //res.json({ status: "success", studentList: studentList });
+                    recruitList.writer = nick;
+                    res.json({ status: "success", recruitList: recruitList });
+                })
+                .catch((err) => {
+                    console.log(err);
+                    res.json({ status: "fail" });
+                });
+
+
         })
         .catch((err) => {
             console.log(err);
-            res.json({ status: "FAIL" });
+            res.json({ status: "fail" });
         });
+
+    // Recruit.findOne({ _id: _id }, { _id: false })
+    //     .then((recruitList) => {
+    //         recruitList.writer = nick;
+
+    //         res.json({ status: "success", recruitList: recruitList });
+
+    //     })
+    //     .catch((err) => {
+    //         console.log(err);
+    //         res.json({ status: "fail3" });
+    //     });
 });
 
 router.post('/input', (req, res) => {
@@ -45,7 +75,7 @@ router.post('/input', (req, res) => {
             return handleError(err);
         }
         else {
-            res.json({ status: "SUCCESS" });
+            res.json({ status: "success" });
         }
     });
 

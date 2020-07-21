@@ -22,7 +22,7 @@ const recruitSchema = new Schema({
         required: false
     },
     writer: {
-        type: Number,
+        type: String,
         required: true
     },
 

@@ -19,11 +19,11 @@ router.get('/detail/:id', (req, res) => {
     var _id = req.params.id;
     Notice.findOne({ _id: _id }, { _id: false })
         .then((noticeList) => {
-            res.json({ status: "SUCCESS", noticeList: noticeList });
+            res.json({ status: "success", noticeList: noticeList });
         })
         .catch((err) => {
             console.log(err);
-            res.json({ status: "FAIL" });
+            res.json({ status: "fail" });
         });
 });
 
@@ -45,7 +45,7 @@ router.post('/input', (req, res) => {
             return handleError(err);
         }
         else {
-            res.json({ status: "SUCCESS" });
+            res.json({ status: "success" });
         }
     });
 

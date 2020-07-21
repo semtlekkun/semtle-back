@@ -25,6 +25,6 @@ const noticeSchema = new Schema({
     },
 
     date: Date
-});
+}, { versionKey: false });
 
 module.exports = mongoose.model('Notice', noticeSchema, 'notice');
