@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const dbConfig = require('../db_config.json');
+
 module.exports = () => {
     const connect = () => {
         if (process.env.NODE_ENV !== ' production') {
