@@ -36,25 +36,13 @@ router.get('/detail/:id', (req, res) => {
                     console.log(err);
                     res.json({ status: "fail" });
                 });
-
-
         })
         .catch((err) => {
             console.log(err);
             res.json({ status: "fail" });
         });
 
-    // Recruit.findOne({ _id: _id }, { _id: false })
-    //     .then((recruitList) => {
-    //         recruitList.writer = nick;
 
-    //         res.json({ status: "success", recruitList: recruitList });
-
-    //     })
-    //     .catch((err) => {
-    //         console.log(err);
-    //         res.json({ status: "fail3" });
-    //     });
 });
 
 router.post('/input', (req, res) => {
