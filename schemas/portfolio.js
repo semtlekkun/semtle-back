@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const {Schema} = mongoose;
 
-const portfolioSchma = new Schema({
+const portfolioSchema = new Schema({
     projectTitle:{
         type:String,
         required:ture
@@ -31,4 +31,4 @@ const portfolioSchma = new Schema({
     versionKey:false
 });
 
-module.exports = mongoose.model("Portfolio",portfolioSchma,"portfolio");
+module.exports = mongoose.model("Portfolio",portfolioSchema,"portfolio");
