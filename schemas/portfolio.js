@@ -4,11 +4,12 @@ const {Schema} = mongoose;
 const portfolioSchema = new Schema({
     projectTitle:{
         type:String,
-        required:ture
+        required:true
     },
     students:{
         type:Array,
-        required:true
+        required:true,
+        ref:"Student"
     },
     contents:String,
     link:String,
@@ -20,7 +21,8 @@ const portfolioSchema = new Schema({
     view:Number,
     writer:{
         type:String,
-        required:true
+        required:true,
+        ref:"Student"
     },
     date:{
         type:String,

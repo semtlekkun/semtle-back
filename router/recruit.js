@@ -8,6 +8,7 @@ router.get('/list', (req, res) => {
     Recruit.find({}, { date: false, contents: false })
         .then((recruitList) => {
             res.json({ status: "success", recruitList: recruitList });
+            
         })
         .catch((err) => {
             console.log(err);
@@ -45,7 +46,7 @@ router.get('/detail/:id', (req, res) => {
 
 });
 
-router.post('/input', (req, res) => {
+router.post('/input' ,(req, res) => {
 
     var writer = req.body.writer;
     var date = req.body.date;
