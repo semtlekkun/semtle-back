@@ -22,4 +22,3 @@ exports.verifyToken = (req,res,next) =>{
         console.log(err);
         res.json({status:"tokenExpired"});
     }
-}
