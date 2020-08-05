@@ -17,17 +17,17 @@ const portfolioSchema = new Schema({
     prijectEndDate:String,
     projectTeamName:String,
     teamLeaderCode:Number,
-    projectImage:Array,
+    projectImages:Array,
     view:Number,
     writer:{
         type:String,
-        required:true,
-        ref:"Student"
+        required:true
     },
     date:{
         type:String,
         required:true
-    }
+    },
+    studentInfo:Array
 },
 {
     versionKey:false
