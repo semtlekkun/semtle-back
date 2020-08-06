@@ -3,7 +3,6 @@ const router = express.Router();
 const Recruit = require('../schemas/recruit');
 const Student = require('../schemas/student');
 
-
 router.get('/list', (req, res) => {
     Recruit.find({}, { date: false, contents: false })
         .then((recruitList) => {
@@ -16,9 +15,7 @@ router.get('/list', (req, res) => {
         });
 });
 
-
 router.get('/detail/:id', (req, res) => {
-
     var _id = req.params.id;
     var nick;
     var studentCode;
@@ -42,8 +39,6 @@ router.get('/detail/:id', (req, res) => {
             console.log(err);
             res.json({ status: "fail" });
         });
-
-
 });
 
 router.post('/input' ,(req, res) => {
@@ -67,7 +62,6 @@ router.post('/input' ,(req, res) => {
             res.json({ status: "success" });
         }
     });
-
 });
 
 

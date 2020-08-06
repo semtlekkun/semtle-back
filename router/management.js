@@ -80,5 +80,4 @@ router.put('/update',studentCheck,(req,res)=>{
     })
 });
 
-
 module.exports = router;
