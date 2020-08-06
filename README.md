@@ -13,3 +13,16 @@ npm install
 ```
 node app.js
 ```
+
+## HTTP Method
+
+| Verb   | Action   | Path         | function                                  |
+| ------ | -------- | ------------ | ----------------------------------------- |
+| GET    | index    | /question    | 모든 질문 조회                            |
+| GET    | retrieve | /question:id | 특정 질문에 달린 모든 응답 조회           |
+| POST   | create   | /question    | 신규 질문 작성                            |
+| POST   | create   | /question:id | 특정  질문에 신규 응답 작성               |
+| PUT    | replace  | /question:id | 특정 질문 수정                            |
+| PUT    | replace  | /answer:id   | 특정 질문 수정                            |
+| DELETE | delete   | /question:id | 특정 질문 삭제 (관련 응답 또한 모두 삭제) |
+| DELETE | delete   | /answer:id   | 특정 응답 삭제                            |
