@@ -1,25 +1,25 @@
 const mongoose = require('mongoose');
-const {Schema} = mongoose;
+const { Schema } = mongoose;
 
 const questionSchema = new Schema({
-    _id:Schema.Types.ObjectId,
-    title:{
-        type:String,
-        required:true
+    _id: Schema.Types.ObjectId,
+    title: {
+        type: String,
+        required: true
     },
-    contents:{
-        type:String,
-        required:true
+    content: {
+        type: String,
+        required: true
     },
-    writer:{
-        type:Number,
-        required:true
+    image: {
+        type: String,
+        default: ""
     },
-    image:{
-        type:String,
-        default:""
+    writer: {
+        type: String,
+        required: true
     },
-    date:Date
+    date: Date
 });
 
-module.exports = mongoose.model('Question',questionSchema,'question');
+module.exports = mongoose.model('Question', questionSchema, 'question');
