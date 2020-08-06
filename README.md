@@ -13,3 +13,7 @@ npm install
 ```
 node app.js
 ```
+## HTTP Method
+
+| Verb   | Action   | Path         | function                                  |
+| ------ | -------- | ------------ | ----------------------------------------- |
