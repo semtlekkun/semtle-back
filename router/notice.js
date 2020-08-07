@@ -4,8 +4,9 @@ const Notice = require('../schemas/notice');
 const multer = require('multer');
 
 
-router.get('/list', (req, res) => {
-    Notice.find({}, { contents: false, image: false })
+router.get('/list/:page', (req, res) => {
+    var page = req.params.page;
+    Notice.find({}, { contents: false, image: false }).sort({ "date": -1 }).skip((page - 1) * 10).limit(10)
         .then((noticeList) => {
             res.json({ status: "success", noticeList: noticeList });
         })

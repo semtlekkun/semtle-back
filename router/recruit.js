@@ -3,11 +3,12 @@ const router = express.Router();
 const Recruit = require('../schemas/recruit');
 const Student = require('../schemas/student');
 
-router.get('/list', (req, res) => {
-    Recruit.find({}, { date: false, contents: false })
+router.get('/list/:page', (req, res) => {
+    var page = req.params.page;
+    Recruit.find({}, { date: false, contents: false }).sort({ "date": -1 }).skip((page - 1) * 10).limit(10)
         .then((recruitList) => {
             res.json({ status: "success", recruitList: recruitList });
-            
+
         })
         .catch((err) => {
             console.log(err);
@@ -17,23 +18,10 @@ router.get('/list', (req, res) => {
 
 router.get('/detail/:id', (req, res) => {
     var _id = req.params.id;
-    var nick;
-    var studentCode;
+
     Recruit.findOne({ _id: _id })
         .then((recruitList) => {
-            studentCode = recruitList.writer;
-            studentCode *= 1;
-            Student.findOne({ studentCode: studentCode })
-                .then((studentList) => {
-                    nick = studentList.nick;
-                    //res.json({ status: "success", studentList: studentList });
-                    recruitList.writer = nick;
-                    res.json({ status: "success", recruitList: recruitList });
-                })
-                .catch((err) => {
-                    console.log(err);
-                    res.json({ status: "fail" });
-                });
+            res.json({ status: "success", recruitList: recruitList });
         })
         .catch((err) => {
             console.log(err);
@@ -41,7 +29,7 @@ router.get('/detail/:id', (req, res) => {
         });
 });
 
-router.post('/input' ,(req, res) => {
+router.post('/input', (req, res) => {
 
     var writer = req.body.writer;
     var date = req.body.date;
