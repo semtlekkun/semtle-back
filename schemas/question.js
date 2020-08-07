@@ -27,4 +27,25 @@ const questionSchema = new Schema({
     date: Date
 });
 
-module.exports = mongoose.model('Question', questionSchema, 'question');
+questionSchema.statics.create = function (payload) {
+    const question = new this(payload);
+    return question.save();
+}
+
+questionSchema.statics.findAll = function () {
+    return this.find({});
+}
+
+questionSchema.statics.findOneByQuestionId = function (_id) {
+    return this.findOne({ _id });
+}
+
+questionSchema.statics.updateByQuestionId = function (_id, payload) {
+    return this.findOneAndUpdate({ _id }, payload, { new: true });
+}
+
+questionSchema.statics.deleteByQuestionId = function (_id) {
+    return this.remove({ _id });
+}
+
+module.exports = mongoose.model('Question', questionSchema);
