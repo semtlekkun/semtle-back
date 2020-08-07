@@ -4,7 +4,7 @@ const { Schema } = mongoose;
 const studentSchema = new Schema({
     //_id: Schema.Types.ObjectId, //따로 선언하지 않아도 자동으로 set 
 
-    studentCode: {
+    _id: {
         type: Number,
         required: true
     },

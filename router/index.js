@@ -5,8 +5,8 @@ const router = express.Router();
 const qnaRouter = require('./QnA');
 router.use('/qna',qnaRouter);
 
-// const loginRouter = require('./log');
-// router.use('/login',loginRouter);
+ const loginRouter = require('./log');
+ router.use('/log',loginRouter);
 
 const recruitRouter = require('./recruit');
 router.use('/recruit', recruitRouter);
