@@ -23,4 +23,4 @@ const answerSchema = new Schema({
     date: Date,
 });
 
-module.exports = mongoose.model('Answer', answerSchema, 'answer');
+module.exports = mongoose.model('answer', answerSchema);
