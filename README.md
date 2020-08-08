@@ -20,6 +20,7 @@ node app.js
 | ------ | -------- | --------------------- | ----------------------------------------- | ------ |
 | GET    | index    | /question             | 모든 질문 조회                            | ok     |
 | GET    | index    | /question/:questionid | 특정 질문 조회                            | ok     |
+| GET    | index    | /answer/:answerid     | 특정 응답 조회                            |        |
 | GET    | retrieve | /answer/:questionid   | 특정 질문에 달린 모든 응답 조회           |        |
 | POST   | create   | /question             | 신규 질문 작성                            | ok     |
 | POST   | create   | /answer/:questionid   | 특정  질문에 신규 응답 작성               |
