@@ -7,12 +7,13 @@
  var admincheck = "ADMIN" || "admin";
 
  router.post('/in',(req,res)=>{
-     var _id = req.body._id;
-     var pw = req.body.pw;
-     if (typeof _id != 'number'){
-        Admin.find({},{"_id":_id,"pw":pw})//문자열(관계자일때) 오류남
-        .then((_id)=>{
-            if(_id.length){
+     var input_id = req.body._id;
+     var input_pw = req.body.pw;
+     if (typeof input_id != 'number'){
+        Admin.find({},{_id:input_id , pw:input_pw})//문자열(관계자일때)
+        .then((_id,pw)=>{
+            console.log(input_id,_id)
+            if((input_id === _id) &&(input_pw === pw)){
                 res.json({status:"success",_id:_id});
             }
             else{
@@ -25,10 +26,11 @@
             res.json({status:"error"});
         })
      }     
-     else if(typeof _id ==='number'){
-         Student.find({},{"_id":_id,"pw":pw})
-         .then((_id)=>{
-            if(_id.length>0){
+     else if(typeof input_id ==='number'){//number
+         Student.find({},{_id:input_id , pw:input_pw})
+         .then((_id,pw)=>{//오류
+            console.log(input_id,_id)
+            if((input_id === _id) &&(input_pw === pw)){
                 res.json({status:"success",_id:_id});
             }
             else{
