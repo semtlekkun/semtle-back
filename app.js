@@ -23,7 +23,8 @@ app.all('/*', (req, res, next) => {
     next();
 });
 
-app.use('/question', require('./router/question'))
+app.use('/question', require('./router/question'));
+app.use('/answer', require('./router/answer'));
 
 app.listen(port, function () {
     console.log(`App is running on port ${port}`);
