@@ -70,6 +70,7 @@ router.post('/input',(req,res)=>{
     });
 })
 
+// 관리자 확인이 필요
 router.delete('/delete',(req,res)=>{
     Student.remove({_id:req.body.studentCode})
     .then((result)=>{
@@ -81,6 +82,5 @@ router.delete('/delete',(req,res)=>{
         res.json({status:"error"});
     })
 })
-
 
 module.exports = router;

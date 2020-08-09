@@ -4,6 +4,7 @@ const Management = require('../schemas/management');
 const studentCheck = require('./controllers/user.controller').checkStudent;
 // 마찬가지로 관리자라는 확인이 필요
 
+// 카운트 추가
 router.get('/list/:page',(req,res)=>{
     const page = req.params.page;
     Management.aggregate([
@@ -54,6 +55,7 @@ router.post('/input',studentCheck,(req,res)=>{
 })
 
 // 원래는 studentCode 였으나 아이디를 받는게 나을거같음.
+// 관리자 확인 필요함
 router.delete('/delete',(req,res)=>{
     Management.remove({_id:req.body.id})
     .then((result)=>{
