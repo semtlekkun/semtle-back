@@ -32,14 +32,15 @@ router.get('/detail/:id', (req, res) => {
 router.post('/input', (req, res) => {
 
     var writer = req.body.writer;
-    var date = req.body.date;
-    var endDate = req.body.endDate;
+    var date = new Date();
+    var now = new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours() + 9, date.getMinutes(), date.getSeconds());
+    var endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() + req.body.endDate);
     var recruitment = req.body.recruitment;
     var title = req.body.title;
     var contents = req.body.contents;
 
     Recruit.create({
-        writer: writer, date: date, endDate: endDate,
+        writer: writer, date: now, endDate: endDate,
         recruitment: recruitment, title: title,
         contents: contents, view: 0
     }, function (err) {

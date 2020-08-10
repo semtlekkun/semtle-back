@@ -37,7 +37,7 @@ var imageStorage = multer.diskStorage({
     },
     filename: function (req, file, callback) {
         //파일명 설정
-        var fileDate = req.body.date;
+        var fileDate = new Date().toLocaleDateString();
         var fileName = file.originalname;
         //console.log("multer1 " + file);
         //console.log("multer2 " + fileDate);
@@ -55,7 +55,7 @@ var upload = multer({
 router.post('/input', upload.single("img"), (req, res, next) => {
 
     var writer = req.body.writer;
-    var date = req.body.date;
+    var date = new Date().toLocaleDateString();
     var title = req.body.title;
     var contents = req.body.contents;
     var file = req.file;
