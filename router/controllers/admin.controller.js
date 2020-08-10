@@ -7,7 +7,8 @@ module.exports.createToken = function(req,res,next){
     .then((admin)=>{
         if(admin.length){
             const token = jwt.sign({
-                adminID:admin[0].adminCode
+                id:admin[0]._id,
+                isAdmin:true
             },
             secretKey.secret,
             {

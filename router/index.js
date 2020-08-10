@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
 
+const {verifyToken} = require("./middlewares/authorization");
+const {adminConfirmation} =  require('./middlewares/adminConfirmation');
+
 const qnaRouter = require('./QnA');
 router.use('/qna',qnaRouter);
 
@@ -17,7 +20,7 @@ const portfolioRouter = require("./pf");
 router.use('/pf',portfolioRouter);
 
 const studentRouter = require("./student");
-router.use('/student',studentRouter);
+router.use('/student',verifyToken,adminConfirmation,studentRouter);
 
 const managementRouter = require('./management');
 router.use('/management',managementRouter);

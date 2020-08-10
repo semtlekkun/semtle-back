@@ -5,7 +5,11 @@ const Portfolio = require('../schemas/portfolio');
 const Student = require('../schemas/student');
 const multer = require("multer");
 const format = require('../js/formatDate');
-const checkStudentList = require('./controllers/user.controller').checkStudentList;
+const {verifyToken} = require("./middlewares/authorization");
+const {findWriter} = require("./middlewares/findWriter");
+const {adminConfirmation} =  require('./middlewares/adminConfirmation');
+// const checkStudentList = require('./controllers/user.controller').checkStudentList;
+
 
 router.use(express.static("images/portfolioImages"));
 
@@ -66,20 +70,13 @@ router.get('/detail/:id', (req, res) => {
     
 });
 
-// 회원확인 후 
-// 이미지 여러개 저장해야댐
+// 이미지 여러개 저장해야댐: 완료
 // 회원명단에서 모두 셈틀인지 확인해야함: 완료
 // 분리하고 싶은데 .. 
 
-router.post("/input",upload.array('projectImages'),(req,res)=>{
-    // res.locals.t = "test";
-    // console.log(req.files);
-    // res.json({t:res.locals.t})
-    // console.log(projectImages);
-    // console.log(req.body.link)
-    // console.log(typeof(req.body.students))
-    res.locals.writer = "testWriter";
-    console.log(req.body.students);
+router.post("/input",verifyToken,findWriter,upload.array('projectImages'),(req,res)=>{
+
+    // res.locals.writer = "testWriter";
     let sl = eval(req.body.students);
     Student.find({_id:{$in:sl}}).count()
     .then((count)=>{
@@ -117,7 +114,7 @@ router.post("/input",upload.array('projectImages'),(req,res)=>{
 })
 
 // 관리자 확인 후
-router.delete("/delete",(req,res)=>{
+router.delete("/delete",verifyToken,adminConfirmation,(req,res)=>{
     Portfolio.remove({_id:req.body.id})
     .then((result)=>{
         if(result.deletedCount) res.json({status:"success"})

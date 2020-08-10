@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const Management = require('../schemas/management');
 const studentCheck = require('./controllers/user.controller').checkStudent;
+const {verifyToken} = require("./middlewares/authorization");
+const {adminConfirmation} =  require('./middlewares/adminConfirmation');
 // 마찬가지로 관리자라는 확인이 필요
 
 // 카운트 추가
@@ -37,7 +39,7 @@ router.get('/list/:page',(req,res)=>{
 });
 
 // 원래 있는 학번인가? 확인이 필요! : 완료
-router.post('/input',studentCheck,(req,res)=>{
+router.post('/input',verifyToken,adminConfirmation,studentCheck,(req,res)=>{
     const management = new Management({
         season:req.body.season,
         studentCode:req.body.studentCode,
@@ -54,9 +56,9 @@ router.post('/input',studentCheck,(req,res)=>{
     });
 })
 
-// 원래는 studentCode 였으나 아이디를 받는게 나을거같음.
-// 관리자 확인 필요함
-router.delete('/delete',(req,res)=>{
+
+// 관리자 확인 필요함: 완료
+router.delete('/delete',verifyToken,adminConfirmation,(req,res)=>{
     Management.remove({_id:req.body.id})
     .then((result)=>{
         if(result.deletedCount) res.json({status:"success"});
@@ -68,7 +70,7 @@ router.delete('/delete',(req,res)=>{
     })
 });
 
-router.put('/update',studentCheck,(req,res)=>{
+router.put('/update',verifyToken,adminConfirmation,studentCheck,(req,res)=>{
     Management.update({_id:req.body.id},
         { $set: {season:req.body.season,studentCode:req.body.studentCode ,contents:req.body.contents }})
     .then((result)=>{

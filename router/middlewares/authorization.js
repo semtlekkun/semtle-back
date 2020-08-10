@@ -1,16 +1,17 @@
 const jwt = require("jsonwebtoken");
 const secretKey = require("../../config/jwt");
 
-exports.verifyToken = (req,res,next) =>{
-    
-    // const clientToken = req.cookies.user;
+module.exports.verifyToken = (req,res,next) =>{
     const token = req.header('token');
-    console.log(token)
+    // console.log(token)
+    if(token == undefined) res.json({status:"tokenMissing"})
     try {
         const decoded = jwt.verify(token, secretKey.secret);
-        console.log(decoded);
+        // console.log(decoded);
         if(decoded)
         {
+            res.locals.isAdmin = decoded.isAdmin
+            res.locals.id = decoded.id
             next();
         }
         else{
@@ -22,3 +23,5 @@ exports.verifyToken = (req,res,next) =>{
         console.log(err);
         res.json({status:"tokenExpired"});
     }
+}
+
