@@ -40,12 +40,7 @@ router.get('/list/:page',(req,res)=>{
 
 // 원래 있는 학번인가? 확인이 필요! : 완료
 router.post('/input',verifyToken,adminConfirmation,studentCheck,(req,res)=>{
-    const management = new Management({
-        season:req.body.season,
-        studentCode:req.body.studentCode,
-        contents:req.body.contents
-    });
-
+    const management = new Management(req.body);
     management.save()
     .then(()=>{
         res.json({status:"success"});

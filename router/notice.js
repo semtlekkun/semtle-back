@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Notice = require('../schemas/notice');
 const multer = require('multer');
-
+const format = require('../js/formatDate');
 
 router.get('/list/:page', (req, res) => {
     var page = req.params.page;
@@ -18,9 +18,7 @@ router.get('/list/:page', (req, res) => {
 
 
 router.get('/detail/:id', (req, res) => {
-
-    var _id = req.params.id;
-    Notice.findOne({ _id: _id }, { _id: false })
+    Notice.findOne({ _id: req.params.id }, { _id: false })
         .then((noticeList) => {
             res.json({ status: "success", noticeList: noticeList });
         })
@@ -37,13 +35,7 @@ var imageStorage = multer.diskStorage({
     },
     filename: function (req, file, callback) {
         //파일명 설정
-        var fileDate = req.body.date;
-        var fileName = file.originalname;
-        //console.log("multer1 " + file);
-        //console.log("multer2 " + fileDate);
-        callback(null, fileDate + '_' + fileName);
-        //callback(null, new Date().valueOf() + '_' + fileName);
-
+        callback(null, format(new Date()) + '_' + file.originalname);
     }
 });
 
@@ -58,15 +50,10 @@ router.post('/input', upload.single("img"), (req, res, next) => {
     var date = req.body.date;
     var title = req.body.title;
     var contents = req.body.contents;
-    var file = req.file;
-    //var fileDate = req.body.fileName;
     var image;
-
-    if (file != undefined)
-        image = date + '_' + file.originalname;
+    if(req.file != undefined)
+        image = req.file.filename
     else image = null;
-    // console.log(file.originalname);
-    console.log(image);
 
     Notice.create({
         writer: writer,
@@ -77,8 +64,8 @@ router.post('/input', upload.single("img"), (req, res, next) => {
         view: 0
     }, function (err) {
         if (err) {
-            res.json({ status: "fail" });
-            return handleError(err);
+            console.log(err)
+            res.json({ status: "error" });
         }
         else {
             res.json({ status: "success" });

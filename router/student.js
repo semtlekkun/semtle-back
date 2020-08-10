@@ -1,12 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const Student = require('../schemas/student');
-const createNick = require('../js/createNick');
-// 학번 고학번이 뒤
+const createNick = require('./controllers/user.controller').createNick;
 
-// 모두 관리자라는 인증이 필요함 (추가예정)
-// 임시 비밀번호 학번: 완료
-// 비밀번호는 해쉬화 후 저장해야함 (추가예정)
+// 이미 상위에 해놧음.
+// const {verifyToken} = require("./middlewares/authorization");
+// const {adminConfirmation} =  require('./middlewares/adminConfirmation');
+
+// 비밀번호는 해쉬화 후 저장해야함 완료
 // 전화번호, 이메일 등은 암호화 후 저장해야 함 (추가예정)
 // 에러 핸들러를 만들어야 함
 
@@ -47,7 +48,6 @@ router.put('/update',(req,res)=>{
     })
 });
 
-// 비밀번호 해시화 필요
 router.post('/input',(req,res)=>{
     const student = new Student({
         _id:req.body.studentCode,
@@ -57,14 +57,12 @@ router.post('/input',(req,res)=>{
         phoneNum:req.body.phoneNum,
         image:"default.jpg"
     });
-    
     student.save()
     .then(()=>{
         res.json({status:"success"});
     })
     .catch((err)=>{
         console.log(err);
-        console.log(err.keyValue)
         if(err.keyValue._id) res.json({status:"duplicate"});
         else res.json({status:"error"});
     });
