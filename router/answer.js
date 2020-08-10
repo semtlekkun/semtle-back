@@ -7,7 +7,7 @@ router.get('/:questionid', (req, res) => {
     answer.findByQuestionId(req.params.questionid)
         .then((answer) => {
             if (!answer.length) return res.status(404).send({ err: 'Answer not found' });
-            res.send('find successfully: ${answer}');
+            res.send(answer);
         })
         .catch(err => res.status(500).send(err));
 });

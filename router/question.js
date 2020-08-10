@@ -6,7 +6,7 @@ router.get('/', (req, res) => {
     question.findAll()
         .then((question) => {
             if (!question.length) return res.status(404).send({ err: 'Question not found' });
-            res.send('find successfully: ${question}');
+            res.send(question);
         })
         .catch(err => res.status(500).send(err));
 });
@@ -15,7 +15,7 @@ router.get('/:questionid', (req, res) => {
     question.findOneByQuestionId(req.params.questionid)
         .then((question) => {
             if (!question) return res.status(404).send({ err: 'Question not found' });
-            res.send('findOne successfully: ${question}');
+            res.send(question);
         })
         .catch(err => res.status(500).send(err));
 });
