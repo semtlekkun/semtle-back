@@ -3,11 +3,8 @@ const dbConfig = require('../db_config.json');
 
 module.exports = () => {
     const connect = () => {
-        if (process.env.NODE_ENV !== ' production') {
-            // 몽구스가 생성하는 쿼리 내용을 콘솔을 통해 확인.
-            // 실제 배포할때는 삭제해야 함.
-            mongoose.set('debug', true);
-        }
+        // 배포시 삭제
+        mongoose.set('debug', true);
         mongoose.connect(dbConfig.MONGO_URI, (err) => {
             if (err) console.log("몽고디비 연결 에러", err);
             else console.log("몽고디비 연결 성공");

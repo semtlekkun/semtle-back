@@ -10,7 +10,6 @@ const {findWriter} = require("./middlewares/findWriter");
 const {adminConfirmation} =  require('./middlewares/adminConfirmation');
 // const checkStudentList = require('./controllers/user.controller').checkStudentList;
 
-
 router.use(express.static("images/portfolioImages"));
 
 var imageStorage = multer.diskStorage({
@@ -67,13 +66,13 @@ router.get('/detail/:id', (req, res) => {
     .then((pf)=>{
         res.json({portfolio:pf});
     })
-    
+    .catch((err)=>{
+        console.log(err);
+        res.json({status:"error"});
+    });
 });
 
-// 이미지 여러개 저장해야댐: 완료
-// 회원명단에서 모두 셈틀인지 확인해야함: 완료
 // 분리하고 싶은데 .. 
-
 router.post("/input",verifyToken,findWriter,upload.array('projectImages'),(req,res)=>{
 
     // res.locals.writer = "testWriter";
