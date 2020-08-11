@@ -5,7 +5,6 @@ const secretKey = require("../../config/jwt");
 const bcrypt = require('bcrypt');
 
 module.exports.createToken = function(req,res,next){
-
     Student.findOne({_id:req.body._id},{pw:true})
     .then((student)=>{
         bcrypt.compare(req.body.pw,student.pw,function(err, result) {
@@ -31,7 +30,6 @@ module.exports.createToken = function(req,res,next){
                 });
             }
         })
-
     })
     .catch((err)=>{
         console.log(err);

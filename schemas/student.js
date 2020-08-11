@@ -16,17 +16,14 @@ const studentSchema = new Schema({
         type: String,
         required: true
     },
-
     nick: {
         type: String,
         required: true
     },
-
     phoneNum: {
         type: String,
         required: true
     },
-
     image: {
         type: String,
         required: true

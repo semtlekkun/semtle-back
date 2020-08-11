@@ -8,7 +8,6 @@ const format = require('../js/formatDate');
 const {verifyToken} = require("./middlewares/authorization");
 const {findWriter} = require("./middlewares/findWriter");
 const {adminConfirmation} =  require('./middlewares/adminConfirmation');
-// const checkStudentList = require('./controllers/user.controller').checkStudentList;
 
 router.use(express.static("images/portfolioImages"));
 
