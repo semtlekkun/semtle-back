@@ -2,35 +2,40 @@
 const Student = require('../../schemas/student');
 const jwt = require("jsonwebtoken");
 const secretKey = require("../../config/jwt");
+const bcrypt = require('bcrypt');
 
 module.exports.createToken = function(req,res,next){
-    Student.find(req.body)
+
+    Student.findOne({_id:req.body._id},{pw:true})
     .then((student)=>{
-        if(student.length){
-            const token = jwt.sign({
-                id:student[0]._id,
-                isAdmin:false
-            },
-            secretKey.secret,
-            {
-                expiresIn:'5m'
-            });
-            res.json({
-                status:'success',
-                token:token,
-                admin:false
-            });
-        }
-        else{
-            res.json({
-                status:"wrong"
-            });
-        }
+        bcrypt.compare(req.body.pw,student.pw,function(err, result) {
+            if(err) res.json({status:"error"});
+            if(result){
+                const token = jwt.sign({
+                    id:student._id,
+                    isAdmin:false
+                },
+                secretKey.secret,
+                {
+                    expiresIn:'5m'
+                });
+                res.json({
+                    status:'success',
+                    token:token,
+                    admin:false
+                });
+            }
+            else{
+                res.json({
+                    status:"wrong"
+                });
+            }
+        })
+
     })
     .catch((err)=>{
         console.log(err);
         res.json({status:"error"});
-     
     });
 }
 
