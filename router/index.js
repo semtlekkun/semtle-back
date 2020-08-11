@@ -25,4 +25,10 @@ router.use('/student',verifyToken,adminConfirmation,studentRouter);
 const managementRouter = require('./management');
 router.use('/management',managementRouter);
 
+const questionRouter = require('./question');
+router.use('/question', questionRouter);
+
+const answerRouter = require('./answer');
+router.use('/answer', answerRouter);
+
 module.exports = router;
