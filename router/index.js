@@ -4,11 +4,8 @@ const router = express.Router();
 const {verifyToken} = require("./middlewares/authorization");
 const {adminConfirmation} =  require('./middlewares/adminConfirmation');
 
-const qnaRouter = require('./QnA');
-router.use('/qna',qnaRouter);
-
- const loginRouter = require('./log');
- router.use('/log',loginRouter);
+const loginRouter = require('./log');
+router.use('/log',loginRouter);
 
 const recruitRouter = require('./recruit');
 router.use('/recruit', recruitRouter);
