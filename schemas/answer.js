@@ -2,26 +2,23 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 
-const answerSchema = new Schema({
-    _id: {
-        type: Schema.Types.ObjectId,
-        index: true,
-        require: true,
-        auto: true
-    },
+const answerSchema = new mongoose.Schema({
     question: {
-        type: Schema.Types.ObjectId,
-        require: true
+        type: mongoose.Schema.Types.ObjectId,
+        require: true,
+        trim: true
     },
-    contents: {
+    content: {
         type: String,
-        required: true
+        required: [true, 'content must be included']
     },
     writer: {
         type: String,
-        required: true
-    },
-    date: Date,
+        required: [true, 'writer must be included'],
+        trim: true
+    }
+}, {
+    timestamps: true
 });
 
 answerSchema.statics.create = function (payload) {
@@ -30,8 +27,7 @@ answerSchema.statics.create = function (payload) {
 }
 
 answerSchema.statics.findByQuestionId = function (question) {
-    return (this.find()
-        .where('question').equals(question));
+    return (this.find().where('question').equals(question));
 }
 
 answerSchema.statics.updateByQuestionId = function (_id, payload) {
@@ -39,8 +35,11 @@ answerSchema.statics.updateByQuestionId = function (_id, payload) {
 }
 
 answerSchema.statics.deleteByAnswerId = function (_id) {
-    return (this.remove()
-        .where('_id').equals(_id));
+    return (this.remove().where('_id').equals(_id));
+}
+
+answerSchema.statics.deleteByQuestionId = function (question) {
+    return (this.deleteMany().where('question').equals(question));
 }
 
 module.exports = mongoose.model('answer', answerSchema);

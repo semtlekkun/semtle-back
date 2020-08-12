@@ -1,6 +1,25 @@
 const express = require('express');
 const router = express.Router();
 const question = require('../schemas/question');
+const answer = require('../schemas/answer');
+const multer = require('multer');
+const path = require('path');
+
+//const imageController = require('../controllers/image');
+
+const upload = multer({
+    storage: multer.diskStorage({
+        destination: (req, file, callback) => {
+            callback(null, "./images/questionImages/");
+        },
+        filename: (req, file, callback) => {
+            callback(null, new Date().valueOf() + path.extname(file.originalname));
+        },
+    }),
+});
+
+
+module.exports = router;
 
 router.get('/', (req, res) => {
     question.findAll()
@@ -20,7 +39,7 @@ router.get('/:questionid', (req, res) => {
         .catch(err => res.status(500).send(err));
 });
 
-router.post('/', (req, res) => {
+router.post('/', upload.array('questionImages'), (req, res) => {
     question.create(req.body)
         .then(question => res.send(question))
         .catch(err => res.status(500).send(err));
@@ -33,9 +52,12 @@ router.put('/:questionid', (req, res) => {
 });
 
 router.delete('/:questionid', (req, res) => {
-    question.deleteByQuestionId(req.params.questionid)
-        .then(() => res.sendStatus(200))
-        .catch(err => res.status(500).send(err));
+    answer.deleteByQuestionId(req.params.questionid)
+        .then(() => {
+            question.deleteByQuestionId(req.params.questionid)
+                .then(() => res.sendStatus(200))
+                .catch(err => res.status(500).send(err));
+        });
 });
 
 module.exports = router;
