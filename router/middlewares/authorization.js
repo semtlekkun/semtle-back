@@ -5,7 +5,7 @@ module.exports.verifyToken = (req, res, next) => {
     const token = req.header('token');
     console.log("토큰 확인")
     //console.log(token)
-    if (token == undefined) res.status(400).json({ status: "tokenMissing" })
+    if (token == undefined) res.status(401).json({ status: "tokenMissing" })
     try {
         const decoded = jwt.verify(token, secretKey.secret);
         // console.log(decoded);
@@ -15,7 +15,7 @@ module.exports.verifyToken = (req, res, next) => {
             next();
         }
         else {
-            res.status(400).json({ status: "unauthorized" });
+            res.status(500).json({ status: "unauthorized" });
         }
     }
     catch (err) {

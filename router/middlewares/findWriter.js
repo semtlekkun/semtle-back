@@ -9,7 +9,7 @@ module.exports.findWriter = function (req, res, next) {
             })
             .catch((err) => {
                 console.log(err);
-                res.json({ status: "error" });
+                res.status(500).json({ status: "error" });
             })
     }
     else {
@@ -20,7 +20,7 @@ module.exports.findWriter = function (req, res, next) {
             })
             .catch((err) => {
                 console.log(err);
-                res.json({ status: "error" });
+                res.status(500).json({ status: "error" });
             })
     }
 }
