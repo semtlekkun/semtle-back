@@ -28,6 +28,9 @@ router.use('/question', questionRouter);
 const answerRouter = require('./answer');
 router.use('/answer', answerRouter);
 
+const mypageRouter = require('./mypage');
+router.use('/mypage', mypageRouter);
+
 //const imageRouter = require('./image');
 //router.use('/image', imageRouter);
 

@@ -39,7 +39,7 @@ router.get('/:questionid', (req, res) => {
         .catch(err => res.status(500).send(err));
 });
 
-router.post('/', upload.array('questionImages'), (req, res) => {
+router.post('/', upload.array('questionImage'), (req, res) => {
     question.create(req.body)
         .then(question => res.send(question))
         .catch(err => res.status(500).send(err));
