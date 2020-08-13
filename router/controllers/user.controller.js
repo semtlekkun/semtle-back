@@ -8,7 +8,7 @@ module.exports.createToken = function(req,res,next){
     Student.findOne({_id:req.body._id},{pw:true})
     .then((student)=>{
         bcrypt.compare(req.body.pw,student.pw,function(err, result) {
-            if(err) res.json({status:"error"});
+            if(err) res.status(500).json({status:"error"});
             if(result){
                 const token = jwt.sign({
                     id:student._id,
@@ -18,14 +18,14 @@ module.exports.createToken = function(req,res,next){
                 {
                     expiresIn:'5m'
                 });
-                res.json({
+                res.status(200).json({
                     status:'success',
                     token:token,
                     admin:false
                 });
             }
             else{
-                res.json({
+                res.status(400).json({
                     status:"wrong"
                 });
             }
@@ -33,7 +33,7 @@ module.exports.createToken = function(req,res,next){
     })
     .catch((err)=>{
         console.log(err);
-        res.json({status:"error"});
+        res.status(500).json({status:"error"});
     });
 }
 
@@ -41,11 +41,11 @@ module.exports.checkStudent = function(req,res,next){
     Student.find({_id:req.body.studentCode}).count()
     .then((count)=>{
         if(count) next();
-        else res.json({status:"none"});
+        else res.status(400).json({status:"none"});
     })
     .catch((err)=>{
         console.log(err);
-        res.json({status:"error"});
+        res.status(500).json({status:"error"});
     })
 }
 
@@ -56,11 +56,11 @@ module.exports.checkStudentList = function(req,res,next){
     Student.find({_id:{$in:sl}}).count()
     .then((count)=>{
         if(count == sl.length) next();
-        else res.json({status:"none"});
+        else res.status(400).json({status:"none"});
     })
     .catch((err)=>{
         console.log(err);
-        res.json({status:"error"});
+        res.status(500).json({status:"error"});
     });
 }
 

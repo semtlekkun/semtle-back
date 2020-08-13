@@ -20,16 +20,16 @@ router.get('/list/:page',(req,res)=>{
         .skip((page - 1) * 10)
         .limit(10)
         .then((students)=>{
-            res.json({ status:"success",students: students,count:count });
+            res.status(200).json({ status:"success",students: students,count:count });
         })
         .catch((err)=>{
             console.log(err);
-            res.json({status:"error"});
+            res.status(500).json({status:"error"});
         })
     })
     .catch((err)=>{
         console.log(err);
-        res.json({status:"error"});
+        res.status(500).json({status:"error"});
     })
 });
 
@@ -39,12 +39,12 @@ router.put('/update',(req,res)=>{
         { $set: {name:req.body.name, nick:createNick(req.body.studentCode,req.body.name) ,phoneNum:req.body.phoneNum }})
     .then((result)=>{
         console.log(result);
-        if(result.n) res.json({status:"success"});
-        else res.json({status:"noMatched"});
+        if(result.n) res.status(200).json({status:"success"});
+        else res.status(400).json({status:"noMatched"});
     })
     .catch((err)=>{
         console.log(err);
-        res.json({status:"error"});
+        res.status(500).json({status:"error"});
     })
 });
 
@@ -59,12 +59,12 @@ router.post('/input',(req,res)=>{
     });
     student.save()
     .then(()=>{
-        res.json({status:"success"});
+        res.status(200).json({status:"success"});
     })
     .catch((err)=>{
         console.log(err);
-        if(err.keyValue._id) res.json({status:"duplicate"});
-        else res.json({status:"error"});
+        if(err.keyValue._id) res.status(400).json({status:"duplicate"});
+        else res.status(500).json({status:"error"});
     });
 })
 
@@ -72,12 +72,12 @@ router.post('/input',(req,res)=>{
 router.delete('/delete',(req,res)=>{
     Student.remove({_id:req.body.studentCode})
     .then((result)=>{
-        if(result.deletedCount) res.json({status:"success"})
-        else res.json({status:"none"});
+        if(result.deletedCount) res.status(200).json({status:"success"})
+        else res.status(400).json({status:"none"});
     })
     .catch(err=>{
         console.log(err);
-        res.json({status:"error"});
+        res.status(500).json({status:"error"});
     })
 })
 

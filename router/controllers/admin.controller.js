@@ -14,21 +14,20 @@ module.exports.createToken = function(req,res,next){
             {
                 expiresIn:'5m'
             });
-            res.json({
+            res.status(200).json({
                 status:'success',
                 token:token,
                 admin:true
             });
         }
         else{
-            res.json({
+            res.status(400).json({
                 status:"wrong"
             });
         }
     })
     .catch((err)=>{
         console.log(err);
-        res.json({status:"error"});
-    
+        res.status(500).json({status:"error"});
     });
 }
