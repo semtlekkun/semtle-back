@@ -21,7 +21,6 @@ var upload = multer({
     storage: imageStorage
 });
 
-
 router.get('/', (req, res) => {
     question.findAll()
         .then((question) => {
@@ -49,7 +48,8 @@ router.post('/',verifyToken,findWriter,upload.single("image"), (req, res) => {
         .catch(err => res.status(500).send(err));
 });
 
-router.put('/:questionid',verifyToken,adminConfirmation, (req, res) => {
+
+router.put('/:questionid',verifyToken,adminConfirmation,findWriter,upload.single("image"), (req, res) => {
     req.body.writer = res.locals.writer
     req.body.image = req.file.filename != undefined? req.file.filename:null
     req.body.date = new Date()
@@ -63,5 +63,6 @@ router.delete('/:questionid',verifyToken,adminConfirmation, (req, res) => {
         .then(() => res.sendStatus(200))
         .catch(err => res.status(500).send(err));
 });
+//question 테스트 완료
 
 module.exports = router;
