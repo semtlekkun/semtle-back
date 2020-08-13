@@ -2,9 +2,9 @@ const express = require('express');
 const router = express.Router();
 const Recruit = require('../schemas/recruit');
 const Student = require('../schemas/student');
-const {verifyToken} = require("./middlewares/authorization");
-const {findWriter} = require("./middlewares/findWriter");
-const {adminConfirmation} =  require('./middlewares/adminConfirmation');
+const { verifyToken } = require("./middlewares/authorization");
+const { findWriter } = require("./middlewares/findWriter");
+const { adminConfirmation } = require('./middlewares/adminConfirmation');
 
 router.get('/list/:page', (req, res) => {
     var page = req.params.page;
@@ -33,7 +33,7 @@ router.get('/detail/:id', (req, res) => {
         });
 });
 
-router.post('/input',verifyToken,findWriter, (req, res) => {
+router.post('/input', verifyToken, findWriter, (req, res) => {
 
     var writer = req.body.writer;
     var date = new Date();
@@ -56,16 +56,16 @@ router.post('/input',verifyToken,findWriter, (req, res) => {
     });
 });
 
-router.delete('/delete',verifyToken,adminConfirmation,(req,res)=>{
-    Recruit.remove({_id:req.body._id})
-    .then((result)=>{
-        if(result.deletedCount) res.status(200).json({status:"success"});
-        else res.status(400).json({status:"none"});
-    })
-    .catch((err)=>{
-        console.log(err);
-        res.status(500).json({status:"error"});
-    })
+router.delete('/delete', verifyToken, adminConfirmation, (req, res) => {
+    Recruit.remove({ _id: req.body._id })
+        .then((result) => {
+            if (result.deletedCount) res.status(200).json({ status: "success" });
+            else res.status(400).json({ status: "none" });
+        })
+        .catch((err) => {
+            console.log(err);
+            res.status(500).json({ status: "error" });
+        })
 });
 
 module.exports = router;
