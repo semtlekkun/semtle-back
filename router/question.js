@@ -6,11 +6,11 @@ const format = require('../js/formatDate');
 const {verifyToken} = require("./middlewares/authorization");
 const {adminConfirmation} =  require('./middlewares/adminConfirmation');
 const {findWriter} = require("./middlewares/findWriter"); 
-
+router.use(express.static("images"));
 
 var imageStorage = multer.diskStorage({
     destination: function (req, file, callback) {
-        callback(null, "./images/questionImages/");
+        callback(null, "./images");
     },
     filename: function (req, file, callback) {
         callback(null, format(new Date()) + '_' + file.originalname);
