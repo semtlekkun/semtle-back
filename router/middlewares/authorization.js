@@ -5,7 +5,7 @@ module.exports.verifyToken = (req,res,next) =>{
     const token = req.header('token');
     console.log("토큰 확인")
     console.log(token)
-    if(token == undefined) res.json({status:"tokenMissing"})
+    if(token == undefined) res.status(400).json({status:"tokenMissing"})
     try {
         const decoded = jwt.verify(token, secretKey.secret);
         // console.log(decoded);
