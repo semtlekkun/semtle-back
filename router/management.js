@@ -51,7 +51,6 @@ router.post('/input',verifyToken,adminConfirmation,studentCheck,(req,res)=>{
     });
 })
 
-
 // 관리자 확인 필요함: 완료
 router.delete('/delete',verifyToken,adminConfirmation,(req,res)=>{
     Management.remove({_id:req.body._id})
