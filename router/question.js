@@ -2,6 +2,11 @@ const express = require('express');
 const router = express.Router();
 const question = require('../schemas/question');
 
+const {verifyToken} = require("./middlewares/authorization");
+const {adminConfirmation} =  require('./middlewares/adminConfirmation');
+const {findWriter} = require("./middlewares/findWriter"); 
+
+
 router.get('/', (req, res) => {
     question.findAll()
         .then((question) => {
@@ -20,19 +25,20 @@ router.get('/:questionid', (req, res) => {
         .catch(err => res.status(500).send(err));
 });
 
-router.post('/', (req, res) => {
+router.post('/',verifyToken,findWriter, (req, res) => {
+    req.body.writer = res.locals.writer
     question.create(req.body)
         .then(question => res.send(question))
         .catch(err => res.status(500).send(err));
 });
 
-router.put('/:questionid', (req, res) => {
+router.put('/:questionid',verifyToken,adminConfirmation, (req, res) => {
     question.updateByQuestionId(req.params.questionid, req.body)
         .then(question => res.send(question))
         .catch(err => res.status(500).send(err));
 });
 
-router.delete('/:questionid', (req, res) => {
+router.delete('/:questionid',verifyToken,adminConfirmation, (req, res) => {
     question.deleteByQuestionId(req.params.questionid)
         .then(() => res.sendStatus(200))
         .catch(err => res.status(500).send(err));
