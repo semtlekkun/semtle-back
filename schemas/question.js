@@ -51,4 +51,4 @@ questionSchema.statics.deleteByQuestionId = function (_id) {
     return this.remove({ _id });
 }
 
-module.exports = mongoose.model('Question', questionSchema);
+module.exports = mongoose.model('Question', questionSchema,'question');

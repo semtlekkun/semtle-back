@@ -49,19 +49,20 @@ router.post('/',verifyToken,findWriter,upload.single("image"), (req, res) => {
 });
 
 
-router.put('/:questionid',verifyToken,adminConfirmation, (req, res) => {
-    req.body.writer = res.locals.writer
-    req.body.image = req.file.filename != undefined? req.file.filename:null
-    req.body.date = new Date()
-    question.updateByQuestionId(req.params.questionid, req.body)
-        .then(question => res.send(question))
-        .catch(err => res.status(500).send(err));
-});
+// router.put('/:questionid',verifyToken,adminConfirmation,findWriter,upload.single("image"), (req, res) => {
+//     req.body.writer = res.locals.writer
+//     req.body.image = req.file.filename != undefined? req.file.filename:null
+//     req.body.date = new Date()
+//     question.updateByQuestionId(req.params.questionid, req.body)
+//         .then(question => res.send(question))
+//         .catch(err => res.status(500).send(err));
+// });
 
 router.delete('/:questionid',verifyToken,adminConfirmation, (req, res) => {
     question.deleteByQuestionId(req.params.questionid)
         .then(() => res.sendStatus(200))
         .catch(err => res.status(500).send(err));
 });
+//question 테스트 완료
 
 module.exports = router;
