@@ -14,7 +14,7 @@ const portfolioSchema = new Schema({
     contents:String,
     link:String,
     projectStartDate:String,
-    prijectEndDate:String,
+    projectEndDate:String,
     projectTeamName:String,
     teamLeaderCode:String,
     projectImages:Array,
