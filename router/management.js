@@ -54,7 +54,7 @@ router.post('/input',verifyToken,adminConfirmation,studentCheck,(req,res)=>{
 
 // 관리자 확인 필요함: 완료
 router.delete('/delete',verifyToken,adminConfirmation,(req,res)=>{
-    Management.remove({_id:req.body.id})
+    Management.remove({_id:req.body._id})
     .then((result)=>{
         if(result.deletedCount) res.status(200).json({status:"success"});
         else res.status(400).json({status:"none"});
@@ -66,7 +66,7 @@ router.delete('/delete',verifyToken,adminConfirmation,(req,res)=>{
 });
 
 router.put('/update',verifyToken,adminConfirmation,studentCheck,(req,res)=>{
-    Management.update({_id:req.body.id},
+    Management.update({_id:req.body._id},
         { $set: {season:req.body.season,studentCode:req.body.studentCode ,contents:req.body.contents }})
     .then((result)=>{
         console.log(result);

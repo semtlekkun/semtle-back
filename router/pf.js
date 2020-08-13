@@ -113,7 +113,7 @@ router.post("/input",verifyToken,findWriter,upload.array('projectImages'),(req,r
 
 // 관리자 확인 후
 router.delete("/delete",verifyToken,adminConfirmation,(req,res)=>{
-    Portfolio.remove({_id:req.body.id})
+    Portfolio.remove({_id:req.body._id})
     .then((result)=>{
         if(result.deletedCount) res.status(200).json({status:"success"})
         else res.status(400).json({status:"none"});
