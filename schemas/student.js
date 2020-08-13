@@ -5,7 +5,7 @@ const bcrypt = require("bcrypt");
 const studentSchema = new Schema({
     //_id: Schema.Types.ObjectId, //따로 선언하지 않아도 자동으로 set 
     _id:{
-        type:Number,
+        type:String,
         required:true
     },
     pw: {
