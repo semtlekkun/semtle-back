@@ -3,9 +3,9 @@ const router = express.Router();
 const Notice = require('../schemas/notice');
 const multer = require('multer');
 const format = require('../js/formatDate');
-const {verifyToken} = require("./middlewares/authorization");
-const {findWriter} = require("./middlewares/findWriter");
-const {adminConfirmation} =  require('./middlewares/adminConfirmation');
+const { verifyToken } = require("./middlewares/authorization");
+const { findWriter } = require("./middlewares/findWriter");
+const { adminConfirmation } = require('./middlewares/adminConfirmation');
 
 router.get('/list/:page', (req, res) => {
     var page = req.params.page;
@@ -47,9 +47,9 @@ var upload = multer({
 });
 
 
-router.post('/input', verifyToken,findWriter,upload.single("img"), (req, res, next) => {
+router.post('/input', verifyToken, findWriter, upload.single("img"), (req, res, next) => {
 
-    var writer = req.body.writer;
+    var writer = res.locals.writer;
     var title = req.body.title;
     var contents = req.body.contents;
     var image;
@@ -77,31 +77,31 @@ router.post('/input', verifyToken,findWriter,upload.single("img"), (req, res, ne
 
 });
 
-router.put('/update',verifyToken,adminConfirmation,(req,res)=>{
+router.put('/update', verifyToken, adminConfirmation, (req, res) => {
     req.body.date = new Date()
-    Notice.update({_id:req.body._id},
-        { $set: req.body})
-    .then((result)=>{
-        console.log(result);
-        if(result.n) res.status(200).json({status:"success"});
-        else res.status(400).json({status:"noMatched"});
-    })
-    .catch((err)=>{
-        console.log(err);
-        res.status(500).json({status:"error"});
-    })
+    Notice.update({ _id: req.body._id },
+        { $set: req.body })
+        .then((result) => {
+            console.log(result);
+            if (result.n) res.status(200).json({ status: "success" });
+            else res.status(400).json({ status: "noMatched" });
+        })
+        .catch((err) => {
+            console.log(err);
+            res.status(500).json({ status: "error" });
+        })
 });
 
-router.delete('/delete',verifyToken,adminConfirmation,(req,res)=>{
-    Notice.remove({_id:req.body._id})
-    .then((result)=>{
-        if(result.deletedCount) res.status(200).json({status:"success"});
-        else res.status(400).json({status:"none"});
-    })
-    .catch((err)=>{
-        console.log(err);
-        res.status(500).json({status:"error"});
-    })
+router.delete('/delete', verifyToken, adminConfirmation, (req, res) => {
+    Notice.remove({ _id: req.body._id })
+        .then((result) => {
+            if (result.deletedCount) res.status(200).json({ status: "success" });
+            else res.status(400).json({ status: "none" });
+        })
+        .catch((err) => {
+            console.log(err);
+            res.status(500).json({ status: "error" });
+        })
 });
 
 module.exports = router;
