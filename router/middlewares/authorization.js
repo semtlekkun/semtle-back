@@ -1,28 +1,26 @@
 const jwt = require("jsonwebtoken");
 const secretKey = require("../../config/jwt");
 
-module.exports.verifyToken = (req,res,next) =>{
+module.exports.verifyToken = (req, res, next) => {
     const token = req.header('token');
     console.log("토큰 확인")
-    console.log(token)
-    if(token == undefined) res.json({status:"tokenMissing"})
+    //console.log(token)
+    if (token == undefined) res.json({ status: "tokenMissing" })
     try {
         const decoded = jwt.verify(token, secretKey.secret);
         // console.log(decoded);
-        if(decoded)
-        {
+        if (decoded) {
             res.locals.isAdmin = decoded.isAdmin
             res.locals.id = decoded.id
             next();
         }
-        else{
-            res.status(400).json({status:"unauthorized"});
+        else {
+            res.status(400).json({ status: "unauthorized" });
         }
     }
-    catch(err)
-    {
+    catch (err) {
         console.log(err);
-        res.status(401).json({status:"tokenExpired"});
+        res.status(401).json({ status: "tokenExpired" });
     }
 }
 

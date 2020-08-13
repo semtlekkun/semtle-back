@@ -6,6 +6,7 @@ const format = require('../js/formatDate');
 const { verifyToken } = require("./middlewares/authorization");
 const { findWriter } = require("./middlewares/findWriter");
 const { adminConfirmation } = require('./middlewares/adminConfirmation');
+const fs = require('fs');
 
 router.get('/list/:page', (req, res) => {
     var page = req.params.page;
@@ -15,7 +16,7 @@ router.get('/list/:page', (req, res) => {
         })
         .catch((err) => {
             console.log(err);
-            res.status(500).send(err);
+            res.status(500).send({ status: "err" });
         });
 });
 
@@ -27,14 +28,14 @@ router.get('/detail/:id', (req, res) => {
         })
         .catch((err) => {
             console.log(err);
-            res.status(500).send(err);
+            res.status(500).send({ status: "err" });
         });
 });
 
 
 var imageStorage = multer.diskStorage({
     destination: function (req, file, callback) {
-        callback(null, "./Images");
+        callback(null, "./images");
     },
     filename: function (req, file, callback) {
         //파일명 설정
@@ -68,7 +69,7 @@ router.post('/input', verifyToken, findWriter, upload.single("img"), (req, res, 
     }, function (err) {
         if (err) {
             console.log(err)
-            res.status(500).send(err);
+            res.status(500).send({ status: "err" });
         }
         else {
             res.status(200).send({ status: "success" });
@@ -77,31 +78,42 @@ router.post('/input', verifyToken, findWriter, upload.single("img"), (req, res, 
 
 });
 
-router.put('/update', verifyToken, adminConfirmation, (req, res) => {
-    req.body.date = new Date()
-    Notice.update({ _id: req.body._id },
-        { $set: req.body })
-        .then((result) => {
-            console.log(result);
-            if (result.n) res.status(200).json({ status: "success" });
-            else res.status(400).json({ status: "noMatched" });
-        })
-        .catch((err) => {
-            console.log(err);
-            res.status(500).json({ status: "error" });
-        })
-});
+// router.put('/update', verifyToken, adminConfirmation, (req, res) => {
+//     req.body.date = new Date()
+//     Notice.update({ _id: req.body._id },
+//         { $set: req.body })
+//         .then((result) => {
+//             console.log(result);
+//             if (result.n) res.status(200).json({ status: "success" });
+//             else res.status(400).json({ status: "noMatched" });
+//         })
+//         .catch((err) => {
+//             console.log(err);
+//             res.status(500).json({ status: "error" });
+//         })
+// });
 
 router.delete('/delete', verifyToken, adminConfirmation, (req, res) => {
-    Notice.remove({ _id: req.body._id })
-        .then((result) => {
-            if (result.deletedCount) res.status(200).json({ status: "success" });
-            else res.status(400).json({ status: "none" });
+    //console.log(req.body._id);
+    Notice.findOne({ _id: req.body._id }, { _id: false })
+        .then((noticeList) => {
+            //console.log(noticeList.image);
+            var filePath = './images/' + noticeList.image;
+            fs.unlinkSync(filePath);
+            Notice.remove({ _id: req.body._id })
+                .then((result) => {
+                    if (result.deletedCount) res.status(200).json({ status: "success" });
+                    else res.status(400).json({ status: "none" });
+                })
+                .catch((err) => {
+                    console.log(err);
+                    res.status(500).json({ status: "error" });
+                })
         })
         .catch((err) => {
             console.log(err);
-            res.status(500).json({ status: "error" });
-        })
+            res.status(500).send({ status: "err" });
+        });
 });
 
 module.exports = router;
