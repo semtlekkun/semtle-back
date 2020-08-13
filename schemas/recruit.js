@@ -25,7 +25,7 @@ const recruitSchema = new Schema({
         type: String,
         required: true
     },
-    date: Date
+    date: String
     //date: Number,
 
 }, { versionKey: false }); //"__v"필드를 안보이게 하려고 

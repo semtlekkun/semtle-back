@@ -6,6 +6,7 @@ const format = require('../js/formatDate');
 const { verifyToken } = require("./middlewares/authorization");
 const { findWriter } = require("./middlewares/findWriter");
 const { adminConfirmation } = require('./middlewares/adminConfirmation');
+const {formatDateSend} = require('../js/formatDateSend');
 
 router.get('/list/:page', (req, res) => {
     var page = req.params.page;
@@ -56,7 +57,7 @@ router.post('/input', verifyToken, findWriter, upload.single("img"), (req, res, 
     if (req.file != undefined)
         image = req.file.filename
     else image = null;
-    var date = new Date()
+    var date = formatDateSend(new Date())
 
     Notice.create({
         writer: writer,
@@ -77,20 +78,20 @@ router.post('/input', verifyToken, findWriter, upload.single("img"), (req, res, 
 
 });
 
-router.put('/update', verifyToken, adminConfirmation, (req, res) => {
-    req.body.date = new Date()
-    Notice.update({ _id: req.body._id },
-        { $set: req.body })
-        .then((result) => {
-            console.log(result);
-            if (result.n) res.status(200).json({ status: "success" });
-            else res.status(400).json({ status: "noMatched" });
-        })
-        .catch((err) => {
-            console.log(err);
-            res.status(500).json({ status: "error" });
-        })
-});
+// router.put('/update', verifyToken, adminConfirmation, (req, res) => {
+//     req.body.date = new Date()
+//     Notice.update({ _id: req.body._id },
+//         { $set: req.body })
+//         .then((result) => {
+//             console.log(result);
+//             if (result.n) res.status(200).json({ status: "success" });
+//             else res.status(400).json({ status: "noMatched" });
+//         })
+//         .catch((err) => {
+//             console.log(err);
+//             res.status(500).json({ status: "error" });
+//         })
+// });
 
 router.delete('/delete', verifyToken, adminConfirmation, (req, res) => {
     Notice.remove({ _id: req.body._id })

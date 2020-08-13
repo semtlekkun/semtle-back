@@ -23,7 +23,7 @@ const portfolioSchema = new Schema({
         type:String,
         required:true
     },
-    date:Date,
+    date:String,
     studentInfo:Array
 },
 {

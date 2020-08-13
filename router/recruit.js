@@ -36,7 +36,7 @@ router.get('/detail/:id', (req, res) => {
 router.post('/input', verifyToken, findWriter, (req, res) => {
 
     var writer = res.locals.writer;
-    var date = new Date();
+    var date = formatDateSend(new Date())
     var endDate = req.body.endDate;
     var recruitment = req.body.recruitment;
     var title = req.body.title;

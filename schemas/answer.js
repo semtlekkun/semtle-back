@@ -21,7 +21,7 @@ const answerSchema = new Schema({
         type: String,
         required: true
     },
-    date: Date,
+    date: String,
 },
 {
     versionKey:false

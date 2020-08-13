@@ -42,21 +42,21 @@ router.get('/:questionid', (req, res) => {
 router.post('/',verifyToken,findWriter,upload.single("image"), (req, res) => {
     req.body.writer = res.locals.writer
     req.body.image = req.file.filename != undefined? req.file.filename:null
-    req.body.date = new Date()
+    req.body.date = formatDateSend(new Date())
     question.create(req.body)
         .then(question => res.send(question))
         .catch(err => res.status(500).send(err));
 });
 
 
-router.put('/:questionid',verifyToken,adminConfirmation,findWriter,upload.single("image"), (req, res) => {
-    req.body.writer = res.locals.writer
-    req.body.image = req.file.filename != undefined? req.file.filename:null
-    req.body.date = new Date()
-    question.updateByQuestionId(req.params.questionid, req.body)
-        .then(question => res.send(question))
-        .catch(err => res.status(500).send(err));
-});
+// router.put('/:questionid',verifyToken,adminConfirmation,findWriter,upload.single("image"), (req, res) => {
+//     req.body.writer = res.locals.writer
+//     req.body.image = req.file.filename != undefined? req.file.filename:null
+//     req.body.date = new Date()
+//     question.updateByQuestionId(req.params.questionid, req.body)
+//         .then(question => res.send(question))
+//         .catch(err => res.status(500).send(err));
+// });
 
 router.delete('/:questionid',verifyToken,adminConfirmation, (req, res) => {
     question.deleteByQuestionId(req.params.questionid)

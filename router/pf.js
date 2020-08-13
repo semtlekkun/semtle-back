@@ -8,6 +8,7 @@ const format = require('../js/formatDate');
 const {verifyToken} = require("./middlewares/authorization");
 const {findWriter} = require("./middlewares/findWriter");
 const {adminConfirmation} =  require('./middlewares/adminConfirmation');
+const {formatDateSend} = require('../js/formatDateSend');
 
 router.use(express.static("images/portfolioImages"));
 
@@ -91,7 +92,7 @@ router.post("/input",verifyToken,findWriter,upload.array('projectImages'),(req,r
                 projectImages:req.files.map((image)=>{return image.filename}),
                 view:0,
                 writer:res.locals.writer,
-                date:new Date()
+                date:formatDateSend(new Date())
             });
 
             pf.save()
