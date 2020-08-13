@@ -27,12 +27,12 @@ router.post('/:questionid',verifyToken,findWriter, (req, res) => {
         .catch(err => res.status(500).send(err));
 });
 
-router.put('/:answerid',verifyToken,adminConfirmation, (req, res) => {
-    req.body.date = new Date()
-    answer.updateByQuestionId(req.params.answerid, req.body)
-        .then(answer => res.send(answer))
-        .catch(err => res.status(500).send(err));
-});
+// router.put('/:answerid',verifyToken,adminConfirmation, (req, res) => {
+//     req.body.date = new Date()
+//     answer.updateByQuestionId(req.params.answerid, req.body)
+//         .then(answer => res.send(answer))
+//         .catch(err => res.status(500).send(err));
+// });
 
 router.delete('/:answerid',verifyToken,adminConfirmation, (req, res) => {
     answer.deleteByAnswerId(req.params.answerid)
