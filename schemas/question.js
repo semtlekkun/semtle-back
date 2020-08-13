@@ -24,7 +24,7 @@ const questionSchema = new Schema({
         type: String,
         required: true
     },
-    date: Date
+    date: String
 });
 
 questionSchema.statics.create = function (payload) {
