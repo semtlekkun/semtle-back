@@ -8,11 +8,11 @@ router.get('/list/:page', (req, res) => {
     var page = req.params.page;
     Notice.find({}, { contents: false, image: false }).sort({ "date": -1 }).skip((page - 1) * 10).limit(10)
         .then((noticeList) => {
-            res.json({ status: "success", noticeList: noticeList });
+            res.status(200).json({ status: "success", noticeList: noticeList });
         })
         .catch((err) => {
             console.log(err);
-            res.json({ status: "fail" });
+            res.status(500).send(err);
         });
 });
 
@@ -20,11 +20,11 @@ router.get('/list/:page', (req, res) => {
 router.get('/detail/:id', (req, res) => {
     Notice.findOne({ _id: req.params.id }, { _id: false })
         .then((noticeList) => {
-            res.json({ status: "success", noticeList: noticeList });
+            res.status(200).json({ status: "success", noticeList: noticeList });
         })
         .catch((err) => {
             console.log(err);
-            res.json({ status: "fail" });
+            res.status(500).send(err);
         });
 });
 
@@ -51,7 +51,7 @@ router.post('/input', upload.single("img"), (req, res, next) => {
     var title = req.body.title;
     var contents = req.body.contents;
     var image;
-    if(req.file != undefined)
+    if (req.file != undefined)
         image = req.file.filename
     else image = null;
 
@@ -65,10 +65,10 @@ router.post('/input', upload.single("img"), (req, res, next) => {
     }, function (err) {
         if (err) {
             console.log(err)
-            res.json({ status: "error" });
+            res.status(500).send(err);
         }
         else {
-            res.json({ status: "success" });
+            res.status(200).send({ status: "success" });
         }
     });
 
