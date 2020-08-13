@@ -33,7 +33,7 @@ router.get('/detail/:id', (req, res) => {
         });
 });
 
-router.post('/input', (req, res) => {
+router.post('/input',verifyToken,findWriter, (req, res) => {
 
     var writer = req.body.writer;
     var date = new Date();

@@ -47,7 +47,7 @@ var upload = multer({
 });
 
 
-router.post('/input', upload.single("img"), (req, res, next) => {
+router.post('/input', verifyToken,findWriter,upload.single("img"), (req, res, next) => {
 
     var writer = req.body.writer;
     var title = req.body.title;
