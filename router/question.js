@@ -42,6 +42,7 @@ router.get('/:questionid', (req, res) => {
 
 router.post('/',verifyToken,findWriter,upload.single("image"), (req, res) => {
     req.body.writer = res.locals.writer
+    console.log(req.file.filename)
     req.body.image = req.file.filename != undefined? req.file.filename:null
     req.body.date = formatDateSend(new Date())
     question.create(req.body)
