@@ -38,12 +38,12 @@ router.get("/list/:page", (req, res) => {
         })
         .catch((err) => {
             console.log(err);
-            res.json({ status: 'error' });
+            res.status(500).json({ status: 'error' });
         });
     })
     .catch((err)=>{
         console.log(err);
-        res.json({status:"error"});
+        res.status(500).json({status:"error"});
     })
 });
 
@@ -63,11 +63,11 @@ router.get('/detail/:id', (req, res) => {
      { $project: { "studentInfo.pw": 0,"studentInfo.name":0,"studentInfo.phoneNum":0 } }
     ])
     .then((pf)=>{
-        res.json({portfolio:pf});
+        res.status(200).json({portfolio:pf});
     })
     .catch((err)=>{
         console.log(err);
-        res.json({status:"error"});
+        res.status(500).json({status:"error"});
     });
 });
 
@@ -91,36 +91,36 @@ router.post("/input",verifyToken,findWriter,upload.array('projectImages'),(req,r
                 projectImages:req.files.map((image)=>{return image.filename}),
                 view:0,
                 writer:res.locals.writer,
-                date:req.body.date
+                date:new Date()
             });
 
             pf.save()
             .then(()=>{
-                res.json({status:"success"});
+                res.status(200).json({status:"success"});
             })
             .catch((err)=>{
                 console.log(err);
-                res.json({status:"error"});
+                res.status(500).json({status:"error"});
             })
         }
-        else res.json({status:"none"});
+        else res.status(400).json({status:"none"});
     })
     .catch((err)=>{
         console.log(err);
-        res.json({status:"error"});
+        res.status(500).json({status:"error"});
     });
 })
 
 // 관리자 확인 후
 router.delete("/delete",verifyToken,adminConfirmation,(req,res)=>{
-    Portfolio.remove({_id:req.body.id})
+    Portfolio.remove({_id:req.body._id})
     .then((result)=>{
-        if(result.deletedCount) res.json({status:"success"})
-        else res.json({status:"none"});
+        if(result.deletedCount) res.status(200).json({status:"success"})
+        else res.status(400).json({status:"none"});
     })
     .catch((err)=>{
         console.log(err);
-        res.json({status:"error"});
+        res.status(500).json({status:"error"});
     })
 })
 

@@ -15,13 +15,13 @@ module.exports.verifyToken = (req,res,next) =>{
             next();
         }
         else{
-            res.json({status:"unauthorized"});
+            res.status(400).json({status:"unauthorized"});
         }
     }
     catch(err)
     {
         console.log(err);
-        res.json({status:"tokenExpired"});
+        res.status(401).json({status:"tokenExpired"});
     }
 }
 

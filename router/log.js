@@ -6,13 +6,12 @@
 // 토큰생성 완료
  router.post('/in',(req,res,next)=>{
     var _id = req.body._id;
-     if (typeof _id != 'number'){
+     if (_id.indexOf("AD") != -1){
         adminController.createToken(req,res,next);
      }     
      else{//number
         studentController.createToken(req,res,next)
      }
-    
  });
 
  module.exports = router;

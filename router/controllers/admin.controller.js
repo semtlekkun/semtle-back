@@ -12,23 +12,22 @@ module.exports.createToken = function(req,res,next){
             },
             secretKey.secret,
             {
-                expiresIn:'5m'
+                expiresIn:'3h'
             });
-            res.json({
+            res.status(200).json({
                 status:'success',
                 token:token,
                 admin:true
             });
         }
         else{
-            res.json({
+            res.status(400).json({
                 status:"wrong"
             });
         }
     })
     .catch((err)=>{
         console.log(err);
-        res.json({status:"error"});
-    
+        res.status(500).json({status:"error"});
     });
 }

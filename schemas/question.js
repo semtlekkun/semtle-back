@@ -12,7 +12,7 @@ const questionSchema = new Schema({
         type: String,
         required: true
     },
-    content: {
+    contents: {
         type: String,
         required: true
     },
@@ -25,6 +25,9 @@ const questionSchema = new Schema({
         required: true
     },
     date: Date
+},
+{
+    versionKey:false
 });
 
 questionSchema.statics.create = function (payload) {

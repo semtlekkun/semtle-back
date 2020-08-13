@@ -1,6 +1,26 @@
 const express = require('express');
 const router = express.Router();
 const question = require('../schemas/question');
+const multer = require("multer");
+const format = require('../js/formatDate');
+const {verifyToken} = require("./middlewares/authorization");
+const {adminConfirmation} =  require('./middlewares/adminConfirmation');
+const {findWriter} = require("./middlewares/findWriter"); 
+
+
+var imageStorage = multer.diskStorage({
+    destination: function (req, file, callback) {
+        callback(null, "./images/questionImages/");
+    },
+    filename: function (req, file, callback) {
+        callback(null, format(new Date()) + '_' + file.originalname);
+    }
+})
+
+var upload = multer({
+    storage: imageStorage
+});
+
 
 router.get('/', (req, res) => {
     question.findAll()
@@ -20,19 +40,25 @@ router.get('/:questionid', (req, res) => {
         .catch(err => res.status(500).send(err));
 });
 
-router.post('/', (req, res) => {
+router.post('/',verifyToken,findWriter,upload.single("image"), (req, res) => {
+    req.body.writer = res.locals.writer
+    req.body.image = req.file.filename != undefined? req.file.filename:null
+    req.body.date = new Date()
     question.create(req.body)
         .then(question => res.send(question))
         .catch(err => res.status(500).send(err));
 });
 
-router.put('/:questionid', (req, res) => {
+router.put('/:questionid',verifyToken,adminConfirmation, (req, res) => {
+    req.body.writer = res.locals.writer
+    req.body.image = req.file.filename != undefined? req.file.filename:null
+    req.body.date = new Date()
     question.updateByQuestionId(req.params.questionid, req.body)
         .then(question => res.send(question))
         .catch(err => res.status(500).send(err));
 });
 
-router.delete('/:questionid', (req, res) => {
+router.delete('/:questionid',verifyToken,adminConfirmation, (req, res) => {
     question.deleteByQuestionId(req.params.questionid)
         .then(() => res.sendStatus(200))
         .catch(err => res.status(500).send(err));

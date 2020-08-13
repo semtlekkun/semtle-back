@@ -34,7 +34,7 @@ router.get('/list/:page',(req,res)=>{
         {$limit:3}
     ])
     .then((management)=>{
-        res.json({status:"success",management:management});
+        res.status(200).json({status:"success",management:management});
     })
 });
 
@@ -43,39 +43,39 @@ router.post('/input',verifyToken,adminConfirmation,studentCheck,(req,res)=>{
     const management = new Management(req.body);
     management.save()
     .then(()=>{
-        res.json({status:"success"});
+        res.status(200).json({status:"success"});
     })
     .catch((err)=>{
         console.log(err);
-        res.json({status:"error"});
+        res.status(500).json({status:"error"});
     });
 })
 
 
 // 관리자 확인 필요함: 완료
 router.delete('/delete',verifyToken,adminConfirmation,(req,res)=>{
-    Management.remove({_id:req.body.id})
+    Management.remove({_id:req.body._id})
     .then((result)=>{
-        if(result.deletedCount) res.json({status:"success"});
-        else res.json({status:"none"});
+        if(result.deletedCount) res.status(200).json({status:"success"});
+        else res.status(400).json({status:"none"});
     })
     .catch((err)=>{
         console.log(err);
-        res.json({status:"error"});
+        res.status(500).json({status:"error"});
     })
 });
 
 router.put('/update',verifyToken,adminConfirmation,studentCheck,(req,res)=>{
-    Management.update({_id:req.body.id},
+    Management.update({_id:req.body._id},
         { $set: {season:req.body.season,studentCode:req.body.studentCode ,contents:req.body.contents }})
     .then((result)=>{
         console.log(result);
-        if(result.n) res.json({status:"success"});
-        else res.json({status:"noMatched"});
+        if(result.n) res.status(200).json({status:"success"});
+        else res.status(400).json({status:"noMatched"});
     })
     .catch((err)=>{
         console.log(err);
-        res.json({status:"error"});
+        res.status(500).json({status:"error"});
     })
 });
 

@@ -24,7 +24,7 @@ const noticeSchema = new Schema({
         required: true
     },
     //date: Number
-    date: String
+    date: Date
 }, { versionKey: false });
 
 module.exports = mongoose.model('Notice', noticeSchema, 'notice');
