@@ -14,7 +14,7 @@ router.get('/', (req, res) => {
     try {
         const decoded = jwt.verify(token, secretKey.secret);
         if (decoded) {
-            console.log(decoded);
+            res.send(student.findOne().where('_id').equals(decoded._id));
         }
         else res.status(401).send({ err: 'token unauthorized' });
     }
