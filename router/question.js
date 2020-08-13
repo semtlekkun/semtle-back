@@ -6,6 +6,7 @@ const format = require('../js/formatDate');
 const {verifyToken} = require("./middlewares/authorization");
 const {adminConfirmation} =  require('./middlewares/adminConfirmation');
 const {findWriter} = require("./middlewares/findWriter"); 
+const {formatDateSend} = require('../js/formatDateSend');
 router.use(express.static("images"));
 
 var imageStorage = multer.diskStorage({

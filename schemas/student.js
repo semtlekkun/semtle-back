@@ -43,4 +43,8 @@ studentSchema.pre('save',function(next){
     });
 })
 
+// studentSchema.pre('find',function(next){
+//     console.log("TEST FIND");
+// })
+
 module.exports = mongoose.model('Student', studentSchema, 'student');
