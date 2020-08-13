@@ -94,26 +94,21 @@ router.post('/input', verifyToken, findWriter, upload.single("img"), (req, res, 
 // });
 
 router.delete('/delete', verifyToken, adminConfirmation, (req, res) => {
-    //console.log(req.body._id);
-    Notice.findOne({ _id: req.body._id }, { _id: false })
-        .then((noticeList) => {
-            //console.log(noticeList.image);
-            var filePath = './images/' + noticeList.image;
+
+    Notice.findOneAndRemove({ _id: req.body._id })
+        .exec(function (err, item) {
+            //console.log(item.image);
+            var filePath = './images/' + item.image;
             fs.unlinkSync(filePath);
-            Notice.remove({ _id: req.body._id })
-                .then((result) => {
-                    if (result.deletedCount) res.status(200).json({ status: "success" });
-                    else res.status(400).json({ status: "none" });
-                })
-                .catch((err) => {
-                    console.log(err);
-                    res.status(500).json({ status: "error" });
-                })
-        })
-        .catch((err) => {
-            console.log(err);
-            res.status(500).send({ status: "err" });
+            if (err) {
+                res.status(500).send({ status: "err" });
+            }
+            if (!item) {
+                return res.status(404).json({ status: "none" });
+            }
+            res.status(200).json({ status: "success" });
         });
+
 });
 
 module.exports = router;
