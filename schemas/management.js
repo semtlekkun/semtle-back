@@ -7,10 +7,11 @@ const managementSchema = new Schema({
         required:true
     },
     studentCode:{
-        type:Number,
+        type:String,
         required:true
     },
-    contents:String
+    contents:String,
+    language:String
 }, { versionKey: false });
 
 module.exports = mongoose.model('Management', managementSchema, 'management');

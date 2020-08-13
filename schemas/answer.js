@@ -22,6 +22,9 @@ const answerSchema = new Schema({
         required: true
     },
     date: Date,
+},
+{
+    versionKey:false
 });
 
 answerSchema.statics.create = function (payload) {

@@ -18,12 +18,14 @@ router.get('/:questionid', (req, res) => {
 
 router.post('/:questionid',verifyToken,findWriter, (req, res) => {
     req.body.writer = res.locals.writer
+    req.body.date = new Date()
     answer.create(req.body)
         .then(answer => res.send(answer))
         .catch(err => res.status(500).send(err));
 });
 
 router.put('/:answerid',verifyToken,adminConfirmation, (req, res) => {
+    req.body.date = new Date()
     answer.updateByQuestionId(req.params.answerid, req.body)
         .then(answer => res.send(answer))
         .catch(err => res.status(500).send(err));

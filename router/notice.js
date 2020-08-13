@@ -47,13 +47,13 @@ var upload = multer({
 router.post('/input', upload.single("img"), (req, res, next) => {
 
     var writer = req.body.writer;
-    var date = req.body.date;
     var title = req.body.title;
     var contents = req.body.contents;
     var image;
     if (req.file != undefined)
         image = req.file.filename
     else image = null;
+    var date = new Date()
 
     Notice.create({
         writer: writer,
@@ -73,5 +73,6 @@ router.post('/input', upload.single("img"), (req, res, next) => {
     });
 
 });
+
 
 module.exports = router;

@@ -91,7 +91,7 @@ router.post("/input",verifyToken,findWriter,upload.array('projectImages'),(req,r
                 projectImages:req.files.map((image)=>{return image.filename}),
                 view:0,
                 writer:res.locals.writer,
-                date:req.body.date
+                date:new Date()
             });
 
             pf.save()

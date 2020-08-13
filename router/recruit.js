@@ -33,7 +33,7 @@ router.get('/detail/:id', (req, res) => {
 router.post('/input', (req, res) => {
 
     var writer = req.body.writer;
-    var date = req.body.date;
+    var date = new Date();
     var endDate = req.body.endDate;
     var recruitment = req.body.recruitment;
     var title = req.body.title;

@@ -12,7 +12,7 @@ const recruitSchema = new Schema({
         required: true
     },
     //endDate: Number,
-    endDate: Date, //test를 위해 Number로 대체 
+    endDate: String, //test를 위해 Number로 대체 
     recruitment: { //모집인원
         type: Number,
         required: true
@@ -25,7 +25,6 @@ const recruitSchema = new Schema({
         type: String,
         required: true
     },
-
     date: Date
     //date: Number,
 
