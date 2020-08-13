@@ -10,10 +10,13 @@ const {findWriter} = require("./middlewares/findWriter");
 router.get('/:questionid', (req, res) => {
     answer.findByQuestionId(req.params.questionid)
         .then((answer) => {
-            if (!answer.length) return res.status(404).send({ err: 'Answer not found' });
+            if (!answer.length){
+                console.log(answer);
+                return res.status(404).send({ err: 'Answer not found' });
+            } 
             res.send(answer);
         })
-        .catch(err => res.status(500).send(err));
+        .catch(err => {res.status(500).send(err)});
 });
 
 router.post('/:questionid',verifyToken,findWriter, (req, res) => {

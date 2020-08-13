@@ -46,4 +46,4 @@ answerSchema.statics.deleteByAnswerId = function (_id) {
         .where('_id').equals(_id));
 }
 
-module.exports = mongoose.model('answer', answerSchema);
+module.exports = mongoose.model('answer', answerSchema,'answer');
