@@ -21,7 +21,6 @@ var upload = multer({
     storage: imageStorage
 });
 
-
 router.get('/', (req, res) => {
     question.findAll()
         .then((question) => {
@@ -48,6 +47,7 @@ router.post('/',verifyToken,findWriter,upload.single("image"), (req, res) => {
         .then(question => res.send(question))
         .catch(err => res.status(500).send(err));
 });
+
 
 router.put('/:questionid',verifyToken,adminConfirmation, (req, res) => {
     req.body.writer = res.locals.writer
