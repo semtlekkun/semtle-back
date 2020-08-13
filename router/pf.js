@@ -88,7 +88,7 @@ router.post("/input",verifyToken,findWriter,upload.array('projectImages'),(req,r
                 projectStartDate:req.body.projectStartDate,
                 projectEndDate:req.body.projectEndDate,
                 projectTeamName:req.body.projectTeamName,
-                teamLeaderCode:req.body.teamLeaderCode,
+                leaderNick:req.body.teamLeaderCode,
                 projectImages:req.files.map((image)=>{return image.filename}),
                 view:0,
                 writer:res.locals.writer,
