@@ -7,12 +7,12 @@ router.get('/list/:page', (req, res) => {
     var page = req.params.page;
     Recruit.find({}, { date: false, contents: false }).sort({ "date": -1 }).skip((page - 1) * 10).limit(10)
         .then((recruitList) => {
-            res.json({ status: "success", recruitList: recruitList });
 
+            res.status(200).json({ status: "success", recruitList: recruitList });
         })
         .catch((err) => {
             console.log(err);
-            res.json({ status: "fail" });
+            res.status(500).send(err);
         });
 });
 
@@ -21,11 +21,12 @@ router.get('/detail/:id', (req, res) => {
 
     Recruit.findOne({ _id: _id })
         .then((recruitList) => {
-            res.json({ status: "success", recruitList: recruitList });
+            res.status(200).json({ status: "success", recruitList: recruitList });
+
         })
         .catch((err) => {
             console.log(err);
-            res.json({ status: "fail" });
+            res.status(500).send(err);
         });
 });
 
@@ -47,7 +48,7 @@ router.post('/input', (req, res) => {
             return handleError(err);
         }
         else {
-            res.json({ status: "success" });
+            res.status(200).send({ status: "success" });
         }
     });
 });
