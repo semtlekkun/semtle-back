@@ -78,29 +78,34 @@ router.post("/input",verifyToken,findWriter,upload.array('projectImages'),(req,r
     Student.find({_id:{$in:sl}}).count()
     .then((count)=>{
         if(count == sl.length) {
-            const pf = new Portfolio({
-                projectTitle:req.body.projectTitle,
-                students:sl,
-                contents:req.body.contents,
-                link:req.body.link != undefined? req.body.link:null,
-                projectStartDate:req.body.projectStartDate,
-                projectEndDate:req.body.projectEndDate,
-                projectTeamName:req.body.projectTeamName,
-                leaderNick:req.body.teamLeaderCode,
-                projectImages:req.files.map((image)=>{return image.filename}),
-                view:0,
-                writer:res.locals.writer,
-                date:formatDateSend(new Date())
-            });
-
-            pf.save()
-            .then(()=>{
-                res.status(200).json({status:"success"});
+            Student.findOne({_id:req.body.teamLeaderCode},{nick:true})
+            .then((student)=>{
+                if(student == null) res.status(400).json({status:"none"});
+                const pf = new Portfolio({
+                    projectTitle:req.body.projectTitle,
+                    students:sl,
+                    contents:req.body.contents,
+                    link:req.body.link != undefined? req.body.link:null,
+                    projectStartDate:req.body.projectStartDate,
+                    projectEndDate:req.body.projectEndDate,
+                    projectTeamName:req.body.projectTeamName,
+                    leaderNick:student.nick,
+                    projectImages:req.files.map((image)=>{return image.filename}),
+                    view:0,
+                    writer:res.locals.writer,
+                    date:formatDateSend(new Date())
+                });
+    
+                pf.save()
+                .then(()=>{
+                    res.status(200).json({status:"success"});
+                })
+                .catch((err)=>{
+                    console.log(err);
+                    res.status(500).json({status:"error"});
+                })
             })
-            .catch((err)=>{
-                console.log(err);
-                res.status(500).json({status:"error"});
-            })
+          
         }
         else res.status(400).json({status:"none"});
     })
