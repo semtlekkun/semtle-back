@@ -75,6 +75,9 @@ router.post("/input",verifyToken,findWriter,upload.array('projectImages'),(req,r
 
     // res.locals.writer = "testWriter";
     let sl = eval(req.body.students);
+    console.log("여기야!!")
+    console.log(req.body.students)
+    console.log(sl)
     Student.find({_id:{$in:sl}}).count()
     .then((count)=>{
         if(count == sl.length) {
