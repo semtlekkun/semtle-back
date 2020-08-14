@@ -10,8 +10,6 @@ const {findWriter} = require("./middlewares/findWriter");
 const {adminConfirmation} =  require('./middlewares/adminConfirmation');
 const {formatDateSend} = require('../js/formatDateSend');
 
-router.use(express.static("images"));
-
 var imageStorage = multer.diskStorage({
     destination: function (req, file, callback) {
         callback(null, "./images");

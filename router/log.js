@@ -1,7 +1,7 @@
- const express = require('express');
- const router = express.Router();
- const adminController = require("./controllers/admin.controller");
- const studentController = require("./controllers/user.controller");
+const express = require('express');
+const router = express.Router();
+const adminController = require("./controllers/admin.controller");
+const studentController = require("./controllers/user.controller");
 
 // 토큰생성 완료
  router.post('/in',(req,res,next)=>{
@@ -14,5 +14,5 @@
      }
  });
 
- module.exports = router;
+module.exports = router;
 

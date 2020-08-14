@@ -5,18 +5,22 @@ const Student = require('../schemas/student');
 const { verifyToken } = require("./middlewares/authorization");
 const { findWriter } = require("./middlewares/findWriter");
 const { adminConfirmation } = require('./middlewares/adminConfirmation');
-const {formatDateSend} = require('../js/formatDateSend');
+const { formatDateSend } = require('../js/formatDateSend');
+
 router.get('/list/:page', (req, res) => {
     var page = req.params.page;
-    Recruit.find({}, { date: false, contents: false }).sort({ "date": -1 }).skip((page - 1) * 10).limit(10)
-        .then((recruitList) => {
+    Recruit.find({}).count()
+        .then((count) => {
+            Recruit.find({}, { date: false, contents: false }).sort({ "date": -1 }).skip((page - 1) * 10).limit(10)
+                .then((recruitList) => {
 
-            res.status(200).json({ status: "success", recruitList: recruitList });
+                    res.status(200).json({ status: "success", recruitList: recruitList, count: count });
+                })
+                .catch((err) => {
+                    console.log(err);
+                    res.status(500).send(err);
+                });
         })
-        .catch((err) => {
-            console.log(err);
-            res.status(500).send(err);
-        });
 });
 
 router.get('/detail/:id', (req, res) => {

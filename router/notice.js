@@ -6,19 +6,26 @@ const format = require('../js/formatDate');
 const { verifyToken } = require("./middlewares/authorization");
 const { findWriter } = require("./middlewares/findWriter");
 const { adminConfirmation } = require('./middlewares/adminConfirmation');
-const {formatDateSend} = require('../js/formatDateSend');
+const { formatDateSend } = require('../js/formatDateSend');
 const fs = require('fs');
 
 router.get('/list/:page', (req, res) => {
     var page = req.params.page;
-    Notice.find({}, { contents: false, image: false }).sort({ "date": -1 }).skip((page - 1) * 10).limit(10)
-        .then((noticeList) => {
-            res.status(200).json({ status: "success", noticeList: noticeList });
+    Notice.find({}).count()
+        .then((count) => {
+            Notice.find({}, { contents: false, image: false }).sort({ "date": -1 }).skip((page - 1) * 10).limit(10)
+                .then((noticeList) => {
+                    res.status(200).json({ status: "success", noticeList: noticeList, count: count });
+                })
+                .catch((err) => {
+                    console.log(err);
+                    res.status(500).send({ status: "err" });
+                });
         })
         .catch((err) => {
             console.log(err);
-            res.status(500).send({ status: "err" });
-        });
+            res.status(500).json({ status: "error" });
+        })
 });
 
 
