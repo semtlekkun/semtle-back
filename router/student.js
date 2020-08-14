@@ -11,26 +11,18 @@ const createNick = require('./controllers/user.controller').createNick;
 // 전화번호, 이메일 등은 암호화 후 저장해야 함 (추가예정)
 // 에러 핸들러를 만들어야 함
 
-router.get('/list/:page',(req,res)=>{
-    const page = req.params.page;
-    Student.find({}).count()
-    .then((count)=>{
+router.get('/list',(req,res)=>{
+
         Student.find({},{_id:1,phoneNum:1,name:1})
-        .sort({ _id: -1 })
-        .skip((page - 1) * 10)
-        .limit(10)
         .then((students)=>{
-            res.status(200).json({ status:"success",students: students,count:count });
+            res.status(200).json({ status:"success",students: students});
         })
         .catch((err)=>{
             console.log(err);
             res.status(500).json({status:"error"});
         })
-    })
-    .catch((err)=>{
-        console.log(err);
-        res.status(500).json({status:"error"});
-    })
+   
+  
 });
 
 // 닉네임도 바뀐 이름에 맞게 수정해야함: 완료
