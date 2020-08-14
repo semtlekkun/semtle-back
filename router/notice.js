@@ -70,7 +70,7 @@ router.post('/input', verifyToken, findWriter, upload.single("img"), (req, res, 
     }, function (err) {
         if (err) {
             console.log(err)
-            res.status(500).send({ status: "err" });
+            res.status(500).send({ status: "error" });
         }
         else {
             res.status(200).send({ status: "success" });
@@ -105,7 +105,7 @@ router.delete('/delete', verifyToken, adminConfirmation, (req, res) => {
                 res.status(500).send({ status: "err" });
             }
             if (!item) {
-                return res.status(404).json({ status: "none" });
+                return res.status(400).json({ status: "none" });
             }
             res.status(200).json({ status: "success" });
         });
