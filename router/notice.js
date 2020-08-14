@@ -7,6 +7,7 @@ const { verifyToken } = require("./middlewares/authorization");
 const { findWriter } = require("./middlewares/findWriter");
 const { adminConfirmation } = require('./middlewares/adminConfirmation');
 const {formatDateSend} = require('../js/formatDateSend');
+const fs = require('fs');
 
 router.get('/list/:page', (req, res) => {
     var page = req.params.page;
@@ -16,7 +17,7 @@ router.get('/list/:page', (req, res) => {
         })
         .catch((err) => {
             console.log(err);
-            res.status(500).send(err);
+            res.status(500).send({ status: "err" });
         });
 });
 
@@ -28,7 +29,7 @@ router.get('/detail/:id', (req, res) => {
         })
         .catch((err) => {
             console.log(err);
-            res.status(500).send(err);
+            res.status(500).send({ status: "err" });
         });
 });
 
@@ -69,7 +70,7 @@ router.post('/input', verifyToken, findWriter, upload.single("img"), (req, res, 
     }, function (err) {
         if (err) {
             console.log(err)
-            res.status(500).send(err);
+            res.status(500).send({ status: "err" });
         }
         else {
             res.status(200).send({ status: "success" });
@@ -94,15 +95,21 @@ router.post('/input', verifyToken, findWriter, upload.single("img"), (req, res, 
 // });
 
 router.delete('/delete', verifyToken, adminConfirmation, (req, res) => {
-    Notice.remove({ _id: req.body._id })
-        .then((result) => {
-            if (result.deletedCount) res.status(200).json({ status: "success" });
-            else res.status(400).json({ status: "none" });
-        })
-        .catch((err) => {
-            console.log(err);
-            res.status(500).json({ status: "error" });
-        })
+
+    Notice.findOneAndRemove({ _id: req.body._id })
+        .exec(function (err, item) {
+            //console.log(item.image);
+            var filePath = './images/' + item.image;
+            fs.unlinkSync(filePath);
+            if (err) {
+                res.status(500).send({ status: "err" });
+            }
+            if (!item) {
+                return res.status(404).json({ status: "none" });
+            }
+            res.status(200).json({ status: "success" });
+        });
+
 });
 
 module.exports = router;
