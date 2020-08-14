@@ -7,8 +7,7 @@ const {adminConfirmation} =  require('./middlewares/adminConfirmation');
 // 마찬가지로 관리자라는 확인이 필요
 
 // 카운트 추가
-router.get('/list/:page',(req,res)=>{
-    const page = req.params.page;
+router.get('/list',(req,res)=>{
     Management.aggregate([
         {
             $lookup:{
@@ -29,9 +28,7 @@ router.get('/list/:page',(req,res)=>{
                 ],
                 as:"Info"
             }
-        },
-        {$skip:(page - 1) * 3},
-        {$limit:3}
+        }
     ])
     .then((management)=>{
         res.status(200).json({status:"success",management:management});
