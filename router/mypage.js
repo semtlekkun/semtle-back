@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const student = require('../schemas/student');
-const verifyToken = require('./middlewares/authorization');
+const {verifyToken} = require('./middlewares/authorization');
 
 router.get('/', verifyToken, (req, res) => {
     student.findOne({_id:res.locals.id},{pw:false})
