@@ -80,7 +80,7 @@ router.post("/input",verifyToken,findWriter,upload.array('projectImages'),(req,r
     console.log(req.body.students)
     console.log(typeof sl)
     console.log(sl)
-    Student.find({_id:{$in:req.body.students}}).count()
+    Student.find({_id:{$in:req.body.students.split(',')}}).count()
     .then((count)=>{
         if(count == sl.length) {
             const pf = new Portfolio({
