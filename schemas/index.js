@@ -5,10 +5,13 @@ module.exports = () => {
     const connect = () => {
         // 배포시 삭제
         mongoose.set('debug', true);
-        mongoose.connect(dbConfig.MONGO_URI, (err) => {
-            if (err) console.log("몽고디비 연결 에러", err);
-            else console.log("몽고디비 연결 성공");
-        });
+        mongoose.connect(dbConfig.MONGO_URI, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true
+
+        })
+            .then(() => console.log('몽고디비 연결 성공'))
+            .catch((e) => console.error(e));
     }
     connect();
 

@@ -1,34 +1,29 @@
 const mongoose = require('mongoose');
-const { Schema } = mongoose;
 
-const questionSchema = new Schema({
-    _id: {
-        type: Schema.Types.ObjectId,
-        index: true,
-        require: true,
-        auto: true
-    },
+const questionSchema = new mongoose.Schema({
     title: {
         type: String,
-        required: true
+        required: [true, 'title must be included'],
+        trim: true
     },
     contents: {
         type: String,
-        required: true
+        required: [true, 'content must be included']
     },
     image: {
-        type: String,
-        default: ""
+        type:String
     },
     writer: {
         type: String,
-        required: true
+        required: [true, 'writer must be included']
     },
     date: Date
 },
-{
-    versionKey:false
-});
+    {
+        versionKey: false
+
+    }
+);
 
 questionSchema.statics.create = function (payload) {
     const question = new this(payload);
@@ -40,7 +35,7 @@ questionSchema.statics.findAll = function () {
 }
 
 questionSchema.statics.findOneByQuestionId = function (_id) {
-    return this.findOne({ _id });
+    return (this.findOne().where('_id').equals(_id));
 }
 
 questionSchema.statics.updateByQuestionId = function (_id, payload) {
@@ -48,7 +43,7 @@ questionSchema.statics.updateByQuestionId = function (_id, payload) {
 }
 
 questionSchema.statics.deleteByQuestionId = function (_id) {
-    return this.remove({ _id });
+    return (this.deleteOne().where('_id').equals(_id));
 }
 
-module.exports = mongoose.model('Question', questionSchema,'question');
+module.exports = mongoose.model('Question', questionSchema, 'question');

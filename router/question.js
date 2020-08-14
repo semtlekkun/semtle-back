@@ -1,30 +1,30 @@
 const express = require('express');
 const router = express.Router();
 const question = require('../schemas/question');
+const answer = require('../schemas/answer');
 const multer = require("multer");
 const format = require('../js/formatDate');
 const {verifyToken} = require("./middlewares/authorization");
 const {adminConfirmation} =  require('./middlewares/adminConfirmation');
 const {findWriter} = require("./middlewares/findWriter"); 
+router.use(express.static("images"));
 
-
-var imageStorage = multer.diskStorage({
+const imageStorage = multer.diskStorage({
     destination: function (req, file, callback) {
-        callback(null, "./images/questionImages/");
+        callback(null, "./images");
     },
     filename: function (req, file, callback) {
         callback(null, format(new Date()) + '_' + file.originalname);
     }
 })
 
-var upload = multer({
+const upload = multer({
     storage: imageStorage
 });
 
 router.get('/', (req, res) => {
     question.findAll()
         .then((question) => {
-            if (!question.length) return res.status(404).send({ err: 'Question not found' });
             res.send(question);
         })
         .catch(err => res.status(500).send(err));
@@ -42,7 +42,7 @@ router.get('/:questionid', (req, res) => {
 router.post('/',verifyToken,findWriter,upload.single("image"), (req, res) => {
     req.body.writer = res.locals.writer
     req.body.image = req.file.filename != undefined? req.file.filename:null
-    req.body.date = new Date()
+    req.body.date = formatDateSend(new Date())
     question.create(req.body)
         .then(question => res.send(question))
         .catch(err => res.status(500).send(err));
@@ -59,9 +59,15 @@ router.post('/',verifyToken,findWriter,upload.single("image"), (req, res) => {
 // });
 
 router.delete('/:questionid',verifyToken,adminConfirmation, (req, res) => {
-    question.deleteByQuestionId(req.params.questionid)
+
+    answer.deleteByQuestionId(req.params.questionid)
+    .then(()=>{
+        question.deleteByQuestionId(req.params.questionid)
         .then(() => res.sendStatus(200))
         .catch(err => res.status(500).send(err));
+    })
+
+
 });
 //question 테스트 완료
 
