@@ -62,8 +62,7 @@ router.delete('/delete',verifyToken,adminConfirmation,(req,res)=>{
 });
 
 router.put('/update',verifyToken,adminConfirmation,studentCheck,(req,res)=>{
-    Management.update({_id:req.body._id},
-        { $set: {season:req.body.season,studentCode:req.body.studentCode ,contents:req.body.contents }})
+    Management.update({_id:req.body._id},req.body)
     .then((result)=>{
         console.log(result);
         if(result.n) res.status(200).json({status:"success"});
