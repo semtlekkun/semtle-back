@@ -14,7 +14,7 @@ router.use(express.static('images/students'));
 
 router.get('/list',(req,res)=>{
 
-        Student.find({},{_id:1,phoneNum:1,name:1})
+        Student.find({},{pw:0})
         .then((students)=>{
             res.status(200).json({ status:"success",students: students});
         })
