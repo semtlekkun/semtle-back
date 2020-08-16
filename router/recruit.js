@@ -37,10 +37,10 @@ router.get('/list/:page', (req, res) => {
 
 router.get('/:recruitId', (req, res) => {
     var _id = req.params.recruitId;
-
-    Recruit.findOne({ _id: _id })
-        .then((recruitList) => {
-            res.json({ status: "success", recruitList: recruitList });
+    Recruit.findOneAndUpdate({ _id: _id },{$inc:{view:1}})
+        .then((recruit) => {
+            recruit.view +=1
+            res.json({ status: "success", recruit: recruit });
 
         })
         .catch((err) => {

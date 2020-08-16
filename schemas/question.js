@@ -35,7 +35,7 @@ questionSchema.statics.findAll = function () {
 }
 
 questionSchema.statics.findOneByQuestionId = function (_id) {
-    return (this.findOne().where('_id').equals(_id));
+    return (this.findOneAndUpdate({_id:_id},{$inc:{view:1}}));
 }
 
 questionSchema.statics.updateByQuestionId = function (_id, payload) {

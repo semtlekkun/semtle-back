@@ -48,8 +48,9 @@ router.get('/list/:page', (req, res) => {
 });
 
 router.get('/:noticeId', (req, res) => {
-    Notice.findOne({ _id: req.params.noticeId })
+    Notice.findOneAndUpdate({ _id: req.params.noticeId },{$inc:{view:1}})
         .then((notice) => {
+            notice.view += 1;
             res.json({ status: "success", notice: notice});
         })
         .catch((err) => {
@@ -78,6 +79,7 @@ router.post('/', verifyToken, adminConfirmation, findWriter, imageUploader("imag
 
 });
 
+//이미지 삭제 필요
 router.delete('/:noticeId', verifyToken, adminConfirmation, (req, res) => {
 
     // Notice.findOneAndRemove({ _id: req.params.noticeId })

@@ -45,7 +45,8 @@ router.get('/list/:page', (req, res) => {
 router.get('/:questionid', (req, res) => {
     question.findOneByQuestionId(req.params.questionid)
         .then((question) => {
-            if (!question) return res.status(404).json({ err: 'Question not found' });
+            if (!question) res.status(404).json({ err: 'Question not found' });
+            question.view +=1
             res.send(question);
         })
         .catch(err => {
