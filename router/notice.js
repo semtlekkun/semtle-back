@@ -80,23 +80,30 @@ router.post('/', verifyToken, adminConfirmation, findWriter, imageUploader("imag
 
 router.delete('/:noticeId', verifyToken, adminConfirmation, (req, res) => {
 
-    Notice.findOneAndRemove({ _id: req.params.noticeId })
-        .exec(function (err, item) {
-            var filePath = './images/notices/' + item.image;
+    // Notice.findOneAndRemove({ _id: req.params.noticeId })
+    //     .exec(function (err, item) {
+    //         var filePath = './images/notices/' + item.image;
         
-            fs.unlinkSync(filePath);
-            if (err) {
-                res.status(500).send({ status: "err" });
-            }
-            if (!item) {
-                res.status(400).json({ status: "none" });
-            }
-            res.json({ status: "success" });
-        })
-        .catch(err=>{
-            console.log(err);
-            res.status(500).json({status:"error"});
-        })
+    //         fs.unlinkSync(filePath);
+    //         if (err) {
+    //             res.status(500).send({ status: "err" });
+    //         }
+    //         if (!item) {
+    //             res.status(400).json({ status: "none" });
+    //         }
+    //         res.json({ status: "success" });
+    //     })
+    //     .catch(err=>{
+    //         console.log(err);
+    //         res.status(500).json({status:"error"});
+    //     })
+    Notice.remove({_id:req.params.noticeId})
+    .then(()=>{
+        res.json({status:"success"});
+    })
+    .catch(err=>{
+        res.status(500).json({status:"error"});
+    })
 
 });
 
