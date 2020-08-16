@@ -8,7 +8,7 @@ const answerSchema = new mongoose.Schema({
         require: true,
         trim: true
     },
-    content: {
+    contents: {
         type: String,
         required: [true, 'content must be included']
     },

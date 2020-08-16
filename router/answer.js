@@ -12,21 +12,27 @@ router.get('/:questionid', (req, res) => {
         .then((answer) => {
             res.send({answer:answer});
         })
-        .catch(err => {res.status(500).send(err)});
+        .catch(err => {
+            console.log(err);
+            res.status(500).send(err)});
 });
 
-router.post('/:questionid',verifyToken,findWriter, (req, res) => {
+router.post('/',verifyToken,findWriter, (req, res) => {
     req.body.writer = res.locals.writer
     req.body.date = formatDateSend(new Date())
     answer.create(req.body)
-        .then(answer => res.send(answer))
-        .catch(err => res.status(500).send(err));
+        .then(() => res.json({status:"success"}))
+        .catch(err => {
+            console.log(err);
+            res.status(500).send(err)});
 });
 
 router.delete('/:answerid',verifyToken,adminConfirmation, (req, res) => {
     answer.deleteByAnswerId(req.params.answerid)
         .then(() => res.sendStatus(200))
-        .catch(err => res.status(500).send(err));
+        .catch(err => {
+            console.log(err);
+            res.status(500).send(err)});
 });
 
 
