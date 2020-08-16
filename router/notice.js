@@ -48,7 +48,7 @@ router.get('/list/:page', (req, res) => {
 });
 
 router.get('/:noticeId', (req, res) => {
-    Notice.findOneAndUpdate({ _id: req.params.noticeId }, { _id: false })
+    Notice.findOneAndUpdate({ _id: req.params.noticeId })
         .then((notice) => {
             res.json({ status: "success", notice: notice});
         })
