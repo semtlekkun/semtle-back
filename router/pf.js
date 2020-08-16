@@ -13,7 +13,7 @@ const imageCleaner = require('./controllers/image.controller').imageClean;
 router.use(express.static('images/portfolios'));
 
 router.get('/list', (req, res) => {
-    Portfolio.find({}, { _id: true, projectTitle: true, writer: true, date: true, projectTeam: true, view: true }).sort({ _id: -1 })
+    Portfolio.find({}, { _id: true, projectTitle: true, writer: true, date: true, projectTeamName: true, view: true }).sort({ _id: -1 })
         .then((portfolioList) => {
             res.json({ status: "success", count: portfolioList.length, portfolioList: portfolioList });
         })
@@ -28,7 +28,7 @@ router.get("/list/:page", (req, res) => {
     const page = req.params.page;
     Portfolio.find({}).count()
         .then((count) => {
-            Portfolio.find({}, { _id: true, projectTitle: true, date: true, projectTeam: true, projectImages:true })
+            Portfolio.find({}, { _id: true, projectTitle: true,contents:true, date: true, projectTeamName: true, projectImages:true })
                 .sort({ _id: -1 })
                 .skip((page - 1) * 10)
                 .limit(10)
@@ -47,11 +47,11 @@ router.get("/list/:page", (req, res) => {
 });
 
 router.get('/:portfolioId', (req, res) => {
-    const _id = req.params.portfolioId;
-    Portfolio.update({ _id: mongoose.Types.ObjectId(_id) }, { $inc: { view: 1 } })
+    const _id = mongoose.Types.ObjectId(req.params.portfolioId);
+    Portfolio.update({ _id: _id }, { $inc: { view: 1 } })
         .then(() => {
             Portfolio.aggregate([
-                { $match: { _id: mongoose.Types.ObjectId(_id) } },
+                { $match: { _id:_id } },
                 {
                     $lookup:
                     {
