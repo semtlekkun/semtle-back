@@ -68,12 +68,16 @@ router.delete('/:questionid', verifyToken, adminConfirmation, (req, res) => {
         .then(() => {
             question.deleteByQuestionId(req.params.questionid)
                 .then((question) => {
-                    let result = imageCleaner("images/questions",question.image);
-                    console.log(result);
-                    if(result == -1) res.json({status:"succes but image has not been erased"});
-                    else res.json({ status: "success" });
+                    imageCleaner("images/questions",question.image);
+                    res.json({ status: "success" });
                 })
-                .catch(err => res.status(500).send(err));
+                .catch(err => {
+                    console.log(err);
+                    res.status(500).json({status:"error"})});
+        })
+        .catch(err=>{
+            console.log(err);
+            res.status(500).json({status:"error"});
         })
 });
 

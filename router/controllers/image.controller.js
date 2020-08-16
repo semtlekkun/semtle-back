@@ -21,13 +21,12 @@ module.exports.imageUpload = function (path) {
 }
 
 module.exports.imageClean = function (folder, file) {
-    if(file == null) return 0
+    if(file == null) return 0;
     const filePath = path.join(folder, file);
     fs.access(filePath, fs.constants.F_OK, (err) => {
         if (err) {
-            console.log("?")
             console.log(err);
-            return -1;
+            return -1
         }
         fs.unlink(filePath, (err) => {
             if(err) return -1
@@ -35,3 +34,5 @@ module.exports.imageClean = function (folder, file) {
         });
     })
 }
+
+// module.exports.images

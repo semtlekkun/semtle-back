@@ -96,9 +96,11 @@ router.delete('/:noticeId', verifyToken, adminConfirmation, (req, res) => {
     //     })
     Notice.findOneAndRemove({ _id: req.params.noticeId })
         .then((notice) => {
-            let result = imageCleaner("images/notices",notice.image);
-            if(result == -1) res.json({status:"succes but image has not been erased"});
-            else res.json({ status: "success" });
+            // let result = imageCleaner("images/notices",notice.image);
+            // if(result == -1) res.json({status:"succes but image has not been erased"});
+            // else res.json({ status: "success" });
+            imageCleaner("images/notices",notice.image);
+            res.json({ status: "success" });
         })
         .catch(err => {
             console.log(err);

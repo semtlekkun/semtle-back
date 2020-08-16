@@ -28,12 +28,12 @@ router.get("/list/:page", (req, res) => {
     const page = req.params.page;
     Portfolio.find({}).count()
         .then((count) => {
-            Portfolio.find({}, { _id: true, projectTitle: true, writer: true, date: true, projectTeam: true, view: true })
+            Portfolio.find({}, { _id: true, projectTitle: true, date: true, projectTeam: true, projectImages:true })
                 .sort({ _id: -1 })
                 .skip((page - 1) * 10)
                 .limit(10)
-                .then((portfolio) => {
-                    res.json({ status: "success", count: count, projectList: portfolio });
+                .then((portfolios) => {
+                    res.json({ status: "success", count: count, projectList: portfolios });
                 })
                 .catch((err) => {
                     console.log(err);
