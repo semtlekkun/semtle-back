@@ -34,5 +34,4 @@ router.delete('/:answerid',verifyToken,adminConfirmation, (req, res) => {
             res.status(500).send(err)});
 });
 
-
 module.exports = router;
