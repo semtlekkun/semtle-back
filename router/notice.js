@@ -10,13 +10,31 @@ const fs = require('fs');
 
 router.use(express.static('images/notices'));
 
+router.get('/list', (req, res) => {
+    Notice.find({}).count()
+        .then((count) => {
+            Notice.find({}, { contents: false, image: false })
+                .then((noticeList) => {
+                    res.json({ status: "success", count: count,noticeList: noticeList});
+                })
+                .catch(err=>{
+                    console.log(err);
+                    res.status(500).json({status:"error"})
+                })
+        })
+        .catch(err=>{
+            console.log(err);
+            res.status(500).json({status:"error"});
+        })
+})
+
 router.get('/list/:page', (req, res) => {
     var page = req.params.page;
     Notice.find({}).count()
         .then((count) => {
             Notice.find({}, { contents: false, image: false }).sort({ "date": -1 }).skip((page - 1) * 10).limit(10)
                 .then((noticeList) => {
-                    res.status(200).json({ status: "success", noticeList: noticeList, count: count });
+                    res.json({ status: "success", count: count, noticeList: noticeList});
                 })
                 .catch((err) => {
                     console.log(err);
@@ -31,31 +49,31 @@ router.get('/list/:page', (req, res) => {
 
 router.get('/detail/:id', (req, res) => {
     Notice.findOne({ _id: req.params.id }, { _id: false })
-        .then((noticeList) => {
-            res.status(200).json({ status: "success", noticeList: noticeList });
+        .then((notice) => {
+            res.json({ status: "success", notice: notice});
         })
         .catch((err) => {
             console.log(err);
-            res.status(500).send({ status: "err" });
+            res.status(500).json({ status: "err" });
         });
 });
 
-router.post('/input', verifyToken,adminConfirmation, findWriter, imageUploader("images/notices").single("img"), (req, res, next) => {
+router.post('/input', verifyToken, adminConfirmation, findWriter, imageUploader("images/notices").single("img"), (req, res, next) => {
 
     Notice.create({
         writer: res.locals.writer,
         date: formatDateSend(new Date()),
-        image: req.file != undefined? req.file.filename:null,
+        image: req.file != undefined ? req.file.filename : null,
         title: req.body.title,
         contents: req.body.contents,
         view: 0
     }, function (err) {
         if (err) {
             console.log(err)
-            res.status(500).send({ status: "error" });
+            res.status(500).json({ status: "error" });
         }
         else {
-            res.status(200).send({ status: "success" });
+            res.json({ status: "success" });
         }
     });
 
@@ -73,7 +91,7 @@ router.delete('/delete', verifyToken, adminConfirmation, (req, res) => {
             if (!item) {
                 return res.status(400).json({ status: "none" });
             }
-            res.status(200).json({ status: "success" });
+            res.json({ status: "success" });
         });
 
 });

@@ -12,22 +12,40 @@ const imageUploader = require('./controllers/image.controller').imageUpload;
 
 router.use(express.static("images/questions"));
 
+router.get('/list', (req, res) => {
+    question.find({}).count()
+        .then((count) => {
+            question.find({},{image: false} )
+                .then((questionList) => {
+                    res.json({ status: "success", count: count,questionList: questionList});
+                })
+                .catch(err=>{
+                    console.log(err);
+                    res.status(500).json({status:"error"})
+                })
+        })
+        .catch(err=>{
+            console.log(err);
+            res.status(500).json({status:"error"});
+        })
+})
+
 router.get('/list/:page', (req, res) => {
     var page = req.params.page
     question.find({}).count()
     .then((count)=>{
         question.find({},{image: false }).sort({ "date": -1 }).skip((page - 1) * 10).limit(10)
         .then((question) => {
-            res.send({status:"success",question:question,count:count});
+            res.json({status:"success",count:count,question:question});
         })
-        .catch(err => res.status(500).send(err));
+        .catch(err => res.status(500).json({status:"error"}));
     })
 });
 
 router.get('/:questionid', (req, res) => {
     question.findOneByQuestionId(req.params.questionid)
         .then((question) => {
-            if (!question) return res.status(404).send({ err: 'Question not found' });
+            if (!question) return res.status(404).json({ err: 'Question not found' });
             res.send(question);
         })
         .catch(err => res.status(500).send(err));

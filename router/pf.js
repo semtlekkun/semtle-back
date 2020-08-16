@@ -11,6 +11,24 @@ const imageUploader = require('./controllers/image.controller').imageUpload;
 
 router.use(express.static('images/portfolios'));
 
+router.get('/list', (req, res) => {
+    Portfolio.find({}).count()
+        .then((count) => {
+            Portfolio.find({}, { _id: true, projectTitle: true, writer: true, date: true, projectTeam: true, view: true })
+                .then((portfolioList) => {
+                    res.json({ status: "success",count: count, portfolioList: portfolioList });
+                })
+                .catch(err=>{
+                    console.log(err);
+                    res.status(500).json({status:"error"})
+                })
+        })
+        .catch(err=>{
+            console.log(err);
+            res.status(500).json({status:"error"});
+        })
+})
+
 router.get("/list/:page", (req, res) => {
     const page = req.params.page;
     Portfolio.find({}).count()
@@ -20,7 +38,7 @@ router.get("/list/:page", (req, res) => {
         .skip((page - 1) * 10)
         .limit(10)
         .then((portfolio) => {
-            res.status(200).json({ status:"success",projectList: portfolio,count:count });
+            res.json({ status:"success",count:count ,projectList: portfolio});
         })
         .catch((err) => {
             console.log(err);
@@ -49,7 +67,7 @@ router.get('/detail/:id', (req, res) => {
      { $project: { "studentInfo.pw": 0,"studentInfo.name":0,"studentInfo.phoneNum":0 } }
     ])
     .then((pf)=>{
-        res.status(200).json({portfolio:pf});
+        res.json({portfolio:pf});
     })
     .catch((err)=>{
         console.log(err);
@@ -84,7 +102,7 @@ router.post("/input",verifyToken,findWriter,imageUploader('images/portfolios').a
     
                 pf.save()
                 .then(()=>{
-                    res.status(200).json({status:"success"});
+                    res.json({status:"success"});
                 })
                 .catch((err)=>{
                     console.log(err);
@@ -104,7 +122,7 @@ router.post("/input",verifyToken,findWriter,imageUploader('images/portfolios').a
 router.delete("/delete",verifyToken,adminConfirmation,(req,res)=>{
     Portfolio.remove({_id:req.body._id})
     .then((result)=>{
-        if(result.deletedCount) res.status(200).json({status:"success"})
+        if(result.deletedCount) res.json({status:"success"})
         else res.status(400).json({status:"none"});
     })
     .catch((err)=>{

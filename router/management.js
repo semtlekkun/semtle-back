@@ -29,7 +29,11 @@ router.get('/list',(req,res)=>{
         }
     ])
     .then((management)=>{
-        res.status(200).json({status:"success",management:management});
+        res.json({status:"success",management:management});
+    })
+    .catch(err=>{
+        console.log(err);
+        res.status(500).json({status:"error"});
     })
 });
 
@@ -37,7 +41,7 @@ router.post('/input',verifyToken,adminConfirmation,studentCheck,(req,res)=>{
     const management = new Management(req.body);
     management.save()
     .then(()=>{
-        res.status(200).json({status:"success"});
+        res.json({status:"success"});
     })
     .catch((err)=>{
         console.log(err);
@@ -48,7 +52,7 @@ router.post('/input',verifyToken,adminConfirmation,studentCheck,(req,res)=>{
 router.delete('/delete',verifyToken,adminConfirmation,(req,res)=>{
     Management.remove({_id:req.body._id})
     .then((result)=>{
-        if(result.deletedCount) res.status(200).json({status:"success"});
+        if(result.deletedCount) res.json({status:"success"});
         else res.status(400).json({status:"none"});
     })
     .catch((err)=>{
@@ -61,7 +65,7 @@ router.put('/update',verifyToken,adminConfirmation,studentCheck,(req,res)=>{
     Management.update({_id:req.body._id},req.body)
     .then((result)=>{
         console.log(result);
-        if(result.n) res.status(200).json({status:"success"});
+        if(result.n) res.json({status:"success"});
         else res.status(400).json({status:"noMatched"});
     })
     .catch((err)=>{

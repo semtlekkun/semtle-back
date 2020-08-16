@@ -14,7 +14,7 @@ router.get('/list',verifyToken, adminConfirmation, (req,res)=>{
 
         Student.find({},{pw:0})
         .then((students)=>{
-            res.status(200).json({ status:"success",students: students});
+            res.json({ status:"success",students: students});
         })
         .catch((err)=>{
             console.log(err);
@@ -28,7 +28,7 @@ router.put('/update',verifyToken, adminConfirmation, createNick,(req,res)=>{
         { $set: {name:req.body.name, nick:res.locals.createdNick ,phoneNum:req.body.phoneNum }})
     .then((result)=>{
         console.log(result);
-        if(result.n) res.status(200).json({status:"success"});
+        if(result.n) res.json({status:"success"});
         else res.status(400).json({status:"noMatched"});
     })
     .catch((err)=>{
@@ -48,7 +48,7 @@ router.post('/input',verifyToken, adminConfirmation, createNick,(req,res)=>{
     });
     student.save()
     .then(()=>{
-        res.status(200).json({status:"success"});
+        res.json({status:"success"});
     })
     .catch((err)=>{
         console.log(err);
@@ -60,7 +60,7 @@ router.post('/input',verifyToken, adminConfirmation, createNick,(req,res)=>{
 router.delete('/delete',verifyToken, adminConfirmation, (req,res)=>{
     Student.remove({_id:{$in:req.body.ids}})
     .then((result)=>{
-        if(result.deletedCount) res.status(200).json({status:"success"})
+        if(result.deletedCount) res.json({status:"success"})
         else res.status(400).json({status:"none"});
     })
     .catch(err=>{

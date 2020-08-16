@@ -6,13 +6,27 @@ const { findWriter } = require("./middlewares/findWriter");
 const { adminConfirmation } = require('./middlewares/adminConfirmation');
 const { formatDateSend } = require('../js/formatDateSend');
 
+router.get('/list', (req, res) => {
+    Recruit.find({}).count()
+        .then((count) => {
+            Recruit.find({}, { date: false, contents: false })
+                .then((recruitList) => {
+                    res.json({ status: "success", count: count ,recruitList: recruitList });
+                })
+                .catch((err) => {
+                    console.log(err);
+                    res.status(500).send(err);
+                });
+        })
+});
+
 router.get('/list/:page', (req, res) => {
     var page = req.params.page;
     Recruit.find({}).count()
         .then((count) => {
             Recruit.find({}, { date: false, contents: false }).sort({ "date": -1 }).skip((page - 1) * 10).limit(10)
                 .then((recruitList) => {
-                    res.status(200).json({ status: "success", recruitList: recruitList, count: count });
+                    res.json({ status: "success", count: count, recruitList: recruitList});
                 })
                 .catch((err) => {
                     console.log(err);
@@ -26,7 +40,7 @@ router.get('/detail/:id', (req, res) => {
 
     Recruit.findOne({ _id: _id })
         .then((recruitList) => {
-            res.status(200).json({ status: "success", recruitList: recruitList });
+            res.json({ status: "success", recruitList: recruitList });
 
         })
         .catch((err) => {
@@ -50,10 +64,10 @@ router.post('/input', verifyToken, findWriter, (req, res) => {
         contents: contents, view: 0
     }, function (err) {
         if (err) {
-            return handleError(err);
+            res.status(500).json({status:"error"});
         }
         else {
-            res.status(200).send({ status: "success" });
+            res.json({ status: "success" });
         }
     });
 });
@@ -61,7 +75,7 @@ router.post('/input', verifyToken, findWriter, (req, res) => {
 router.delete('/delete', verifyToken, adminConfirmation, (req, res) => {
     Recruit.remove({ _id: req.body._id })
         .then((result) => {
-            if (result.deletedCount) res.status(200).json({ status: "success" });
+            if (result.deletedCount) res.json({ status: "success" });
             else res.status(400).json({ status: "none" });
         })
         .catch((err) => {
