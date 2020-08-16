@@ -8,7 +8,7 @@ const { findWriter } = require("./middlewares/findWriter");
 const { adminConfirmation } = require('./middlewares/adminConfirmation');
 const { formatDateSend } = require('../js/formatDateSend');
 const imageUploader = require('./controllers/image.controller').imageUpload;
-const imageCleaner = require('./controllers/image.controller').imageClean;
+const imagesCleaner = require('./controllers/image.controller').imagesClean;
 
 router.use(express.static('images/portfolios'));
 
@@ -21,7 +21,6 @@ router.get('/list', (req, res) => {
             console.log(err);
             res.status(500).json({ status: "error" })
         })
-
 })
 
 router.get("/list/:page", (req, res) => {
@@ -127,6 +126,7 @@ router.delete("/:portfolioId", verifyToken, adminConfirmation, (req, res) => {
     Portfolio.findOneAndRemove({ _id: req.params.portfolioId })
         .then((portfolio) => {
             if (portfolio) {
+                imagesCleaner("images/portfolios",portfolio.projectImages);
                 res.json({ status: "success" });
             }
             else res.status(400).json({ status: "none" });
