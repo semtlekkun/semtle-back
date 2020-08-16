@@ -68,15 +68,12 @@ router.post('/',verifyToken,findWriter,imageUploader('images/questions').single(
 });
 
 router.delete('/:questionid',verifyToken,adminConfirmation, (req, res) => {
-
     answer.deleteByQuestionId(req.params.questionid)
     .then(()=>{
         question.deleteByQuestionId(req.params.questionid)
         .then(() => res.json({status:"success"}))
         .catch(err => res.status(500).send(err));
     })
-
-
 });
 
 module.exports = router;
