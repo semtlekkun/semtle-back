@@ -15,7 +15,7 @@ router.use(express.static("images/questions"));
 router.get('/list', (req, res) => {
     question.find({}).count()
         .then((count) => {
-            question.find({},{image: false} )
+            question.find({},{image: false} ).sort({_id:-1})
                 .then((questionList) => {
                     res.json({ status: "success", count: count,questionList: questionList});
                 })

@@ -9,7 +9,7 @@ const { formatDateSend } = require('../js/formatDateSend');
 router.get('/list', (req, res) => {
     Recruit.find({}).count()
         .then((count) => {
-            Recruit.find({}, { date: false, contents: false })
+            Recruit.find({}, { date: false, contents: false }).sort({_id:-1})
                 .then((recruitList) => {
                     res.json({ status: "success", count: count ,recruitList: recruitList });
                 })

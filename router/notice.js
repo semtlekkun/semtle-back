@@ -13,7 +13,7 @@ router.use(express.static('images/notices'));
 router.get('/list', (req, res) => {
     Notice.find({}).count()
         .then((count) => {
-            Notice.find({}, { contents: false, image: false })
+            Notice.find({}, { contents: false, image: false }).sort({_id:-1})
                 .then((noticeList) => {
                     res.json({ status: "success", count: count,noticeList: noticeList});
                 })
