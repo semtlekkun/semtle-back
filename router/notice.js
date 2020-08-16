@@ -46,7 +46,6 @@ var imageStorage = multer.diskStorage({
         callback(null, "./images");
     },
     filename: function (req, file, callback) {
-        //파일명 설정
         callback(null, format(new Date()) + '_' + file.originalname);
     }
 });

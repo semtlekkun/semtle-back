@@ -13,7 +13,6 @@ router.get('/list/:page', (req, res) => {
         .then((count) => {
             Recruit.find({}, { date: false, contents: false }).sort({ "date": -1 }).skip((page - 1) * 10).limit(10)
                 .then((recruitList) => {
-
                     res.status(200).json({ status: "success", recruitList: recruitList, count: count });
                 })
                 .catch((err) => {

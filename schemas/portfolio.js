@@ -9,7 +9,6 @@ const portfolioSchema = new Schema({
     students:{
         type:Array,
         required:true,
-        ref:"Student"
     },
     contents:String,
     link:String,

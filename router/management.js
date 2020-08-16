@@ -4,9 +4,7 @@ const Management = require('../schemas/management');
 const studentCheck = require('./controllers/user.controller').checkStudent;
 const {verifyToken} = require("./middlewares/authorization");
 const {adminConfirmation} =  require('./middlewares/adminConfirmation');
-// 마찬가지로 관리자라는 확인이 필요
 
-// 카운트 추가
 router.get('/list',(req,res)=>{
     Management.aggregate([
         {
@@ -48,7 +46,6 @@ router.post('/input',verifyToken,adminConfirmation,studentCheck,(req,res)=>{
     });
 })
 
-// 관리자 확인 필요함: 완료
 router.delete('/delete',verifyToken,adminConfirmation,(req,res)=>{
     Management.remove({_id:req.body._id})
     .then((result)=>{

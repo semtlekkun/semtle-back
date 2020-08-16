@@ -32,7 +32,6 @@ router.get("/list/:page", (req, res) => {
         .skip((page - 1) * 10)
         .limit(10)
         .then((portfolio) => {
-            // console.log(portfolio);
             res.status(200).json({ status:"success",projectList: portfolio,count:count });
         })
         .catch((err) => {
@@ -73,7 +72,6 @@ router.get('/detail/:id', (req, res) => {
 // 분리하고 싶은데 .. 
 router.post("/input",verifyToken,findWriter,upload.array('projectImages'),(req,res)=>{
 
-    // res.locals.writer = "testWriter";
     let sl = req.body.students.split(',');
     Student.find({_id:{$in:sl}}).count()
     .then((count)=>{
@@ -115,7 +113,6 @@ router.post("/input",verifyToken,findWriter,upload.array('projectImages'),(req,r
     });
 })
 
-// 관리자 확인 후
 router.delete("/delete",verifyToken,adminConfirmation,(req,res)=>{
     Portfolio.remove({_id:req.body._id})
     .then((result)=>{

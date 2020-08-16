@@ -65,15 +65,17 @@ module.exports.checkStudentList = function(req,res,next){
 }
 
 // 중복방지 필요
-module.exports.createNick = function(studentCode,name)
+module.exports.createNick = async function(studentCode,name)
 {
-    return studentCode.toString().substring(2,4)+name
-    // let createdNick = studentCode.toString().substring(2,4)+name;
-    // Student.find({nick:{$regex:createdNick}}).count()
-    // .then((c)=>{
-    //     console.log(createdNick+(c+1))
-    //     if(c !=0)
-    //         return createdNick+(c+1)
-    //     return createdNick
-    // })
+    // return studentCode.substring(2,4)+name
+    let createdNick = studentCode.substring(2,4)+name;
+    await Student.find({nick:{$regex:createdNick}}).count()
+    .then((c)=>{
+        console.log("합니다!!!!");
+        console.log(c);
+        console.log(createdNick)
+
+        if(c > 0) return createdNick+(c+1)
+        else return createdNick
+    })
 }

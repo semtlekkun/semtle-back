@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const noticeSchema = new Schema({
-    //_id: Schema.Types.ObjectId,
     title: {
         type: String,
         required: true
@@ -23,7 +22,6 @@ const noticeSchema = new Schema({
         type: String,
         required: true
     },
-    //date: Number
     date: String
 }, { versionKey: false });
 

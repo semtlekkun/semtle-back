@@ -74,6 +74,5 @@ router.delete('/:questionid',verifyToken,adminConfirmation, (req, res) => {
 
 
 });
-//question 테스트 완료
 
 module.exports = router;

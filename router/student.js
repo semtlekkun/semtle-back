@@ -49,20 +49,26 @@ router.post('/input',(req,res)=>{
         phoneNum:req.body.phoneNum,
         image:"default.jpg"
     });
+    
+    console.log(createNick(req.body.studentCode,req.body.name));
+
     student.save()
     .then(()=>{
         res.status(200).json({status:"success"});
     })
     .catch((err)=>{
         console.log(err);
-        if(err.keyValue._id) res.status(400).json({status:"duplicate"});
-        else res.status(500).json({status:"error"});
+        // if(err.keyValue._id != null) res.status(400).json({status:"duplicate"});
+        // else res.status(500).json({status:"error"});
     });
 })
 
 // 관리자 확인이 필요
 router.delete('/delete',(req,res)=>{
-    Student.remove({_id:req.body.studentCode})
+
+    // Student.remove({_id:req.body.studentCode})
+    console.log(req.body.ids);
+    Student.remove({_id:{$in:req.body.ids}})
     .then((result)=>{
         if(result.deletedCount) res.status(200).json({status:"success"})
         else res.status(400).json({status:"none"});
