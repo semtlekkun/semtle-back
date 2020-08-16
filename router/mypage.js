@@ -5,14 +5,7 @@ const { verifyToken } = require('./middlewares/authorization');
 const {compare} = require('./middlewares/compare');
 const imageUploader = require('./controllers/image.controller').imageUpload;
 
-router.use(express.static('images/students'));
 
-router.put('/update', (req, res) => {
-    Student.update({ _id: "20161184" }, { $set: { _id: "20161184" } })
-        .then((student) => {
-            console.log(student);
-        })
-})
 
 router.put('/picture/update', verifyToken, imageUploader("images/students").single("img"), (req, res) => {
 

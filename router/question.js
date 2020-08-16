@@ -12,19 +12,6 @@ const imageUploader = require('./controllers/image.controller').imageUpload;
 
 router.use(express.static("images/questions"));
 
-const imageStorage = multer.diskStorage({
-    destination: function (req, file, callback) {
-        callback(null, "./images");
-    },
-    filename: function (req, file, callback) {
-        callback(null, format(new Date()) + '_' + file.originalname);
-    }
-})
-
-const upload = multer({
-    storage: imageStorage
-});
-
 router.get('/list/:page', (req, res) => {
     var page = req.params.page
     question.find({}).count()

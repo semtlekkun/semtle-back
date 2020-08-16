@@ -5,7 +5,6 @@ const cors = require('cors');
 const app = express();
 const port = process.env.PORT || 80
 
-
 const connect = require('./schemas');
 connect();
 
