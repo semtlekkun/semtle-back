@@ -82,7 +82,7 @@ router.delete('/delete', verifyToken, adminConfirmation, (req, res) => {
 
     Notice.findOneAndRemove({ _id: req.body._id })
         .exec(function (err, item) {
-            var filePath = './images/' + item.image;
+            var filePath = './images/notices' + item.image;
             fs.unlinkSync(filePath);
             if (err) {
                 res.status(500).send({ status: "err" });
