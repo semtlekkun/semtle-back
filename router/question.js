@@ -38,7 +38,7 @@ router.post('/',verifyToken,findWriter,imageUploader('images/questions').single(
     req.body.image = req.file.filename != undefined? req.file.filename:null
     req.body.date = formatDateSend(new Date())
     question.create(req.body)
-        .then(question => res.send(question))
+        .then(() => res.json({status:"success"}))
         .catch(err => res.status(500).send(err));
 });
 
@@ -57,7 +57,7 @@ router.delete('/:questionid',verifyToken,adminConfirmation, (req, res) => {
     answer.deleteByQuestionId(req.params.questionid)
     .then(()=>{
         question.deleteByQuestionId(req.params.questionid)
-        .then(() => res.sendStatus(200))
+        .then(() => res.json({status:"success"}))
         .catch(err => res.status(500).send(err));
     })
 
