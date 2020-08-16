@@ -83,15 +83,20 @@ router.delete('/:noticeId', verifyToken, adminConfirmation, (req, res) => {
     Notice.findOneAndRemove({ _id: req.params.noticeId })
         .exec(function (err, item) {
             var filePath = './images/notices/' + item.image;
+        
             fs.unlinkSync(filePath);
             if (err) {
                 res.status(500).send({ status: "err" });
             }
             if (!item) {
-                return res.status(400).json({ status: "none" });
+                res.status(400).json({ status: "none" });
             }
             res.json({ status: "success" });
-        });
+        })
+        .catch(err=>{
+            console.log(err);
+            res.status(500).json({status:"error"});
+        })
 
 });
 
