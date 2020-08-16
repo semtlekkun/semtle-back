@@ -12,7 +12,7 @@ const noticeSchema = new Schema({
     },
     image: {
         type: String,
-        default: ""
+        default: null
     },
     view: {
         type: Number,

@@ -56,7 +56,7 @@ router.get('/:questionid', (req, res) => {
 
 router.post('/',verifyToken,findWriter,imageUploader('images/questions').single("image"), (req, res) => {
     req.body.writer = res.locals.writer
-    req.body.image = req.file.filename != undefined? req.file.filename:null
+    req.body.image = req.file != undefined? req.file.filename:null
     req.body.date = formatDateSend(new Date())
     question.create(req.body)
         .then(() => res.json({status:"success"}))
