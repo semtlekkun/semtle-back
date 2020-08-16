@@ -1,13 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const Notice = require('../schemas/notice');
-const multer = require('multer');
-const format = require('../js/formatDate');
 const { verifyToken } = require("./middlewares/authorization");
 const { findWriter } = require("./middlewares/findWriter");
 const { adminConfirmation } = require('./middlewares/adminConfirmation');
 const { formatDateSend } = require('../js/formatDateSend');
+const imageUploader = require('./controllers/image.controller').imageUpload;
 const fs = require('fs');
+
+router.use(express.static('images/notices'));
 
 router.get('/list/:page', (req, res) => {
     var page = req.params.page;
@@ -40,38 +41,14 @@ router.get('/detail/:id', (req, res) => {
         });
 });
 
-
-var imageStorage = multer.diskStorage({
-    destination: function (req, file, callback) {
-        callback(null, "./images");
-    },
-    filename: function (req, file, callback) {
-        callback(null, format(new Date()) + '_' + file.originalname);
-    }
-});
-
-var upload = multer({
-    storage: imageStorage
-});
-
-
-router.post('/input', verifyToken, findWriter, upload.single("img"), (req, res, next) => {
-
-    var writer = res.locals.writer;
-    var title = req.body.title;
-    var contents = req.body.contents;
-    var image;
-    if (req.file != undefined)
-        image = req.file.filename
-    else image = null;
-    var date = formatDateSend(new Date())
+router.post('/input', verifyToken,adminConfirmation, findWriter, imageUploader("images/notices").single("img"), (req, res, next) => {
 
     Notice.create({
-        writer: writer,
-        date: date,
-        image: image,
-        title: title,
-        contents: contents,
+        writer: res.locals.writer,
+        date: formatDateSend(new Date()),
+        image: req.file != undefined? req.file.filename:null,
+        title: req.body.title,
+        contents: req.body.contents,
         view: 0
     }, function (err) {
         if (err) {
@@ -84,21 +61,6 @@ router.post('/input', verifyToken, findWriter, upload.single("img"), (req, res, 
     });
 
 });
-
-// router.put('/update', verifyToken, adminConfirmation, (req, res) => {
-//     req.body.date = new Date()
-//     Notice.update({ _id: req.body._id },
-//         { $set: req.body })
-//         .then((result) => {
-//             console.log(result);
-//             if (result.n) res.status(200).json({ status: "success" });
-//             else res.status(400).json({ status: "noMatched" });
-//         })
-//         .catch((err) => {
-//             console.log(err);
-//             res.status(500).json({ status: "error" });
-//         })
-// });
 
 router.delete('/delete', verifyToken, adminConfirmation, (req, res) => {
 

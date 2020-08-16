@@ -3,25 +3,13 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const Portfolio = require('../schemas/portfolio');
 const Student = require('../schemas/student');
-const multer = require("multer");
-const format = require('../js/formatDate');
 const {verifyToken} = require("./middlewares/authorization");
 const {findWriter} = require("./middlewares/findWriter");
 const {adminConfirmation} =  require('./middlewares/adminConfirmation');
 const {formatDateSend} = require('../js/formatDateSend');
+const imageUploader = require('./controllers/image.controller').imageUpload;
 
-var imageStorage = multer.diskStorage({
-    destination: function (req, file, callback) {
-        callback(null, "./images");
-    },
-    filename: function (req, file, callback) {
-        callback(null, format(new Date()) + '_' + file.originalname);
-    }
-})
-
-var upload = multer({
-    storage: imageStorage
-});
+router.use(express.static('images/portfolios'));
 
 router.get("/list/:page", (req, res) => {
     const page = req.params.page;
@@ -70,7 +58,7 @@ router.get('/detail/:id', (req, res) => {
 });
 
 // 분리하고 싶은데 .. 
-router.post("/input",verifyToken,findWriter,upload.array('projectImages'),(req,res)=>{
+router.post("/input",verifyToken,findWriter,imageUploader('images/portfolios').array('projectImages'),(req,res)=>{
 
     let sl = req.body.students.split(',');
     Student.find({_id:{$in:sl}}).count()

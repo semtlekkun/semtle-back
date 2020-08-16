@@ -28,20 +28,29 @@ const studentSchema = new Schema({
         required: true
     }
 }, { versionKey: false }); 
+
 studentSchema.pre('save',function(next){
     const user = this;
     bcrypt.hash(user.pw, saltRounds, function (err, hash) {
         if (err){
             console.log(err);
-            res.json({status:"error"});
+            next(err);
         }
         user.pw = hash;
         next();
     });
 })
 
-// studentSchema.pre('find',function(next){
-//     console.log("TEST FIND");
-// })
+studentSchema.pre('update',function(next){
+    const user = this;
+    bcrypt.hash(user.getUpdate().$set.pw, saltRounds, function (err, hash) {
+        if (err){
+            console.log(err);
+            next(err);
+        }
+        user.getUpdate().$set.pw = hash;
+        next();
+    });
+})
 
 module.exports = mongoose.model('Student', studentSchema, 'student');

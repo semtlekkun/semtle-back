@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const Recruit = require('../schemas/recruit');
-const Student = require('../schemas/student');
 const { verifyToken } = require("./middlewares/authorization");
 const { findWriter } = require("./middlewares/findWriter");
 const { adminConfirmation } = require('./middlewares/adminConfirmation');

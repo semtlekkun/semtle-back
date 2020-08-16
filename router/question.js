@@ -8,7 +8,9 @@ const {verifyToken} = require("./middlewares/authorization");
 const {adminConfirmation} =  require('./middlewares/adminConfirmation');
 const {findWriter} = require("./middlewares/findWriter"); 
 const {formatDateSend} = require('../js/formatDateSend');
-router.use(express.static("images"));
+const imageUploader = require('./controllers/image.controller').imageUpload;
+
+router.use(express.static("images/questions"));
 
 const imageStorage = multer.diskStorage({
     destination: function (req, file, callback) {
@@ -44,7 +46,7 @@ router.get('/:questionid', (req, res) => {
         .catch(err => res.status(500).send(err));
 });
 
-router.post('/',verifyToken,findWriter,upload.single("image"), (req, res) => {
+router.post('/',verifyToken,findWriter,imageUploader('images/questions').single("image"), (req, res) => {
     req.body.writer = res.locals.writer
     req.body.image = req.file.filename != undefined? req.file.filename:null
     req.body.date = formatDateSend(new Date())

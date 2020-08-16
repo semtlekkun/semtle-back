@@ -2,33 +2,22 @@ const express = require('express');
 const router = express.Router();
 const Student = require('../schemas/student');
 const { verifyToken } = require('./middlewares/authorization');
-const multer = require('multer');
-const format = require('../js/formatDate');
-const bcrypt = require('bcrypt');
-const saltRounds = require("../config/hash").saltRounds;
+const {compare} = require('./middlewares/compare');
+const imageUploader = require('./controllers/image.controller').imageUpload;
 
-var imageStorage = multer.diskStorage({
-    destination: function (req, file, callback) {
-        callback(null, "./images/students");
-    },
-    filename: function (req, file, callback) {
-        //파일명 설정
-        callback(null, format(new Date()) + '_' + file.originalname);
-    }
-});
+router.use(express.static('images/students'));
 
-var upload = multer({
-    storage: imageStorage
-});
+router.put('/update', (req, res) => {
+    Student.update({ _id: "20161184" }, { $set: { _id: "20161184" } })
+        .then((student) => {
+            console.log(student);
+        })
+})
 
+router.put('/picture/update', verifyToken, imageUploader("images/students").single("img"), (req, res) => {
 
-router.put('/picture/update', verifyToken, upload.single("img"), (req, res) => {
-    var image;
-    if (req.file != undefined)
-        image = req.file.filename
-    else image = null;
     Student.findOneAndUpdate({ _id: res.locals.id }, {
-        $set: { image: image }
+        $set: { image: req.file != undefined? req.file.filename:null }
     }, { projection: { pw: false }, new: true })
         .exec().then((studentList) => {
             console.log(studentList.image);
@@ -38,53 +27,16 @@ router.put('/picture/update', verifyToken, upload.single("img"), (req, res) => {
 });
 
 
-router.put('/pw/update', verifyToken, (req, res) => {
+router.put('/pw/update', verifyToken,compare, (req, res) => {
 
-
-    Student.findOne({ _id: res.locals.id })
-        .then((student) => {
-            bcrypt.compare(req.body.currentPW, student.pw, function (err, result) {
-                if (err) {
-                    console.log(err);
-                    res.status(500).json({ status: "error" });
-                }
-                if (result) {
-
-                    bcrypt.hash(req.body.changePW, saltRounds, function (err, hash) {
-                        // Store hash in your password DB.
-                        if (err) {
-                            console.log(err);
-                            res.json({ status: "error" });
-                        } else {
-
-                            Student.findOneAndUpdate({ _id: res.locals.id }, {
-                                $set: { pw: hash }
-                            }).then(() => {
-                                res.status(200).json({ status: "success" });
-                            })
-                                .catch(err => res.status(500).send(err));
-
-                        }
-
-                    });
-
-
-
-                }
-                else {//compareErr
-                    res.status(400).json({
-                        status: "wrong"
-                    });
-                }
-            })
-
-
-        })//findeErr
-        .catch((err) => {
+    Student.update({ _id: res.locals.id }, {
+        $set: { pw: req.body.changePW }
+    }).then(() => {
+        res.status(200).json({ status: "success" });
+    })
+        .catch(err => {
             console.log(err);
-            res.status(500).json({ status: "error" });
-        });
-
+            res.status(500).send(err)});
 });
 
 
