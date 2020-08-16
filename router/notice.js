@@ -38,7 +38,7 @@ router.get('/list/:page', (req, res) => {
                 })
                 .catch((err) => {
                     console.log(err);
-                    res.status(500).send({ status: "err" });
+                    res.status(500).json({ status: "err" });
                 });
         })
         .catch((err) => {

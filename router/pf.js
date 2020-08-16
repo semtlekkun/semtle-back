@@ -71,7 +71,7 @@ router.get('/:portfolioId', (req, res) => {
                 .then((pf) => {
 
                     pf.view = +1;
-                    res.json({ portfolio: pf });
+                    res.json({ portfolio: pf[0] });
                 })
                 .catch((err) => {
                     console.log(err);
