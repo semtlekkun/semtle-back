@@ -27,7 +27,7 @@ router.put('/picture/update', verifyToken, imageUploader("images/students").sing
 });
 
 router.put('/pw/update', verifyToken,compare, (req, res) => {
-
+    console.log(req.body)
     Student.update({ _id: res.locals.id }, {
         $set: { pw: req.body.changePW }
     }).then(() => {
