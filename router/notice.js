@@ -58,9 +58,7 @@ router.get('/detail/:id', (req, res) => {
         });
 });
 
-
 router.post('/input', verifyToken, adminConfirmation, findWriter, imageUploader("images/notices").single("image"), (req, res, next) => {
-
     Notice.create({
         writer: res.locals.writer,
         date: formatDateSend(new Date()),

@@ -6,7 +6,6 @@ const {verifyToken} = require("./middlewares/authorization");
 const {adminConfirmation} =  require('./middlewares/adminConfirmation');
 const {findWriter} = require("./middlewares/findWriter"); 
 
-
 router.get('/:questionid', (req, res) => {
     answer.findByQuestionId(req.params.questionid)
         .then((answer) => {
