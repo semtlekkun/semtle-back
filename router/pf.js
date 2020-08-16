@@ -51,8 +51,8 @@ router.get("/list/:page", (req, res) => {
     })
 });
 
-router.get('/detail/:id', (req, res) => {
-    const _id = req.params.id;
+router.get('/:portfolioId', (req, res) => {
+    const _id = req.params.portfolioId;
     Portfolio.aggregate([
         {$match:{_id:mongoose.Types.ObjectId(_id)}},
         {
@@ -76,7 +76,7 @@ router.get('/detail/:id', (req, res) => {
 });
 
 // 분리하고 싶은데 .. 
-router.post("/input",verifyToken,findWriter,imageUploader('images/portfolios').array('projectImages'),(req,res)=>{
+router.post("/",verifyToken,findWriter,imageUploader('images/portfolios').array('projectImages'),(req,res)=>{
 
     let sl = req.body.students.split(',');
     Student.find({_id:{$in:sl}}).count()
@@ -119,8 +119,8 @@ router.post("/input",verifyToken,findWriter,imageUploader('images/portfolios').a
     });
 })
 
-router.delete("/delete",verifyToken,adminConfirmation,(req,res)=>{
-    Portfolio.remove({_id:req.body._id})
+router.delete("/:portfolioId",verifyToken,adminConfirmation,(req,res)=>{
+    Portfolio.remove({_id:req.params.portfolioId})
     .then((result)=>{
         if(result.deletedCount) res.json({status:"success"})
         else res.status(400).json({status:"none"});

@@ -47,8 +47,8 @@ router.get('/list/:page', (req, res) => {
         })
 });
 
-router.get('/detail/:id', (req, res) => {
-    Notice.findOne({ _id: req.params.id }, { _id: false })
+router.get('/:noticeId', (req, res) => {
+    Notice.findOne({ _id: req.params.noticeId }, { _id: false })
         .then((notice) => {
             res.json({ status: "success", notice: notice});
         })
@@ -58,7 +58,7 @@ router.get('/detail/:id', (req, res) => {
         });
 });
 
-router.post('/input', verifyToken, adminConfirmation, findWriter, imageUploader("images/notices").single("image"), (req, res, next) => {
+router.post('/', verifyToken, adminConfirmation, findWriter, imageUploader("images/notices").single("image"), (req, res, next) => {
     Notice.create({
         writer: res.locals.writer,
         date: formatDateSend(new Date()),
@@ -78,9 +78,9 @@ router.post('/input', verifyToken, adminConfirmation, findWriter, imageUploader(
 
 });
 
-router.delete('/delete', verifyToken, adminConfirmation, (req, res) => {
+router.delete('/:noticeId', verifyToken, adminConfirmation, (req, res) => {
 
-    Notice.findOneAndRemove({ _id: req.body._id })
+    Notice.findOneAndRemove({ _id: req.params.noticeId })
         .exec(function (err, item) {
             var filePath = './images/notices' + item.image;
             fs.unlinkSync(filePath);

@@ -35,8 +35,8 @@ router.get('/list/:page', (req, res) => {
         })
 });
 
-router.get('/detail/:id', (req, res) => {
-    var _id = req.params.id;
+router.get('/:recruitId', (req, res) => {
+    var _id = req.params.recruitId;
 
     Recruit.findOne({ _id: _id })
         .then((recruitList) => {
@@ -49,7 +49,7 @@ router.get('/detail/:id', (req, res) => {
         });
 });
 
-router.post('/input', verifyToken, findWriter, (req, res) => {
+router.post('/', verifyToken, findWriter, (req, res) => {
 
     var writer = res.locals.writer;
     var date = formatDateSend(new Date())
@@ -72,8 +72,8 @@ router.post('/input', verifyToken, findWriter, (req, res) => {
     });
 });
 
-router.delete('/delete', verifyToken, adminConfirmation, (req, res) => {
-    Recruit.remove({ _id: req.body._id })
+router.delete('/:recruitId', verifyToken, adminConfirmation, (req, res) => {
+    Recruit.remove({ _id: req.params.recruitId })
         .then((result) => {
             if (result.deletedCount) res.json({ status: "success" });
             else res.status(400).json({ status: "none" });
