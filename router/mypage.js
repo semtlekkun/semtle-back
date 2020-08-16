@@ -5,8 +5,6 @@ const { verifyToken } = require('./middlewares/authorization');
 const {compare} = require('./middlewares/compare');
 const imageUploader = require('./controllers/image.controller').imageUpload;
 
-
-
 router.put('/picture/update', verifyToken, imageUploader("images/students").single("img"), (req, res) => {
 
     Student.findOneAndUpdate({ _id: res.locals.id }, {
@@ -18,7 +16,6 @@ router.put('/picture/update', verifyToken, imageUploader("images/students").sing
         })
         .catch(err => res.status(500).send(err));
 });
-
 
 router.put('/pw/update', verifyToken,compare, (req, res) => {
 

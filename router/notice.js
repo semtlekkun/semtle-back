@@ -29,7 +29,6 @@ router.get('/list/:page', (req, res) => {
         })
 });
 
-
 router.get('/detail/:id', (req, res) => {
     Notice.findOne({ _id: req.params.id }, { _id: false })
         .then((noticeList) => {
