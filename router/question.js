@@ -48,7 +48,10 @@ router.get('/:questionid', (req, res) => {
             if (!question) return res.status(404).json({ err: 'Question not found' });
             res.send(question);
         })
-        .catch(err => res.status(500).send(err));
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({status:"error"})}
+        );
 });
 
 router.post('/',verifyToken,findWriter,imageUploader('images/questions').single("image"), (req, res) => {
@@ -57,7 +60,11 @@ router.post('/',verifyToken,findWriter,imageUploader('images/questions').single(
     req.body.date = formatDateSend(new Date())
     question.create(req.body)
         .then(() => res.json({status:"success"}))
-        .catch(err => res.status(500).send(err));
+        .catch(err => 
+            {
+                console.log(err);
+                res.status(500).json({status:"error"})
+            });
 });
 
 
