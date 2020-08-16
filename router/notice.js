@@ -65,7 +65,6 @@ router.delete('/delete', verifyToken, adminConfirmation, (req, res) => {
 
     Notice.findOneAndRemove({ _id: req.body._id })
         .exec(function (err, item) {
-            //console.log(item.image);
             var filePath = './images/' + item.image;
             fs.unlinkSync(filePath);
             if (err) {

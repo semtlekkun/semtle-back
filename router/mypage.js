@@ -5,14 +5,14 @@ const { verifyToken } = require('./middlewares/authorization');
 const {compare} = require('./middlewares/compare');
 const imageUploader = require('./controllers/image.controller').imageUpload;
 
-router.put('/picture/update', verifyToken, imageUploader("images/students").single("img"), (req, res) => {
+router.put('/picture/update', verifyToken, imageUploader("images/students").single("image"), (req, res) => {
 
     Student.findOneAndUpdate({ _id: res.locals.id }, {
         $set: { image: req.file != undefined? req.file.filename:null }
     }, { projection: { pw: false }, new: true })
         .exec().then((studentList) => {
             console.log(studentList.image);
-            res.status(200).json({ status: "success", studentList: studentList });
+            res.status(200).json({ status: "success"});
         })
         .catch(err => res.status(500).send(err));
 });
