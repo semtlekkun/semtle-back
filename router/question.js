@@ -9,6 +9,7 @@ const { adminConfirmation } = require('./middlewares/adminConfirmation');
 const { findWriter } = require("./middlewares/findWriter");
 const { formatDateSend } = require('../js/formatDateSend');
 const imageUploader = require('./controllers/image.controller').imageUpload;
+const imageCleaner = require('./controllers/image.controller').imageClean;
 
 router.use(express.static("images/questions"));
 
@@ -66,7 +67,12 @@ router.delete('/:questionid', verifyToken, adminConfirmation, (req, res) => {
     answer.deleteByQuestionId(req.params.questionid)
         .then(() => {
             question.deleteByQuestionId(req.params.questionid)
-                .then(() => res.json({ status: "success" }))
+                .then((question) => {
+                    let result = imageCleaner("images/questions",question.image);
+                    console.log(result);
+                    if(result == -1) res.json({status:"succes but image has not been erased"});
+                    else res.json({ status: "success" });
+                })
                 .catch(err => res.status(500).send(err));
         })
 });

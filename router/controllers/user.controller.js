@@ -7,6 +7,7 @@ const bcrypt = require('bcrypt');
 module.exports.createToken = function(req,res,next){
     Student.findOne({_id:req.body._id},{pw:true})
     .then((student)=>{
+        if(student == null) res.status(400).json({status:"wrong"});
         bcrypt.compare(req.body.pw,student.pw,function(err, result) {
             if(err) res.status(500).json({status:"error"});
             if(result){

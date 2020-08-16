@@ -20,17 +20,18 @@ module.exports.imageUpload = function (path) {
     return upload
 }
 
-module.exports.imageDelete = function (folder, file) {
-    const filePath = path.join(__dirname, folder, file);
-
+module.exports.imageClean = function (folder, file) {
+    if(file == null) return 0
+    const filePath = path.join(folder, file);
     fs.access(filePath, fs.constants.F_OK, (err) => {
         if (err) {
+            console.log("?")
             console.log(err);
-            return { status: "error" };
+            return -1;
         }
         fs.unlink(filePath, (err) => {
-            if(err) return {status:"error"}
-            else return {status:"success"}
+            if(err) return -1
+            else return 1
         });
     })
 }

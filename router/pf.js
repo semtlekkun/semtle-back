@@ -8,6 +8,7 @@ const { findWriter } = require("./middlewares/findWriter");
 const { adminConfirmation } = require('./middlewares/adminConfirmation');
 const { formatDateSend } = require('../js/formatDateSend');
 const imageUploader = require('./controllers/image.controller').imageUpload;
+const imageCleaner = require('./controllers/image.controller').imageClean;
 
 router.use(express.static('images/portfolios'));
 
@@ -123,9 +124,11 @@ router.post("/", verifyToken, findWriter, imageUploader('images/portfolios').arr
 })
 
 router.delete("/:portfolioId", verifyToken, adminConfirmation, (req, res) => {
-    Portfolio.remove({ _id: req.params.portfolioId })
-        .then((result) => {
-            if (result.deletedCount) res.json({ status: "success" })
+    Portfolio.findOneAndRemove({ _id: req.params.portfolioId })
+        .then((portfolio) => {
+            if (portfolio) {
+                res.json({ status: "success" });
+            }
             else res.status(400).json({ status: "none" });
         })
         .catch((err) => {

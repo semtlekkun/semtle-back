@@ -43,7 +43,7 @@ questionSchema.statics.updateByQuestionId = function (_id, payload) {
 }
 
 questionSchema.statics.deleteByQuestionId = function (_id) {
-    return (this.deleteOne().where('_id').equals(_id));
+    return (this.findOneAndRemove({_id}));
 }
 
 module.exports = mongoose.model('Question', questionSchema, 'question');

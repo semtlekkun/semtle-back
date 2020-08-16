@@ -7,7 +7,8 @@ module.exports = () => {
         mongoose.set('debug', true);
         mongoose.connect(dbConfig.MONGO_URI, {
             useNewUrlParser: true,
-            useUnifiedTopology: true
+            useUnifiedTopology: true,
+            useFindAndModify: false
 
         })
             .then(() => console.log('몽고디비 연결 성공'))
