@@ -6,7 +6,7 @@ const { findWriter } = require("./middlewares/findWriter");
 const { adminConfirmation } = require('./middlewares/adminConfirmation');
 const { formatDateSend } = require('../js/formatDateSend');
 const imageUploader = require('./controllers/image.controller').imageUpload;
-const fs = require('fs');
+
 
 router.use(express.static('images/notices'));
 

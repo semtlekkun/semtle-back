@@ -92,6 +92,7 @@ router.post("/", verifyToken, findWriter, imageUploader('images/portfolios').arr
                             students: sl,
                             contents: req.body.contents,
                             link: req.body.link != undefined ? req.body.link : null,
+                            git: req.body.git != undefined ? req.body.git : null,
                             projectStartDate: req.body.projectStartDate,
                             projectEndDate: req.body.projectEndDate,
                             projectTeamName: req.body.projectTeamName,

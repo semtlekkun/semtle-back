@@ -11,6 +11,7 @@ const portfolioSchema = new Schema({
         required:true,
     },
     contents:String,
+    git:String,
     link:String,
     projectStartDate:String,
     projectEndDate:String,

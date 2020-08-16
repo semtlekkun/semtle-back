@@ -15,7 +15,6 @@ router.get('/list', (req, res) => {
             console.log(err);
             res.status(500).send(err);
         });
-
 });
 
 router.get('/list/:page', (req, res) => {
