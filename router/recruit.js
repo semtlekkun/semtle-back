@@ -7,17 +7,15 @@ const { adminConfirmation } = require('./middlewares/adminConfirmation');
 const { formatDateSend } = require('../js/formatDateSend');
 
 router.get('/list', (req, res) => {
-    Recruit.find({}).count()
-        .then((count) => {
-            Recruit.find({}, { date: false, contents: false }).sort({_id:-1})
-                .then((recruitList) => {
-                    res.json({ status: "success", count: count ,recruitList: recruitList });
-                })
-                .catch((err) => {
-                    console.log(err);
-                    res.status(500).send(err);
-                });
+    Recruit.find({}, { date: false, contents: false }).sort({ _id: -1 })
+        .then((recruitList) => {
+            res.json({ status: "success", count: recruitList.length, recruitList: recruitList });
         })
+        .catch((err) => {
+            console.log(err);
+            res.status(500).send(err);
+        });
+
 });
 
 router.get('/list/:page', (req, res) => {
@@ -26,7 +24,7 @@ router.get('/list/:page', (req, res) => {
         .then((count) => {
             Recruit.find({}, { date: false, contents: false }).sort({ "date": -1 }).skip((page - 1) * 10).limit(10)
                 .then((recruitList) => {
-                    res.json({ status: "success", count: count, recruitList: recruitList});
+                    res.json({ status: "success", count: count, recruitList: recruitList });
                 })
                 .catch((err) => {
                     console.log(err);
@@ -37,9 +35,9 @@ router.get('/list/:page', (req, res) => {
 
 router.get('/:recruitId', (req, res) => {
     var _id = req.params.recruitId;
-    Recruit.findOneAndUpdate({ _id: _id },{$inc:{view:1}})
+    Recruit.findOneAndUpdate({ _id: _id }, { $inc: { view: 1 } })
         .then((recruit) => {
-            recruit.view +=1
+            recruit.view += 1
             res.json({ status: "success", recruit: recruit });
 
         })
@@ -64,7 +62,7 @@ router.post('/', verifyToken, findWriter, (req, res) => {
         contents: contents, view: 0
     }, function (err) {
         if (err) {
-            res.status(500).json({status:"error"});
+            res.status(500).json({ status: "error" });
         }
         else {
             res.json({ status: "success" });

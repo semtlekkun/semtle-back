@@ -11,21 +11,15 @@ const fs = require('fs');
 router.use(express.static('images/notices'));
 
 router.get('/list', (req, res) => {
-    Notice.find({}).count()
-        .then((count) => {
-            Notice.find({}, { contents: false, image: false }).sort({_id:-1})
-                .then((noticeList) => {
-                    res.json({ status: "success", count: count,noticeList: noticeList});
-                })
-                .catch(err=>{
-                    console.log(err);
-                    res.status(500).json({status:"error"})
-                })
+    Notice.find({}, { contents: false, image: false }).sort({ _id: -1 })
+        .then((noticeList) => {
+            res.json({ status: "success", count: noticeList.length, noticeList: noticeList });
         })
-        .catch(err=>{
+        .catch(err => {
             console.log(err);
-            res.status(500).json({status:"error"});
+            res.status(500).json({ status: "error" })
         })
+
 })
 
 router.get('/list/:page', (req, res) => {
@@ -34,7 +28,7 @@ router.get('/list/:page', (req, res) => {
         .then((count) => {
             Notice.find({}, { contents: false, image: false }).sort({ "date": -1 }).skip((page - 1) * 10).limit(10)
                 .then((noticeList) => {
-                    res.json({ status: "success", count: count, noticeList: noticeList});
+                    res.json({ status: "success", count: count, noticeList: noticeList });
                 })
                 .catch((err) => {
                     console.log(err);
@@ -48,10 +42,10 @@ router.get('/list/:page', (req, res) => {
 });
 
 router.get('/:noticeId', (req, res) => {
-    Notice.findOneAndUpdate({ _id: req.params.noticeId },{$inc:{view:1}})
+    Notice.findOneAndUpdate({ _id: req.params.noticeId }, { $inc: { view: 1 } })
         .then((notice) => {
             notice.view += 1;
-            res.json({ status: "success", notice: notice});
+            res.json({ status: "success", notice: notice });
         })
         .catch((err) => {
             console.log(err);
@@ -85,7 +79,7 @@ router.delete('/:noticeId', verifyToken, adminConfirmation, (req, res) => {
     // Notice.findOneAndRemove({ _id: req.params.noticeId })
     //     .exec(function (err, item) {
     //         var filePath = './images/notices/' + item.image;
-        
+
     //         fs.unlinkSync(filePath);
     //         if (err) {
     //             res.status(500).send({ status: "err" });
@@ -99,13 +93,13 @@ router.delete('/:noticeId', verifyToken, adminConfirmation, (req, res) => {
     //         console.log(err);
     //         res.status(500).json({status:"error"});
     //     })
-    Notice.remove({_id:req.params.noticeId})
-    .then(()=>{
-        res.json({status:"success"});
-    })
-    .catch(err=>{
-        res.status(500).json({status:"error"});
-    })
+    Notice.remove({ _id: req.params.noticeId })
+        .then(() => {
+            res.json({ status: "success" });
+        })
+        .catch(err => {
+            res.status(500).json({ status: "error" });
+        })
 
 });
 
