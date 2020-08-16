@@ -43,7 +43,7 @@ router.get('/detail/:id', (req, res) => {
 
 var imageStorage = multer.diskStorage({
     destination: function (req, file, callback) {
-        callback(null, "./images");
+        callback(null, "./images/notice");
     },
     filename: function (req, file, callback) {
         callback(null, format(new Date()) + '_' + file.originalname);
