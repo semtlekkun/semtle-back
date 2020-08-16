@@ -48,7 +48,7 @@ router.get('/list/:page', (req, res) => {
 });
 
 router.get('/:noticeId', (req, res) => {
-    Notice.findOne({ _id: req.params.noticeId }, { _id: false })
+    Notice.findOneAndUpdate({ _id: req.params.noticeId }, { _id: false })
         .then((notice) => {
             res.json({ status: "success", notice: notice});
         })
@@ -82,7 +82,7 @@ router.delete('/:noticeId', verifyToken, adminConfirmation, (req, res) => {
 
     Notice.findOneAndRemove({ _id: req.params.noticeId })
         .exec(function (err, item) {
-            var filePath = './images/notices' + item.image;
+            var filePath = './images/notices/' + item.image;
             fs.unlinkSync(filePath);
             if (err) {
                 res.status(500).send({ status: "err" });
