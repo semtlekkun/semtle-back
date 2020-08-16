@@ -23,11 +23,25 @@ router.put('/picture/update', verifyToken, imageUploader("images/students").sing
             console.log(studentList.image);
             res.json({ status: "success"});
         })
-        .catch(err => res.status(500).send(err));
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({ status: "error" })});
+});
+
+router.put('/phoneNum/update', verifyToken, (req, res) => {
+
+    Student.findOneAndUpdate({ _id: res.locals.id }, {
+        $set: { phoneNum: req.body.phoneNum }
+    }, { projection: { pw: false } })
+        .then(() => {
+            res.json({ status: "success"});
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json(err)});
 });
 
 router.put('/pw/update', verifyToken,compare, (req, res) => {
-    console.log(req.body)
     Student.update({ _id: res.locals.id }, {
         $set: { pw: req.body.changePW }
     }).then(() => {
@@ -35,7 +49,7 @@ router.put('/pw/update', verifyToken,compare, (req, res) => {
     })
         .catch(err => {
             console.log(err);
-            res.status(500).send(err)});
+            res.status(500).json({ status: "error" })});
 });
 
 
