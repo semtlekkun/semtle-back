@@ -35,4 +35,19 @@ module.exports.imageClean = function (folder, file) {
     })
 }
 
-// module.exports.images
+module.exports.imagesClean = function(folder,files){
+    if(!files.length) return 0;
+    files.forEach(el => {
+        const filePath = path.join(folder, el);
+        fs.access(filePath, fs.constants.F_OK, (err) => {
+            if (err) {
+                console.log(err);
+                return -1
+            }
+            fs.unlink(filePath, (err) => {
+                if(err) return -1
+                else return 1
+            });
+        })
+    });
+}
