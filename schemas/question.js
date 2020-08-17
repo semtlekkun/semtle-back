@@ -20,7 +20,8 @@ const questionSchema = new mongoose.Schema({
     writerImage:{
         type:String
     },
-    date: String
+    date: String,
+    view:Number
 },
     {
         versionKey: false

@@ -37,7 +37,7 @@ router.get('/list/:page', (req, res) => {
 });
 
 router.get('/:questionid', (req, res) => {
-    question.findOneByQuestionId(req.params.questionid)
+    question.findByIdAndUpdate({_id:req.params.questionid},{ $inc: { view: 1 } }, { new: true })
         .then((question) => {
             if (!question) res.status(404).json({ err: 'Question not found' });
             if (question.writer != "관리자") {

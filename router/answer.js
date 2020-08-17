@@ -10,9 +10,7 @@ const { findWriter } = require("./middlewares/findWriter");
 router.get('/:questionid', (req, res) => {
     answer.findByQuestionId(req.params.questionid)
         .then((answers) => {
-            //answers
             answers.forEach(async (element, index) => {
-                // console.log(element);
                 if (element.writer !== "관리자") {
                     await Student.find({ nick: element.writer })
                         .then((sts) => {
@@ -25,14 +23,10 @@ router.get('/:questionid', (req, res) => {
                 else {
                     element.writerImage = 'default.jpg';
                 }
-                // console.log("index: ", index)
-
                 if (index === answers.length - 1) {
-                    console.log("taese0ng: ")
                     res.send({ answers: answers });
                 }
             })
-
         })
         .catch(err => {
             console.log(err);
