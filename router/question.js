@@ -66,6 +66,7 @@ router.post('/', verifyToken, findWriter, imageUploader('images/questions').sing
     req.body.writer = res.locals.writer
     req.body.image = req.file != undefined ? req.file.filename : null
     req.body.date = formatDateSend(new Date())
+    req.body.view = 0
     question.create(req.body)
         .then(() => res.json({ status: "success" }))
         .catch(err => {
