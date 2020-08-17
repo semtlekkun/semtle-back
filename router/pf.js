@@ -53,7 +53,7 @@ router.get('/:portfolioId', (req, res) => {
             Student.find({_id:{$in:portfolio.students}},{pw:0,phoneNum:0})
             .then(sts=>{
                 if(sts.length != portfolio.students){
-                    for()
+                    // for()
                 }
             })
         })
