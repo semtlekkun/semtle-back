@@ -38,7 +38,7 @@ questionSchema.statics.findAll = function () {
 }
 
 questionSchema.statics.findOneByQuestionId = function (_id) {
-    return (this.findOneAndUpdate({_id:_id}));
+    return (this.findOne({_id:_id}));
 }
 
 questionSchema.statics.updateByQuestionId = function (_id, payload) {

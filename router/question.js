@@ -37,7 +37,7 @@ router.get('/list/:page', (req, res) => {
 });
 
 router.get('/:questionid', (req, res) => {
-    question.findOneByQuestionId(req.params.questionid).exec()
+    question.findOneByQuestionId(req.params.questionid)
         .then((question) => {
             if (!question) res.status(404).json({ err: 'Question not found' });
 
