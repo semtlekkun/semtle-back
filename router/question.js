@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const question = require('../schemas/question');
 const answer = require('../schemas/answer');
+const Student = require('../schemas/student');
 const { verifyToken } = require("./middlewares/authorization");
 const { adminConfirmation } = require('./middlewares/adminConfirmation');
 const { findWriter } = require("./middlewares/findWriter");
@@ -36,10 +37,10 @@ router.get('/list/:page', (req, res) => {
 });
 
 router.get('/:questionid', (req, res) => {
-    question.findOneByQuestionId(req.params.questionid)
+    question.findOneByQuestionId(req.params.questionid,{new:true }).exec()
         .then((question) => {
             if (!question) res.status(404).json({ err: 'Question not found' });
-            question.view += 1
+            
             res.send(question);
         })
         .catch(err => {
