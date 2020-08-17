@@ -17,6 +17,9 @@ const questionSchema = new mongoose.Schema({
         type: String,
         required: [true, 'writer must be included']
     },
+    writerImage:{
+        type:String
+    },
     date: String
 },
     {
@@ -35,7 +38,7 @@ questionSchema.statics.findAll = function () {
 }
 
 questionSchema.statics.findOneByQuestionId = function (_id) {
-    return (this.findOneAndUpdate({_id:_id},{$inc:{view:1}}));
+    return (this.findOneAndUpdate({_id:_id}));
 }
 
 questionSchema.statics.updateByQuestionId = function (_id, payload) {

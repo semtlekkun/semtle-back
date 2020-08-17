@@ -37,17 +37,28 @@ router.get('/list/:page', (req, res) => {
 });
 
 router.get('/:questionid', (req, res) => {
-    question.findOneByQuestionId(req.params.questionid,{new:true }).exec()
+    question.findOneByQuestionId(req.params.questionid).exec()
         .then((question) => {
             if (!question) res.status(404).json({ err: 'Question not found' });
-            
-            res.send(question);
+
+            let image = "default.jpg";
+            if (question.writer != "관리자") {
+                Student.findOne({ nick: question.writer }, { image: 1 })
+                    .then(st => {
+                        image = st.image;
+                        question.writerImage = image;
+                        res.json({ status: "success", question: question });
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        res.status(500).json({ status: "error" });
+                    })
+            }
         })
         .catch(err => {
             console.log(err);
             res.status(500).json({ status: "error" })
-        }
-        );
+        });
 });
 
 router.post('/', verifyToken, findWriter, imageUploader('images/questions').single("image"), (req, res) => {
@@ -67,16 +78,17 @@ router.delete('/:questionid', verifyToken, adminConfirmation, (req, res) => {
         .then(() => {
             question.deleteByQuestionId(req.params.questionid)
                 .then((question) => {
-                    imageCleaner("images/questions/",question.image);
+                    imageCleaner("images/questions/", question.image);
                     res.json({ status: "success" });
                 })
                 .catch(err => {
                     console.log(err);
-                    res.status(500).json({status:"error"})});
+                    res.status(500).json({ status: "error" })
+                });
         })
-        .catch(err=>{
+        .catch(err => {
             console.log(err);
-            res.status(500).json({status:"error"});
+            res.status(500).json({ status: "error" });
         })
 });
 
