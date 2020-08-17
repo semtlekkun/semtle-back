@@ -18,7 +18,7 @@ router.put('/picture/update', verifyToken, imageUploader("images/students").sing
 
     Student.findOneAndUpdate({ _id: res.locals.id }, {
         $set: { image: req.file != undefined ? req.file.filename : "default.jpg" }
-    }, { projection: { pw: false }, new: true })
+    }, { projection: { pw: false }})
         .exec().then((student) => {
             console.log(student.image);
             res.json({ status: "success" });
