@@ -48,9 +48,9 @@ router.put('/picture/update', verifyToken, imageUploader("images/students").sing
 
 router.put('/phoneNum/update', verifyToken, (req, res) => {
 
-    Student.findOneAndUpdate({ _id: res.locals.id }, {
+    Student.update({ _id: res.locals.id }, {
         $set: { phoneNum: req.body.phoneNum }
-    }, { projection: { pw: false } })
+    })
         .then(() => {
             res.json({ status: "success" });
         })
