@@ -47,7 +47,8 @@ router.post('/input', verifyToken, adminConfirmation, createNick, (req, res) => 
         image: "default.jpg"
     });
     student.save()
-        .then(() => {
+        .then((student) => {
+            console.log(student);
             res.json({ status: "success" });
         })
         .catch((err) => {
