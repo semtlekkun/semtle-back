@@ -52,9 +52,12 @@ router.get('/:portfolioId', (req, res) => {
         .then((portfolio) => {
             Student.find({_id:{$in:portfolio.students}},{pw:0,phoneNum:0})
             .then(sts=>{
-                if(sts.length != portfolio.students){
-                    // for()
+                if(sts.length != portfolio.students.length){
+                    for(let i = sts.length; i<portfolio.students.length;i++){
+                        sts.push({_id:"NULL",name:"탈퇴한 회원",nick:"탈퇴한 회원",image:"default.jpg"})
+                    }
                 }
+                res.json({status:"success",project:portfolio,studentInfo:sts});
             })
         })
         .catch(err => {
