@@ -18,6 +18,7 @@ const answerSchema = new mongoose.Schema({
         trim:true
     },
     date: String,
+    writerImage:String
 },
 {
     versionKey:false,
