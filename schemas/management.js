@@ -13,7 +13,9 @@ const managementSchema = new Schema({
     contents:String,
     language:String,
     position:String,
-    activeYear:String
+    activeYear:String,
+    name:String,
+    image:String
 }, { versionKey: false });
 
 module.exports = mongoose.model('Management', managementSchema, 'management');
