@@ -1,34 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const Management = require('../schemas/management');
+const Student = require('../schemas/student');
 const studentCheck = require('./controllers/user.controller').checkStudent;
 const {verifyToken} = require("./middlewares/authorization");
 const {adminConfirmation} =  require('./middlewares/adminConfirmation');
 
 router.get('/list',(req,res)=>{
-    Management.aggregate([
-        {
-            $lookup:{
-                from:"student",
-                let:{studentCode:"$studentCode"},
-                pipeline:[
-                    {
-                        $match:
-                        {
-                            $expr:
-                            {
-                                $and:
-                                [{$eq:["$$studentCode","$_id"]}]
-                            }
-                        },
-                    },
-                    {$project:{_id:0,pw:0,phoneNum:0,nick:0}}
-                ],
-                as:"Info"
-            }
-        }
-    ])
-    .then((management)=>{
+    Management.find({})
+    .then(management=>{
         res.json({status:"success",management:management});
     })
     .catch(err=>{
@@ -37,16 +17,28 @@ router.get('/list',(req,res)=>{
     })
 });
 
-router.post('/input',verifyToken,adminConfirmation,studentCheck,(req,res)=>{
-    const management = new Management(req.body);
-    management.save()
-    .then(()=>{
-        res.json({status:"success"});
+router.post('/input',studentCheck,(req,res)=>{
+
+    Student.findOne({_id:req.body.studentCode},{name:1,image:1})
+    .then(student=>{
+        req.body.name = student.name
+        req.body.image = student.image
+        const management = new Management(req.body);
+        management.save()
+        .then(()=>{
+            res.json({status:"success"});
+        })
+        .catch((err)=>{
+            console.log(err);
+            res.status(500).json({status:"error"});
+        });
     })
-    .catch((err)=>{
+    .catch(err=>{
         console.log(err);
         res.status(500).json({status:"error"});
-    });
+    })
+
+
 })
 
 router.delete('/delete',verifyToken,adminConfirmation,(req,res)=>{

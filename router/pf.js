@@ -78,17 +78,14 @@ router.get('/:portfolioId', (req, res) => {
 
 // 분리하고 싶은데 .. 
 router.post("/", verifyToken, findWriter, imageUploader('images/portfolios').array('projectImages'), (req, res) => {
-    // "20161184,20150000"
-    // ["20161184","20150000"]
-    // 팀장 "20161184"
-    // 참여한 사람들 ["20161184",'2020202020"]
+
     let sl = req.body.students.split(',');
     Student.find({ _id: { $in: sl } }).count()
         .then((count) => {
             if (count == sl.length) {
                 Student.findOne({ _id: req.body.teamLeaderCode }, { nick: true })
                     .then((student) => {
-                        if (student == null) res.status(400).json({ status: "none" });
+                        
                         const pf = new Portfolio({
                             projectTitle: req.body.projectTitle,
                             students: sl,
