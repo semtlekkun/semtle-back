@@ -14,7 +14,7 @@ router.use(express.static('images/portfolios'));
 
 router.get('/list', (req, res) => {
     
-    Portfolio.find({}, {projectTitle:1,projectTeamName:1,projectImages}).sort({ _id: -1 })
+    Portfolio.find({}, {projectTitle:1,projectTeamName:1,projectImages:1,contents:1}).sort({ _id: -1 })
         .then((portfolioList) => {
             res.json({ status: "success", count: portfolioList.length, portfolioList: portfolioList });
         })
