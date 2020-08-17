@@ -6,6 +6,7 @@ const { verifyToken } = require('./middlewares/authorization');
 const { compare } = require('./middlewares/compare');
 const imageUploader = require('./controllers/image.controller').imageUpload;
 const createHash = require('./controllers/user.controller').createHash;
+const imageCleaner = require('./controllers/image.controller').imageClean;
 
 router.get('/', verifyToken, (req, res) => {
     Student.findOne({ _id: res.locals.id }, { pw: 0 })
@@ -28,11 +29,13 @@ router.get('/', verifyToken, (req, res) => {
 })
 
 router.put('/picture/update', verifyToken, imageUploader("images/students").single("image"), (req, res) => {
-
     Student.findOneAndUpdate({ _id: res.locals.id }, {
         $set: { image: req.file != undefined ? req.file.filename : "default.jpg" }
     }, { projection: { pw: false } })
         .exec().then((student) => {
+            if(student.image !="default.jpg"){
+                imageCleaner("images/students/",student.image);
+            }                
             console.log(student.image);
             res.json({ status: "success" });
         })
