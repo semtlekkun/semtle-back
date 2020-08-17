@@ -75,7 +75,7 @@ router.post("/", verifyToken, findWriter, imageUploader('images/portfolios').arr
                     projectEndDate: req.body.projectEndDate,
                     projectTeamName: req.body.projectTeamName,
                     leaderNick: sts.filter(el => el._id == req.body.teamLeaderCode)[0].nick,
-                    projectImages: req.files.map((image) => {console.log(image.filename); return image.filename }),
+                    projectImages: req.files.length ==0?["default.jpg"]:req.files.map((image) => {return image.filename }),
                     view: 0,
                     writer: res.locals.writer,
                     date: formatDateSend(new Date())
