@@ -2,8 +2,6 @@ const express = require('express');
 const router = express.Router();
 const question = require('../schemas/question');
 const answer = require('../schemas/answer');
-const multer = require("multer");
-const format = require('../js/formatDate');
 const { verifyToken } = require("./middlewares/authorization");
 const { adminConfirmation } = require('./middlewares/adminConfirmation');
 const { findWriter } = require("./middlewares/findWriter");
@@ -68,7 +66,7 @@ router.delete('/:questionid', verifyToken, adminConfirmation, (req, res) => {
         .then(() => {
             question.deleteByQuestionId(req.params.questionid)
                 .then((question) => {
-                    imageCleaner("images/questions",question.image);
+                    imageCleaner("images/questions/",question.image);
                     res.json({ status: "success" });
                 })
                 .catch(err => {

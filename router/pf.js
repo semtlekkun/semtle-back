@@ -27,7 +27,7 @@ router.get("/list/:page", (req, res) => {
     const page = req.params.page;
     Portfolio.find({}).count()
         .then((count) => {
-            Portfolio.find({}, { _id: true, projectTitle: true, contents: true, date: true, projectTeamName: true, projectImages: true })
+            Portfolio.find({}, { _id: true, projectTitle: true,contents:true, date: true, projectTeamName: true, projectImages:true })
                 .sort({ _id: -1 })
                 .skip((page - 1) * 10)
                 .limit(10)
@@ -47,10 +47,10 @@ router.get("/list/:page", (req, res) => {
 
 router.get('/:portfolioId', (req, res) => {
     const _id = mongoose.Types.ObjectId(req.params.portfolioId);
-    Portfolio.update({ _id: _id }, { $inc: { view: 1 } }, { new: true }).exec()
+    Portfolio.update({ _id: _id }, { $inc: { view: 1 } },{new:true}).exec()
         .then(() => {
             Portfolio.aggregate([
-                { $match: { _id: _id } },
+                { $match: { _id:_id } },
                 {
                     $lookup:
                     {
@@ -82,22 +82,13 @@ router.post("/", verifyToken, findWriter, imageUploader('images/portfolios').arr
     // ["20161184","20150000"]
     // 팀장 "20161184"
     // 참여한 사람들 ["20161184",'2020202020"]
-
     let sl = req.body.students.split(',');
-    var count = 0;
-    sl.forEach((element) => {
-        if (element === req.body.teamLeaderCode) {
-            count++;
-        }
-    })
-    if (count != 1) res.status(400).json({ status: "none" });
-
     Student.find({ _id: { $in: sl } }).count()
         .then((count) => {
             if (count == sl.length) {
                 Student.findOne({ _id: req.body.teamLeaderCode }, { nick: true })
                     .then((student) => {
-
+                        if (student == null) res.status(400).json({ status: "none" });
                         const pf = new Portfolio({
                             projectTitle: req.body.projectTitle,
                             students: sl,
@@ -137,7 +128,7 @@ router.delete("/:portfolioId", verifyToken, adminConfirmation, (req, res) => {
     Portfolio.findOneAndRemove({ _id: req.params.portfolioId })
         .then((portfolio) => {
             if (portfolio) {
-                imagesCleaner("images/portfolios", portfolio.projectImages);
+                imagesCleaner("images/portfolios/",portfolio.projectImages);
                 res.json({ status: "success" });
             }
             else res.status(400).json({ status: "none" });
