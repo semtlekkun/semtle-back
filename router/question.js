@@ -40,19 +40,20 @@ router.get('/:questionid', (req, res) => {
     question.findOneByQuestionId(req.params.questionid)
         .then((question) => {
             if (!question) res.status(404).json({ err: 'Question not found' });
-
-            let image = "default.jpg";
             if (question.writer != "관리자") {
                 Student.findOne({ nick: question.writer }, { image: 1 })
                     .then(st => {
-                        image = st.image;
-                        question.writerImage = image;
+                        question.writerImage = st.image;
                         res.json({ status: "success", question: question });
                     })
                     .catch(err => {
                         console.log(err);
                         res.status(500).json({ status: "error" });
                     })
+            }
+            else {
+                question.writerImage = "default.jpg";
+                res.json({ status: "success", question: question });
             }
         })
         .catch(err => {
