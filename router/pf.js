@@ -78,7 +78,10 @@ router.get('/:portfolioId', (req, res) => {
 
 // 분리하고 싶은데 .. 
 router.post("/", verifyToken, findWriter, imageUploader('images/portfolios').array('projectImages'), (req, res) => {
-
+    // "20161184,20150000"
+    // ["20161184","20150000"]
+    // 팀장 "20161184"
+    // 참여한 사람들 ["20161184",'2020202020"]
     let sl = req.body.students.split(',');
     Student.find({ _id: { $in: sl } }).count()
         .then((count) => {
