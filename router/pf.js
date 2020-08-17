@@ -47,7 +47,7 @@ router.get("/list/:page", (req, res) => {
 
 router.get('/:portfolioId', (req, res) => {
     const _id = mongoose.Types.ObjectId(req.params.portfolioId);
-    Portfolio.update({ _id: _id }, { $inc: { view: 1 } })
+    Portfolio.update({ _id: _id }, { $inc: { view: 1 } },{new:true}).exec()
         .then(() => {
             Portfolio.aggregate([
                 { $match: { _id:_id } },
@@ -63,7 +63,6 @@ router.get('/:portfolioId', (req, res) => {
                 { $project: { "studentInfo.pw": 0, "studentInfo.name": 0, "studentInfo.phoneNum": 0 } }
             ])
                 .then((pf) => {
-                    pf.view = +1;
                     res.json({ portfolio: pf[0] });
                 })
                 .catch((err) => {

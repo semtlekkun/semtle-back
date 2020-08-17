@@ -6,7 +6,7 @@ const {compare} = require('./middlewares/compare');
 const imageUploader = require('./controllers/image.controller').imageUpload;
 
 router.get('/',verifyToken,(req,res)=>{
-    Student.findOne({_id:res.locals.id})
+    Student.findOne({_id:res.locals.id},{pw:0})
     .then(student=>{res.json({status:"success",student:student})})
     .catch(err=>{
         console.log(err);
@@ -17,10 +17,10 @@ router.get('/',verifyToken,(req,res)=>{
 router.put('/picture/update', verifyToken, imageUploader("images/students").single("image"), (req, res) => {
 
     Student.findOneAndUpdate({ _id: res.locals.id }, {
-        $set: { image: req.file != undefined? req.file.filename:null }
+        $set: { image: req.file != undefined? req.file.filename:"default.jpg" }
     }, { projection: { pw: false }, new: true })
-        .exec().then((studentList) => {
-            console.log(studentList.image);
+        .exec().then((student) => {
+            console.log(student.image);
             res.json({ status: "success"});
         })
         .catch(err => {
