@@ -70,16 +70,12 @@ router.get('/:portfolioId', (req, res) => {
 router.post("/", verifyToken, findWriter, imageUploader('images/portfolios').array('projectImages'), (req, res) => {
 
     let sl = req.body.students.split(',');
-    var count = 0;
+    // sl.push(req.body.teamLeaderCode);
     console.log(req.files);
     console.log(req.body.projectImages);
-    sl.forEach((element) => {
-        if (element === req.body.teamLeaderCode) {
-            count++;
-        }
-    })
-    if (count != 1) {
-        res.status(400).json({ status: "none" });
+    
+    if (sl.indexOf(req.body.teamLeaderCode) != -1) {
+        sl.push(req.body.teamLeaderCode);
     }
     else {
         Student.find({ _id: { $in: sl } }, { nick: 1, image: 1 })
