@@ -3,9 +3,9 @@ const { Schema } = mongoose;
 const saltRounds = require("../config/hash").saltRounds;
 const bcrypt = require("bcrypt");
 const studentSchema = new Schema({
-    _id:{
-        type:String,
-        required:true
+    _id: {
+        type: String,
+        required: true
     },
     pw: {
         type: String,
@@ -27,28 +27,16 @@ const studentSchema = new Schema({
         type: String,
         required: true
     }
-}, { versionKey: false }); 
+}, { versionKey: false });
 
-studentSchema.pre('save',function(next){
+studentSchema.pre('save', function (next) {
     const user = this;
     bcrypt.hash(user.pw, saltRounds, function (err, hash) {
-        if (err){
+        if (err) {
             console.log(err);
             next(err);
         }
         user.pw = hash;
-        next();
-    });
-})
-
-studentSchema.pre('update',function(next){
-    const user = this;
-    bcrypt.hash(user.getUpdate().$set.pw, saltRounds, function (err, hash) {
-        if (err){
-            console.log(err);
-            next(err);
-        }
-        user.getUpdate().$set.pw = hash;
         next();
     });
 })
