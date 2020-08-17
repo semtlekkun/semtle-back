@@ -28,7 +28,7 @@ router.get("/list/:page", (req, res) => {
     const page = req.params.page;
     Portfolio.find({}).count()
         .then((count) => {
-            Portfolio.find({}, { _id: true, projectTitle: true, contents: true, date: true, projectTeamName: true, projectImages: true })
+            Portfolio.find({}, { projectTitle:1,projectTeamName:1,projectImages:1,contents:1 })
                 .sort({ _id: -1 })
                 .skip((page - 1) * 10)
                 .limit(10)
