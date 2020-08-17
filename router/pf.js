@@ -70,9 +70,6 @@ router.get('/:portfolioId', (req, res) => {
 router.post("/", verifyToken, findWriter, imageUploader('images/portfolios').array('projectImages[]'), (req, res) => {
 
     let sl = req.body.students.split(',');
-    // sl.push(req.body.teamLeaderCode);
-    console.log(req.files);
-    console.log(req.body.projectImages);
     if (sl.indexOf(req.body.teamLeaderCode) == -1) {
         sl.push(req.body.teamLeaderCode);
     }
