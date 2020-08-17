@@ -27,10 +27,7 @@ const studentSchema = new Schema({
         type: String,
         required: true
     },
-    pfList: {
-        type: Object
-
-    }
+    pfList:Object
 }, { versionKey: false });
 
 studentSchema.pre('save', function (next) {

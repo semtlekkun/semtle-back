@@ -13,7 +13,7 @@ router.get('/', verifyToken, (req, res) => {
         .then(student => {
             Portfolio.find({ students: res.locals.id })
                 .then(pfList => {
-                    student.pfList = pfList;
+                    student.pfList = pfList == null? undefined:pfList;
                     res.json({ status: "success", student: student })
                 })
                 .catch(err => {
