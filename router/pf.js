@@ -67,51 +67,50 @@ router.get('/:portfolioId', (req, res) => {
 });
 
 // 분리하고 싶은데 .. 
-router.post("/", verifyToken, findWriter, imageUploader('images/portfolios').array('projectImages'), (req, res) => {
+router.post("/", verifyToken, findWriter, imageUploader('images/portfolios').array('projectImages[]'), (req, res) => {
 
     let sl = req.body.students.split(',');
     // sl.push(req.body.teamLeaderCode);
     console.log(req.files);
     console.log(req.body.projectImages);
-    
-    if (sl.indexOf(req.body.teamLeaderCode) != -1) {
+    if (sl.indexOf(req.body.teamLeaderCode) == -1) {
         sl.push(req.body.teamLeaderCode);
     }
-    else {
-        Student.find({ _id: { $in: sl } }, { nick: 1, image: 1 })
-            .then((sts) => {
-                if (sts.length == sl.length) {
-                    const pf = new Portfolio({
-                        projectTitle: req.body.projectTitle,
-                        students: sl,
-                        contents: req.body.contents,
-                        link: req.body.link,
-                        git: req.body.git,
-                        projectStartDate: req.body.projectStartDate,
-                        projectEndDate: req.body.projectEndDate,
-                        projectTeamName: req.body.projectTeamName,
-                        leaderNick: sts.filter(el => el._id == req.body.teamLeaderCode)[0].nick,
-                        projectImages: req.files.length == 0 ? ["default.jpg"] : req.files.map((image) => { return image.filename }),
-                        view: 0,
-                        writer: res.locals.writer,
-                        date: formatDateSend(new Date())
-                    });
-                    pf.save()
-                        .then(() => {
-                            res.json({ status: "success" });
-                        })
-                        .catch((err) => {
-                            console.log(err);
-                            res.status(500).json({ status: "error" });
-                        })
-                }
-                else res.status(400).json({ status: "none" });
-            })
-            .catch((err) => {
-                console.log(err);
-                res.status(500).json({ status: "error" });
-            });
-    }
+
+    Student.find({ _id: { $in: sl } }, { nick: 1, image: 1 })
+        .then((sts) => {
+            if (sts.length == sl.length) {
+                const pf = new Portfolio({
+                    projectTitle: req.body.projectTitle,
+                    students: sl,
+                    contents: req.body.contents,
+                    link: req.body.link,
+                    git: req.body.git,
+                    projectStartDate: req.body.projectStartDate,
+                    projectEndDate: req.body.projectEndDate,
+                    projectTeamName: req.body.projectTeamName,
+                    leaderNick: sts.filter(el => el._id == req.body.teamLeaderCode)[0].nick,
+                    projectImages: req.files.length == 0 ? ["default.jpg"] : req.files.map((image) => { return image.filename }),
+                    view: 0,
+                    writer: res.locals.writer,
+                    date: formatDateSend(new Date())
+                });
+                pf.save()
+                    .then(() => {
+                        res.json({ status: "success" });
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                        res.status(500).json({ status: "error" });
+                    })
+            }
+            else res.status(400).json({ status: "none" });
+        })
+        .catch((err) => {
+            console.log(err);
+            res.status(500).json({ status: "error" });
+        });
+
 })
 
 router.delete("/:portfolioId", verifyToken, adminConfirmation, (req, res) => {
