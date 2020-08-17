@@ -9,6 +9,7 @@ const createHash = require('./controllers/user.controller').createHash;
 const imageCleaner = require('./controllers/image.controller').imageClean;
 
 router.get('/', verifyToken, (req, res) => {
+    if(res.locals.isAdmin) res.json({status:"admin"});
     Student.findOne({ _id: res.locals.id }, { pw: 0 })
         .then(student => {
             Portfolio.find({ students: res.locals.id })
