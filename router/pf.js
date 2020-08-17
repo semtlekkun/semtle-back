@@ -13,7 +13,8 @@ const imagesCleaner = require('./controllers/image.controller').imagesClean;
 router.use(express.static('images/portfolios'));
 
 router.get('/list', (req, res) => {
-    Portfolio.find({}, { _id: true, projectTitle: true, writer: true, date: true, projectTeamName: true, view: true }).sort({ _id: -1 })
+    
+    Portfolio.find({}, {projectTitle:1,projectTeamName:1,projectImages}).sort({ _id: -1 })
         .then((portfolioList) => {
             res.json({ status: "success", count: portfolioList.length, portfolioList: portfolioList });
         })
@@ -27,7 +28,7 @@ router.get("/list/:page", (req, res) => {
     const page = req.params.page;
     Portfolio.find({}).count()
         .then((count) => {
-            Portfolio.find({}, { _id: true, projectTitle: true,contents:true, date: true, projectTeamName: true, projectImages:true })
+            Portfolio.find({}, { _id: true, projectTitle: true, contents: true, date: true, projectTeamName: true, projectImages: true })
                 .sort({ _id: -1 })
                 .skip((page - 1) * 10)
                 .limit(10)
@@ -47,28 +48,9 @@ router.get("/list/:page", (req, res) => {
 
 router.get('/:portfolioId', (req, res) => {
     const _id = mongoose.Types.ObjectId(req.params.portfolioId);
-    Portfolio.update({ _id: _id }, { $inc: { view: 1 } },{new:true}).exec()
-        .then(() => {
-            Portfolio.aggregate([
-                { $match: { _id:_id } },
-                {
-                    $lookup:
-                    {
-                        from: "student",
-                        localField: "students",
-                        foreignField: "_id",
-                        as: "studentInfo"
-                    }
-                },
-                { $project: { "studentInfo.pw": 0, "studentInfo.name": 0, "studentInfo.phoneNum": 0 } }
-            ])
-                .then((pf) => {
-                    res.json({ portfolio: pf[0] });
-                })
-                .catch((err) => {
-                    console.log(err);
-                    res.status(500).json({ status: "error" });
-                });
+    Portfolio.findByIdAndUpdate({ _id: _id }, { $inc: { view: 1 } }, { new: true }).exec()
+        .then((portfolio) => {
+            Student.find({_id:{}})
         })
         .catch(err => {
             console.log(err);
@@ -80,38 +62,32 @@ router.get('/:portfolioId', (req, res) => {
 router.post("/", verifyToken, findWriter, imageUploader('images/portfolios').array('projectImages'), (req, res) => {
 
     let sl = req.body.students.split(',');
-    Student.find({ _id: { $in: sl } }).count()
-        .then((count) => {
-            if (count == sl.length) {
-                Student.findOne({ _id: req.body.teamLeaderCode }, { nick: true })
-                    .then((student) => {
-                        
-                        const pf = new Portfolio({
-                            projectTitle: req.body.projectTitle,
-                            students: sl,
-                            contents: req.body.contents,
-                            link: req.body.link,
-                            git: req.body.git,
-                            projectStartDate: req.body.projectStartDate,
-                            projectEndDate: req.body.projectEndDate,
-                            projectTeamName: req.body.projectTeamName,
-                            leaderNick: student.nick,
-                            projectImages: req.files.map((image) => { return image.filename }),
-                            view: 0,
-                            writer: res.locals.writer,
-                            date: formatDateSend(new Date())
-                        });
-
-                        pf.save()
-                            .then(() => {
-                                res.json({ status: "success" });
-                            })
-                            .catch((err) => {
-                                console.log(err);
-                                res.status(500).json({ status: "error" });
-                            })
+    Student.find({ _id: { $in: sl } }, { nick: 1, image: 1 })
+        .then((sts) => {
+            if (sts.length == sl.length) {
+                const pf = new Portfolio({
+                    projectTitle: req.body.projectTitle,
+                    students: sl,
+                    contents: req.body.contents,
+                    link: req.body.link,
+                    git: req.body.git,
+                    projectStartDate: req.body.projectStartDate,
+                    projectEndDate: req.body.projectEndDate,
+                    projectTeamName: req.body.projectTeamName,
+                    leaderNick: sts.filter(el => el._id == req.body.teamLeaderCode)[0].nick,
+                    projectImages: req.files.map((image) => {console.log(image.filename); return image.filename }),
+                    view: 0,
+                    writer: res.locals.writer,
+                    date: formatDateSend(new Date())
+                });
+                pf.save()
+                    .then(() => {
+                        res.json({ status: "success" });
                     })
-
+                    .catch((err) => {
+                        console.log(err);
+                        res.status(500).json({ status: "error" });
+                    })
             }
             else res.status(400).json({ status: "none" });
         })
@@ -125,7 +101,7 @@ router.delete("/:portfolioId", verifyToken, adminConfirmation, (req, res) => {
     Portfolio.findOneAndRemove({ _id: req.params.portfolioId })
         .then((portfolio) => {
             if (portfolio) {
-                imagesCleaner("images/portfolios/",portfolio.projectImages);
+                imagesCleaner("images/portfolios/", portfolio.projectImages);
                 res.json({ status: "success" });
             }
             else res.status(400).json({ status: "none" });
