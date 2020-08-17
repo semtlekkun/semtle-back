@@ -14,7 +14,7 @@ router.use(express.static('images/portfolios'));
 
 router.get('/list', (req, res) => {
     
-    Portfolio.find({}, {projectTitle:1,projectTeamName:1,projectImages:1,contents:1}).sort({ _id: -1 })
+    Portfolio.find({}, {projectTitle:1,projectTeamName:1,projectImages:1,contents:1,writer:1,date:1}).sort({ _id: -1 })
         .then((portfolioList) => {
             res.json({ status: "success", count: portfolioList.length, portfolioList: portfolioList });
         })
@@ -28,7 +28,7 @@ router.get("/list/:page", (req, res) => {
     const page = req.params.page;
     Portfolio.find({}).count()
         .then((count) => {
-            Portfolio.find({}, { projectTitle:1,projectTeamName:1,projectImages:1,contents:1 })
+            Portfolio.find({}, { projectTitle:1,projectTeamName:1,projectImages:1,contents:1,writer:1,date:1 })
                 .sort({ _id: -1 })
                 .skip((page - 1) * 10)
                 .limit(10)
@@ -50,7 +50,12 @@ router.get('/:portfolioId', (req, res) => {
     const _id = mongoose.Types.ObjectId(req.params.portfolioId);
     Portfolio.findByIdAndUpdate({ _id: _id }, { $inc: { view: 1 } }, { new: true }).exec()
         .then((portfolio) => {
-            Student.find({_id:{}})
+            Student.find({_id:{$in:portfolio.students}},{pw:0,phoneNum:0})
+            .then(sts=>{
+                if(sts.length != portfolio.students){
+                    for()
+                }
+            })
         })
         .catch(err => {
             console.log(err);
