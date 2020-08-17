@@ -15,12 +15,13 @@ const answerSchema = new mongoose.Schema({
     writer: {
         type: String,
         required: [true, 'writer must be included'],
-        trim:true
+        trim: true
     },
     date: String,
+    writerImage: String
 },
-{
-    versionKey:false,
+    {
+        versionKey: false,
     }
 );
 
@@ -45,4 +46,4 @@ answerSchema.statics.deleteByQuestionId = function (question) {
     return (this.deleteMany().where('question').equals(question));
 }
 
-module.exports = mongoose.model('answer', answerSchema,'answer');
+module.exports = mongoose.model('answer', answerSchema, 'answer');
