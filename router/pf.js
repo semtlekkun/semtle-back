@@ -71,6 +71,8 @@ router.post("/", verifyToken, findWriter, imageUploader('images/portfolios').arr
 
     let sl = req.body.students.split(',');
     var count = 0;
+    console.log(req.files);
+    console.log(req.body.projectImages);
     sl.forEach((element) => {
         if (element === req.body.teamLeaderCode) {
             count++;

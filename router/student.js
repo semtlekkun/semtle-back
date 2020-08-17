@@ -20,7 +20,6 @@ router.get('/list', verifyToken, adminConfirmation, (req, res) => {
             console.log(err);
             res.status(500).json({ status: "error" });
         })
-
 });
 
 router.put('/update', verifyToken, adminConfirmation, createNick, (req, res) => {
