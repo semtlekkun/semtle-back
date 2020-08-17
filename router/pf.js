@@ -72,8 +72,8 @@ router.post("/", verifyToken, findWriter, imageUploader('images/portfolios').arr
     let sl = req.body.students.split(',');
     if (sl.indexOf(req.body.teamLeaderCode) == -1) {
         sl.push(req.body.teamLeaderCode);
-    }
-
+    }   
+    console.log(req.body.projectStartDate);
     Student.find({ _id: { $in: sl } }, { nick: 1, image: 1 })
         .then((sts) => {
             if (sts.length == sl.length) {
