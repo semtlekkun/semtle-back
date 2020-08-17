@@ -15,7 +15,6 @@ router.get('/', verifyToken, (req, res) => {
             Portfolio.find({ students: res.locals.id })
                 .then(pfList => {
                     student.pfList = pfList == null? undefined:pfList;
-                    console.log(pfList);
                     res.json({ status: "success", student: student })
                 })
                 .catch(err => {
