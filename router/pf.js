@@ -114,7 +114,10 @@ router.delete("/:portfolioId", verifyToken, adminConfirmation, (req, res) => {
     Portfolio.findOneAndRemove({ _id: req.params.portfolioId })
         .then((portfolio) => {
             if (portfolio) {
-                imagesCleaner("images/portfolios/", portfolio.projectImages);
+
+                if(portfolio.projectImages[0] !="default.jpg"){
+                    imagesCleaner("images/portfolios/", portfolio.projectImages);
+                }  
                 res.json({ status: "success" });
             }
             else res.status(400).json({ status: "none" });

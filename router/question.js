@@ -80,7 +80,9 @@ router.delete('/:questionid', verifyToken, adminConfirmation, (req, res) => {
         .then(() => {
             question.deleteByQuestionId(req.params.questionid)
                 .then((question) => {
-                    imageCleaner("images/questions/", question.image);
+                    if(question.image !="default.jpg"){
+                        imageCleaner("images/questions/", question.image);
+                    }  
                     res.json({ status: "success" });
                 })
                 .catch(err => {
