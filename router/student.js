@@ -8,7 +8,7 @@ const { adminConfirmation } = require('./middlewares/adminConfirmation');
 // 전화번호, 이메일 등은 암호화 후 저장해야 함 (추가예정)
 // 에러 핸들러를 만들어야 함
 
-router.use(express.static('images/students'));
+router.use('/images',express.static('images/students'));
 
 router.get('/list', verifyToken, adminConfirmation, (req, res) => {
 

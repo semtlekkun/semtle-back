@@ -10,7 +10,7 @@ const { formatDateSend } = require('../js/formatDateSend');
 const imageUploader = require('./controllers/image.controller').imageUpload;
 const imagesCleaner = require('./controllers/image.controller').imagesClean;
 
-router.use(express.static('images/portfolios'));
+router.use('/images',express.static('images/portfolios'));
 
 router.get('/list', (req, res) => {
 

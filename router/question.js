@@ -10,7 +10,7 @@ const { formatDateSend } = require('../js/formatDateSend');
 const imageUploader = require('./controllers/image.controller').imageUpload;
 const imageCleaner = require('./controllers/image.controller').imageClean;
 
-router.use(express.static("images/questions"));
+router.use('/images',express.static("images/questions"));
 
 router.get('/list', (req, res) => {
     question.find({}, { image: false }).sort({ _id: -1 })

@@ -9,7 +9,7 @@ const imageUploader = require('./controllers/image.controller').imageUpload;
 const imageCleaner = require('./controllers/image.controller').imageClean;
 
 
-router.use(express.static('images/notices'));
+router.use('/images',express.static('images/notices'));
 
 router.get('/list', (req, res) => {
     Notice.find({}, { contents: false, image: false }).sort({ _id: -1 })
