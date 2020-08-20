@@ -34,9 +34,9 @@ router.put('/picture/update', verifyToken, imageUploader("images/students").sing
         $set: { image: req.file != undefined ? req.file.filename : "default.jpg" }
     }, { projection: { pw: false } })
         .exec().then((student) => {
-            if(student.image !="default.jpg"){
-                imageCleaner("images/students/",student.image);
-            }                
+            // if(student.image !="default.jpg"){
+            //     imageCleaner("images/students/",student.image);
+            // }                
             console.log(student.image);
             res.json({ status: "success" });
         })
