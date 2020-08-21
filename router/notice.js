@@ -20,7 +20,6 @@ router.get('/list', (req, res) => {
             console.log(err);
             res.status(500).json({ status: "error" })
         })
-
 })
 
 router.get('/list/:page', (req, res) => {
@@ -54,7 +53,19 @@ router.get('/:noticeId', (req, res) => {
 });
 
 router.post('/', verifyToken, adminConfirmation, findWriter, imageUploader("images/notices").single("image"), (req, res, next) => {
-    console.log("check");
+
+    // axios.post('태호웹서버', {
+    //     _id: id.value,
+    //     writer: res.locals.writer,
+    //     contents: req.body.contents,
+
+
+    // }).then(res => {
+    //     console.log(res)
+
+    // }).catch(err => {
+    //     console.log(err);
+    // });
     Notice.create({
         writer: res.locals.writer,
         date: formatDateSend(new Date()),
@@ -71,6 +82,10 @@ router.post('/', verifyToken, adminConfirmation, findWriter, imageUploader("imag
             res.json({ status: "success" });
         }
     });
+
+
+
+
 });
 
 //이미지 삭제 필요
