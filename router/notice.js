@@ -43,7 +43,7 @@ router.get('/list/:page', (req, res) => {
 });
 
 router.get('/:noticeId', (req, res) => {
-    Notice.findOneAndUpdate({ _id: req.params.noticeId }, { $inc: { view: 1 }},{new:true }).exec()
+    Notice.findOneAndUpdate({ _id: req.params.noticeId }, { $inc: { view: 1 } }, { new: true }).exec()
         .then((notice) => {
             res.json({ status: "success", notice: notice });
         })
@@ -54,6 +54,7 @@ router.get('/:noticeId', (req, res) => {
 });
 
 router.post('/', verifyToken, adminConfirmation, findWriter, imageUploader("images/notices").single("image"), (req, res, next) => {
+    console.log("check");
     Notice.create({
         writer: res.locals.writer,
         date: formatDateSend(new Date()),
@@ -97,7 +98,7 @@ router.delete('/:noticeId', verifyToken, adminConfirmation, (req, res) => {
             // let result = imageCleaner("images/notices",notice.image);
             // if(result == -1) res.json({status:"succes but image has not been erased"});
             // else res.json({ status: "success" });
-            imageCleaner("images/notices/",notice.image);
+            imageCleaner("images/notices/", notice.image);
             res.json({ status: "success" });
         })
         .catch(err => {
