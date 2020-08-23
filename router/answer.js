@@ -11,7 +11,7 @@ router.get('/:questionid', (req, res) => {
     answer.findByQuestionId(req.params.questionid)
         .then((answers) => {
 
-            if (Object.keys(answers).length === 0) {
+            if (answers.length === 0) {
                 console.log("No answer");
                 res.status(500).json({ status: "error" });
             } else {
@@ -20,7 +20,7 @@ router.get('/:questionid', (req, res) => {
                     if (element.writer !== "관리자") {
                         await Student.find({ nick: element.writer })
                             .then((sts) => {
-                                //console.log("test:", index)
+                                console.log("test:", index)
                                 // console.log(sts[0].image);
                                 element.writerImage = sts[0].image;
                                 // console.log(element)
@@ -32,7 +32,7 @@ router.get('/:questionid', (req, res) => {
                     else {
                         element.writerImage = 'default.jpg';
                     }
-                    // console.log("index: ", index)
+                    console.log("index: ", index)
 
                     if (index === answers.length - 1) {
                         //console.log("taese0ng: ")
