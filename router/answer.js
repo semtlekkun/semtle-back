@@ -8,25 +8,52 @@ const { adminConfirmation } = require('./middlewares/adminConfirmation');
 const { findWriter } = require("./middlewares/findWriter");
 
 router.get('/:questionid', (req, res) => {
-    answer.findByQuestionId(req.params.questionid)
-        .then((answers) => {
-            answers.forEach(async (element, index) => {
-                if (element.writer !== "관리자") {
-                    await Student.find({ nick: element.writer })
+    function forEachPromise(items, logItem) {
+        return items.reduce(function (promise, item) { //promise: acc //item: cur 
+            return promise.then(function () {
+                return logItem(item);
+            });
+        }, Promise.resolve());
+    }
+
+    function logItem(item) {
+        return new Promise((resolve, reject) => {
+            process.nextTick(() => {
+                if (item.writer !== "관리자") {
+
+                    Student.find({ nick: item.writer })
                         .then((sts) => {
-                            element.writerImage = !sts.length? "default.jpg":sts[0].image;
+                            //console.log("test:")
+                            //console.log(sts[0].image);
+                            item.writerImage = sts[0].image;
+                            findCheck = true;
                         }).catch(err => {
                             console.log(err);
                             res.status(500).json({ status: "error" });
                         });
                 }
                 else {
-                    element.writerImage = 'default.jpg';
+
+                    item.writerImage = 'default.jpg';
+
                 }
-                if (index === answers.length - 1) {
-                    res.send({ answers: answers });
-                }
+                //console.log(item);
+                setTimeout(function () { resolve() }, 100);
+
             })
+        });
+    }
+    answer.findByQuestionId(req.params.questionid)
+        .then((answers) => {
+
+            if (answers.length === 0) {
+                //console.log("No answer");
+                res.status(200).json({ status: "No answer" });
+            } else {
+                forEachPromise(answers, logItem).then(() => {
+                    res.send({ answers: answers });
+                });
+            }
         })
         .catch(err => {
             console.log(err);
