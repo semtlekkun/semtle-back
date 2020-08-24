@@ -6,8 +6,45 @@ const { formatDateSend } = require('../js/formatDateSend');
 const { verifyToken } = require("./middlewares/authorization");
 const { adminConfirmation } = require('./middlewares/adminConfirmation');
 const { findWriter } = require("./middlewares/findWriter");
+const { find } = require('../schemas/student');
 
 router.get('/:questionid', (req, res) => {
+
+    function forEachPromise(items, logItem) {
+        return items.reduce(function (promise, item) { //promise: acc //item: cur 
+            return promise.then(function () {
+                return logItem(item);
+            });
+        }, Promise.resolve());
+    }
+
+    function logItem(item) {
+        return new Promise((resolve, reject) => {
+            process.nextTick(() => {
+                if (item.writer !== "관리자") {
+
+                    Student.find({ nick: item.writer })
+                        .then((sts) => {
+                            console.log("test:")
+                            console.log(sts[0].image);
+                            item.writerImage = sts[0].image;
+                            findCheck = true;
+                        }).catch(err => {
+                            console.log(err);
+                            res.status(500).json({ status: "error" });
+                        });
+                }
+                else {
+
+                    item.writerImage = 'default.jpg';
+
+                }
+                console.log(item);
+                setTimeout(function () { resolve() }, 100);
+
+            })
+        });
+    }
     answer.findByQuestionId(req.params.questionid)
         .then((answers) => {
 
@@ -15,33 +52,10 @@ router.get('/:questionid', (req, res) => {
                 console.log("No answer");
                 res.status(500).json({ status: "error" });
             } else {
-                answers.forEach(async (element, index) => {
-                    // console.log(element);
-                    if (element.writer !== "관리자") {
-                        await Student.find({ nick: element.writer })
-                            .then((sts) => {
-                                console.log("test:", index)
-                                // console.log(sts[0].image);
-                                element.writerImage = sts[0].image;
-                                // console.log(element)
-                            }).catch(err => {
-                                console.log(err);
-                                res.status(500).json({ status: "error" });
-                            });
-                    }
-                    else {
-                        element.writerImage = 'default.jpg';
-                    }
-                    console.log("index: ", index)
-
-                    if (index === answers.length - 1) {
-                        //console.log("taese0ng: ")
-                        res.send({ answers: answers });
-                    }
-                })
+                forEachPromise(answers, logItem).then(() => {
+                    res.send({ answers: answers });
+                });
             }
-
-
         })
         .catch(err => {
             console.log(err);
