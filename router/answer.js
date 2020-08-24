@@ -25,8 +25,8 @@ router.get('/:questionid', (req, res) => {
 
                     Student.find({ nick: item.writer })
                         .then((sts) => {
-                            console.log("test:")
-                            console.log(sts[0].image);
+                            //console.log("test:")
+                            //console.log(sts[0].image);
                             item.writerImage = sts[0].image;
                             findCheck = true;
                         }).catch(err => {
@@ -39,7 +39,7 @@ router.get('/:questionid', (req, res) => {
                     item.writerImage = 'default.jpg';
 
                 }
-                console.log(item);
+                //console.log(item);
                 setTimeout(function () { resolve() }, 100);
 
             })
