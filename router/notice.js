@@ -9,7 +9,7 @@ const imageUploader = require('./controllers/image.controller').imageUpload;
 const imageCleaner = require('./controllers/image.controller').imageClean;
 
 
-router.use(express.static('images/notices'));
+router.use('/images', express.static('images/notices'));
 
 router.get('/list', (req, res) => {
     Notice.find({}, { contents: false, image: false }).sort({ _id: -1 })
@@ -54,6 +54,41 @@ router.get('/:noticeId', (req, res) => {
 
 router.post('/', verifyToken, adminConfirmation, findWriter, imageUploader("images/notices").single("image"), (req, res, next) => {
 
+    function createNotice() {
+        return new Promise(function (resolve, reject) {
+            Notice.create({
+                writer: res.locals.writer,
+                date: formatDateSend(new Date()),
+                image: req.file != undefined ? req.file.filename : null,
+                title: req.body.title,
+                contents: req.body.contents,
+                view: 0
+            }, function (err) {
+                if (err) {
+                    console.log(err)
+                    res.status(500).json({ status: "error" });
+                }
+                else {
+                    console.log("test");
+                    resolve("success");
+                    res.json({ status: "success" });
+                }
+            })
+        });
+    }
+    async function CreateAndTrans() {
+        await createNotice();
+        Notice.find({ "title": req.body.title })
+            .then((noticeList) => {
+                console.log(noticeList[0]._id);
+            })
+
+
+    }
+
+    CreateAndTrans();
+
+
     // axios.post('태호웹서버', {
     //     _id: id.value,
     //     writer: res.locals.writer,
@@ -66,24 +101,6 @@ router.post('/', verifyToken, adminConfirmation, findWriter, imageUploader("imag
     // }).catch(err => {
     //     console.log(err);
     // });
-    Notice.create({
-        writer: res.locals.writer,
-        date: formatDateSend(new Date()),
-        image: req.file != undefined ? req.file.filename : null,
-        title: req.body.title,
-        contents: req.body.contents,
-        view: 0
-    }, function (err) {
-        if (err) {
-            console.log(err)
-            res.status(500).json({ status: "error" });
-        }
-        else {
-            res.json({ status: "success" });
-        }
-    });
-
-
 
 
 });
