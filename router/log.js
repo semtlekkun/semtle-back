@@ -14,7 +14,6 @@ const studentController = require("./controllers/user.controller");
  });
 
  router.post('/out',(req,res,next)=>{
-    console.log(req.body.pw);
    res.json({status:"success"});
  });
 
