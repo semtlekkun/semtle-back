@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const dbConfig = require('../db_config.json');
+const dbConfig = require('../config/db');
 
 module.exports = () => {
     const connect = () => {
@@ -9,7 +9,6 @@ module.exports = () => {
             useNewUrlParser: true,
             useUnifiedTopology: true,
             useFindAndModify: false
-
         })
             .then(() => console.log('몽고디비 연결 성공'))
             .catch((e) => console.error(e));
