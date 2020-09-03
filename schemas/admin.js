@@ -24,7 +24,7 @@ const adminSchema = new Schema({
     },
     image:{
         type:String,
-        default:"default.png"
+        default:"default.jpg"
     }
 },
 {
