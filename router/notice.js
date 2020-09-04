@@ -89,8 +89,9 @@ router.post('/', verifyToken, adminConfirmation, findWriter, imageUploader("imag
     CreateAndTrans();
 
 
-    // axios.post('태호웹서버', {
+    // axios.post('192.168.0.3:5000/notice', {
     //     _id: id.value,
+    //     title: res.locals.title,
     //     writer: res.locals.writer,
     //     contents: req.body.contents,
 
