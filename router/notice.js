@@ -9,9 +9,10 @@ const imageUploader = require('./controllers/image.controller').imageUpload;
 const imageCleaner = require('./controllers/image.controller').imageClean;
 
 
-router.use('/images',express.static('images/notices'));
+router.use('/images', express.static('images/notices'));
 
 router.get('/list', (req, res) => {
+
     Notice.find({}, { contents: false, image: false }).sort({ _id: -1 })
         .then((noticeList) => {
             res.json({ status: "success", count: noticeList.length, noticeList: noticeList });
@@ -43,7 +44,7 @@ router.get('/list/:page', (req, res) => {
 });
 
 router.get('/:noticeId', (req, res) => {
-    Notice.findOneAndUpdate({ _id: req.params.noticeId }, { $inc: { view: 1 }},{new:true }).exec()
+    Notice.findOneAndUpdate({ _id: req.params.noticeId }, { $inc: { view: 1 } }, { new: true }).exec()
         .then((notice) => {
             res.json({ status: "success", notice: notice });
         })
@@ -97,10 +98,10 @@ router.delete('/:noticeId', verifyToken, adminConfirmation, (req, res) => {
             // let result = imageCleaner("images/notices",notice.image);
             // if(result == -1) res.json({status:"succes but image has not been erased"});
             // else res.json({ status: "success" });
-            if(notice.image !="default.jpg"){
-                imageCleaner("images/notices/",notice.image);
-            }  
-            
+            if (notice.image != "default.jpg") {
+                imageCleaner("images/notices/", notice.image);
+            }
+
             res.json({ status: "success" });
         })
         .catch(err => {

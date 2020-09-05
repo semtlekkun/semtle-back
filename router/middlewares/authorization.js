@@ -1,9 +1,11 @@
 const jwt = require("jsonwebtoken");
 const secretKey = require("../../config/jwt");
+const blacklist = require('../../schemas/blacklist');
+
 
 module.exports.verifyToken = (req, res, next) => {
     const token = req.header('token');
-    console.log("토큰"+token)
+    console.log("토큰" + token)
     if (token == undefined) res.status(401).json({ status: "tokenMissing" })
     try {
         const decoded = jwt.verify(token, secretKey.secret);
@@ -21,4 +23,39 @@ module.exports.verifyToken = (req, res, next) => {
         res.status(401).json({ status: "tokenExpired" });
     }
 }
+
+module.exports.checkBlackList = (req, res, next) => {
+    const token = req.header('token');
+    //console.log("토큰" + token)
+
+    blacklist.find({ token: token })
+        .then((blacklist) => {
+            //console.log(blacklist);
+            res.locals.isBlack = true;
+            next();
+        })
+    // .catch(err => {
+    //     console.log(err);
+    //     res.status(500).json({ status: "error" })
+    // })
+
+
+    // if (token == undefined) res.status(401).json({ status: "tokenMissing" })
+    // try {
+    //     const decoded = jwt.verify(token, secretKey.secret);
+    //     if (decoded) {
+    //         res.locals.isAdmin = decoded.isAdmin
+    //         res.locals.id = decoded.id
+    //         next();
+    //     }
+    //     else {
+    //         res.status(500).json({ status: "unauthorized" });
+    //     }
+    // }
+    // catch (err) {
+    //     console.log(err);
+    //     res.status(401).json({ status: "tokenExpired" });
+    // }
+}
+
 
