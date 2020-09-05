@@ -4,13 +4,11 @@ const Student = require('../schemas/student');
 const { createNick } = require('./middlewares/createNick');
 const { verifyToken } = require("./middlewares/authorization");
 const { adminConfirmation } = require('./middlewares/adminConfirmation');
-
-// 전화번호, 이메일 등은 암호화 후 저장해야 함 (추가예정)
-// 에러 핸들러를 만들어야 함
+const { checkBlackList } = require("./middlewares/authorization");
 
 router.use('/images',express.static('images/students'));
 
-router.get('/list', verifyToken, adminConfirmation, (req, res) => {
+router.get('/list', verifyToken,checkBlackList, adminConfirmation, (req, res) => {
 
     Student.find({}, { pw: 0 })
         .then((students) => {
@@ -22,7 +20,7 @@ router.get('/list', verifyToken, adminConfirmation, (req, res) => {
         })
 });
 
-router.put('/update', verifyToken, adminConfirmation, createNick, (req, res) => {
+router.put('/update', verifyToken,checkBlackList, adminConfirmation, createNick, (req, res) => {
     Student.update({ _id: req.body.studentCode },
         { $set: { name: req.body.name, nick: res.locals.createdNick, phoneNum: req.body.phoneNum } })
         .then((result) => {
@@ -36,7 +34,7 @@ router.put('/update', verifyToken, adminConfirmation, createNick, (req, res) => 
         })
 });
 
-router.post('/input', verifyToken, adminConfirmation, createNick, (req, res) => {
+router.post('/input', verifyToken,checkBlackList, adminConfirmation, createNick, (req, res) => {
     const student = new Student({
         _id: req.body.studentCode,
         pw: req.body.studentCode,
@@ -57,7 +55,7 @@ router.post('/input', verifyToken, adminConfirmation, createNick, (req, res) => 
         });
 })
 
-router.delete('/delete', verifyToken, adminConfirmation, (req, res) => {
+router.delete('/delete', verifyToken,checkBlackList, adminConfirmation, (req, res) => {
     Student.remove({ _id: { $in: req.body.ids } })
         .then((result) => {
             if (result.deletedCount) res.json({ status: "success" })

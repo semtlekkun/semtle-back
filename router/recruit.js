@@ -5,6 +5,7 @@ const { verifyToken } = require("./middlewares/authorization");
 const { findWriter } = require("./middlewares/findWriter");
 const { adminConfirmation } = require('./middlewares/adminConfirmation');
 const { formatDateSend } = require('../js/formatDateSend');
+const { checkBlackList } = require("./middlewares/authorization");
 
 router.get('/list', (req, res) => {
     Recruit.find({}, { date: false, contents: false }).sort({ _id: -1 })
@@ -46,7 +47,7 @@ router.get('/:recruitId', (req, res) => {
         });
 });
 
-router.post('/', verifyToken, findWriter, (req, res) => {
+router.post('/', verifyToken,checkBlackList, findWriter, (req, res) => {
 
     var writer = res.locals.writer;
     var date = formatDateSend(new Date())
@@ -69,7 +70,7 @@ router.post('/', verifyToken, findWriter, (req, res) => {
     });
 });
 
-router.delete('/:recruitId', verifyToken, adminConfirmation, (req, res) => {
+router.delete('/:recruitId', verifyToken,checkBlackList, adminConfirmation, (req, res) => {
     Recruit.remove({ _id: req.params.recruitId })
         .then((result) => {
             if (result.deletedCount) res.json({ status: "success" });

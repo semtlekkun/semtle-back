@@ -14,11 +14,11 @@ module.exports.createToken = function (req, res, next) {
                     const token = jwt.sign({
                         id: admin._id,
                         isAdmin: true,
-                        time: formatDate(new Date())
+                        time: new Date()
                     },
                         secretKey.secret,
                         {
-                            expiresIn: '6h'
+                            expiresIn: '5m'
                         });
                     res.status(200).json({
                         status: 'success',

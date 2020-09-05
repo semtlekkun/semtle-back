@@ -7,7 +7,7 @@ const { adminConfirmation } = require('./middlewares/adminConfirmation');
 const { formatDateSend } = require('../js/formatDateSend');
 const imageUploader = require('./controllers/image.controller').imageUpload;
 const imageCleaner = require('./controllers/image.controller').imageClean;
-
+const { checkBlackList } = require("./middlewares/authorization");
 
 router.use('/images', express.static('images/notices'));
 
@@ -54,7 +54,7 @@ router.get('/:noticeId', (req, res) => {
         });
 });
 
-router.post('/', verifyToken, adminConfirmation, findWriter, imageUploader("images/notices").single("image"), (req, res, next) => {
+router.post('/', verifyToken,checkBlackList, adminConfirmation, findWriter, imageUploader("images/notices").single("image"), (req, res, next) => {
     Notice.create({
         writer: res.locals.writer,
         date: formatDateSend(new Date()),
@@ -73,42 +73,19 @@ router.post('/', verifyToken, adminConfirmation, findWriter, imageUploader("imag
     });
 });
 
-//이미지 삭제 필요
-router.delete('/:noticeId', verifyToken, adminConfirmation, (req, res) => {
+router.delete('/:noticeId', verifyToken,checkBlackList, adminConfirmation, (req, res) => {
 
-    // Notice.findOneAndRemove({ _id: req.params.noticeId })
-    //     .exec(function (err, item) {
-    //         var filePath = './images/notices/' + item.image;
-
-    //         fs.unlinkSync(filePath);
-    //         if (err) {
-    //             res.status(500).send({ status: "err" });
-    //         }
-    //         if (!item) {
-    //             res.status(400).json({ status: "none" });
-    //         }
-    //         res.json({ status: "success" });
-    //     })
-    //     .catch(err=>{
-    //         console.log(err);
-    //         res.status(500).json({status:"error"});
-    //     })
     Notice.findOneAndRemove({ _id: req.params.noticeId })
         .then((notice) => {
-            // let result = imageCleaner("images/notices",notice.image);
-            // if(result == -1) res.json({status:"succes but image has not been erased"});
-            // else res.json({ status: "success" });
             if (notice.image != "default.jpg") {
                 imageCleaner("images/notices/", notice.image);
             }
-
             res.json({ status: "success" });
         })
         .catch(err => {
             console.log(err);
             res.status(500).json({ status: "error" });
         })
-
 });
 
 module.exports = router;

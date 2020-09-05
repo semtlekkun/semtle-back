@@ -5,6 +5,7 @@ const Student = require('../schemas/student');
 const studentCheck = require('./controllers/user.controller').checkStudent;
 const {verifyToken} = require("./middlewares/authorization");
 const {adminConfirmation} =  require('./middlewares/adminConfirmation');
+const { checkBlackList } = require("./middlewares/authorization");
 
 router.get('/list',(req,res)=>{
     Management.find({})
@@ -17,7 +18,7 @@ router.get('/list',(req,res)=>{
     })
 });
 
-router.post('/input',studentCheck,(req,res)=>{
+router.post('/input',verifyToken,checkBlackList,adminConfirmation,studentCheck,(req,res)=>{
 
     Student.findOne({_id:req.body.studentCode},{name:1,image:1})
     .then(student=>{
@@ -41,7 +42,7 @@ router.post('/input',studentCheck,(req,res)=>{
 
 })
 
-router.delete('/delete',verifyToken,adminConfirmation,(req,res)=>{
+router.delete('/delete',verifyToken,checkBlackList,adminConfirmation,(req,res)=>{
     Management.remove({_id:req.body._id})
     .then((result)=>{
         if(result.deletedCount) res.json({status:"success"});
@@ -53,7 +54,7 @@ router.delete('/delete',verifyToken,adminConfirmation,(req,res)=>{
     })
 });
 
-router.put('/update',verifyToken,adminConfirmation,studentCheck,(req,res)=>{
+router.put('/update',verifyToken,checkBlackList,adminConfirmation,studentCheck,(req,res)=>{
     Management.update({_id:req.body._id},req.body)
     .then((result)=>{
         console.log(result);

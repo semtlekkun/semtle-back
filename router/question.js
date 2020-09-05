@@ -64,8 +64,8 @@ router.get('/:questionid', (req, res) => {
 });
 
 router.post('/', verifyToken, checkBlackList, findWriter, imageUploader('images/questions').single("image"), (req, res) => {
-    if (res.locals.isBlack) res.status(401).json({ status: "unauthorized" })
-    else {
+    // if (res.locals.isBlack) res.status(401).json({ status: "unauthorized" })
+    // else {
         req.body.writer = res.locals.writer
         req.body.image = req.file != undefined ? req.file.filename : null
         req.body.date = formatDateSend(new Date())
@@ -76,7 +76,7 @@ router.post('/', verifyToken, checkBlackList, findWriter, imageUploader('images/
                 console.log(err);
                 res.status(500).json({ status: "error" })
             });
-    }
+    // }
 
 });
 
