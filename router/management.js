@@ -6,11 +6,29 @@ const studentCheck = require('./controllers/user.controller').checkStudent;
 const {verifyToken} = require("./middlewares/authorization");
 const {adminConfirmation} =  require('./middlewares/adminConfirmation');
 const { checkBlackList } = require("./middlewares/authorization");
+const answer = require('../schemas/answer');
 
 router.get('/list',(req,res)=>{
+
     Management.find({})
     .then(management=>{
-        res.json({status:"success",management:management});
+        management.forEach(async (el,index) => {
+            await Student.findOne({_id:el.studentCode},{name:1,image:1})
+            .then(student=>{
+                console.log(index)
+                management[index].name = student.name
+                management[index].image = student.image
+            })
+            .catch((err)=>{
+                console.log(err);
+                res.status(500).json({status:"error"});
+            });
+            if(index == management.length -1)
+            {
+                res.json({status:"success",management:management});
+            }
+        });
+        
     })
     .catch(err=>{
         console.log(err);
@@ -19,27 +37,15 @@ router.get('/list',(req,res)=>{
 });
 
 router.post('/input',verifyToken,checkBlackList,adminConfirmation,studentCheck,(req,res)=>{
-
-    Student.findOne({_id:req.body.studentCode},{name:1,image:1})
-    .then(student=>{
-        req.body.name = student.name
-        req.body.image = student.image
-        const management = new Management(req.body);
-        management.save()
-        .then(()=>{
-            res.json({status:"success"});
-        })
-        .catch((err)=>{
-            console.log(err);
-            res.status(500).json({status:"error"});
-        });
+    const management = new Management(req.body);
+    management.save()
+    .then(()=>{
+        res.json({status:"success"});
     })
-    .catch(err=>{
+    .catch((err)=>{
         console.log(err);
         res.status(500).json({status:"error"});
-    })
-
-
+    });
 })
 
 router.delete('/delete',verifyToken,checkBlackList,adminConfirmation,(req,res)=>{
