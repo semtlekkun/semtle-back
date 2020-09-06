@@ -22,7 +22,7 @@ router.get('/list/:page', (req, res) => {
     var page = req.params.page;
     Recruit.find({}).count()
         .then((count) => {
-            Recruit.find({}, { date: false, contents: false }).sort({ "date": -1 }).skip((page - 1) * 10).limit(10)
+            Recruit.find({}, { contents: false }).sort({ "date": -1 }).skip((page - 1) * 10).limit(10)
                 .then((recruitList) => {
                     res.json({ status: "success", count: count, recruitList: recruitList });
                 })
@@ -47,7 +47,7 @@ router.get('/:recruitId', (req, res) => {
         });
 });
 
-router.post('/', verifyToken,checkBlackList, findWriter, (req, res) => {
+router.post('/', verifyToken, checkBlackList, findWriter, (req, res) => {
 
     var writer = res.locals.writer;
     var date = formatDateSend(new Date())
@@ -70,7 +70,7 @@ router.post('/', verifyToken,checkBlackList, findWriter, (req, res) => {
     });
 });
 
-router.delete('/:recruitId', verifyToken,checkBlackList, adminConfirmation, (req, res) => {
+router.delete('/:recruitId', verifyToken, checkBlackList, adminConfirmation, (req, res) => {
     Recruit.remove({ _id: req.params.recruitId })
         .then((result) => {
             if (result.deletedCount) res.json({ status: "success" });
