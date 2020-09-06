@@ -4,13 +4,14 @@ const question = require('../schemas/question');
 const answer = require('../schemas/answer');
 const Student = require('../schemas/student');
 const { verifyToken } = require("./middlewares/authorization");
+const { checkBlackList } = require("./middlewares/authorization");
 const { adminConfirmation } = require('./middlewares/adminConfirmation');
 const { findWriter } = require("./middlewares/findWriter");
 const { formatDateSend } = require('../js/formatDateSend');
 const imageUploader = require('./controllers/image.controller').imageUpload;
 const imageCleaner = require('./controllers/image.controller').imageClean;
 
-router.use('/images',express.static("images/questions"));
+router.use('/images', express.static("images/questions"));
 
 router.get('/list', (req, res) => {
     question.find({}, { image: false }).sort({ _id: -1 })
@@ -37,7 +38,7 @@ router.get('/list/:page', (req, res) => {
 });
 
 router.get('/:questionid', (req, res) => {
-    question.findByIdAndUpdate({_id:req.params.questionid},{ $inc: { view: 1 } }, { new: true })
+    question.findByIdAndUpdate({ _id: req.params.questionid }, { $inc: { view: 1 } }, { new: true })
         .then((question) => {
             if (!question) res.status(404).json({ err: 'Question not found' });
             if (question.writer != "관리자") {
@@ -62,17 +63,21 @@ router.get('/:questionid', (req, res) => {
         });
 });
 
-router.post('/', verifyToken, findWriter, imageUploader('images/questions').single("image"), (req, res) => {
-    req.body.writer = res.locals.writer
-    req.body.image = req.file != undefined ? req.file.filename : null
-    req.body.date = formatDateSend(new Date())
-    req.body.view = 0
-    question.create(req.body)
-        .then(() => res.json({ status: "success" }))
-        .catch(err => {
-            console.log(err);
-            res.status(500).json({ status: "error" })
-        });
+router.post('/', verifyToken, checkBlackList, findWriter, imageUploader('images/questions').single("image"), (req, res) => {
+    // if (res.locals.isBlack) res.status(401).json({ status: "unauthorized" })
+    // else {
+        req.body.writer = res.locals.writer
+        req.body.image = req.file != undefined ? req.file.filename : null
+        req.body.date = formatDateSend(new Date())
+        req.body.view = 0
+        question.create(req.body)
+            .then(() => res.json({ status: "success" }))
+            .catch(err => {
+                console.log(err);
+                res.status(500).json({ status: "error" })
+            });
+    // }
+
 });
 
 router.delete('/:questionid', verifyToken, adminConfirmation, (req, res) => {
@@ -80,9 +85,9 @@ router.delete('/:questionid', verifyToken, adminConfirmation, (req, res) => {
         .then(() => {
             question.deleteByQuestionId(req.params.questionid)
                 .then((question) => {
-                    if(question.image !="default.jpg"){
+                    if (question.image != "default.jpg") {
                         imageCleaner("images/questions/", question.image);
-                    }  
+                    }
                     res.json({ status: "success" });
                 })
                 .catch(err => {

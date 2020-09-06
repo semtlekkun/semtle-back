@@ -2,7 +2,7 @@ const Admin = require("../../schemas/admin");
 const jwt = require("jsonwebtoken");
 const secretKey = require('../../config/jwt');
 const bcrypt = require('bcrypt');
-const saltRounds = require("../../config/hash").saltRounds;
+const { formatDate } = require('../../js/formatDate');
 
 module.exports.createToken = function (req, res, next) {
     Admin.findOne({ _id: req.body._id }, { pw: true })
@@ -13,11 +13,12 @@ module.exports.createToken = function (req, res, next) {
                 if (result) {
                     const token = jwt.sign({
                         id: admin._id,
-                        isAdmin: true
+                        isAdmin: true,
+                        time: new Date()
                     },
                         secretKey.secret,
                         {
-                            expiresIn: '6h'
+                            expiresIn: '30s'
                         });
                     res.status(200).json({
                         status: 'success',

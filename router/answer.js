@@ -6,6 +6,7 @@ const { formatDateSend } = require('../js/formatDateSend');
 const { verifyToken } = require("./middlewares/authorization");
 const { adminConfirmation } = require('./middlewares/adminConfirmation');
 const { findWriter } = require("./middlewares/findWriter");
+const { checkBlackList } = require("./middlewares/authorization");
 
 router.get('/:questionid', (req, res) => {
     function forEachPromise(items, logItem) {
@@ -61,7 +62,7 @@ router.get('/:questionid', (req, res) => {
         });
 });
 
-router.post('/', verifyToken, findWriter, (req, res) => {
+router.post('/', verifyToken, checkBlackList, findWriter, (req, res) => {
     req.body.writer = res.locals.writer
     req.body.date = formatDateSend(new Date())
     answer.create(req.body)
@@ -72,7 +73,7 @@ router.post('/', verifyToken, findWriter, (req, res) => {
         });
 });
 
-router.delete('/:answerid', verifyToken, adminConfirmation, (req, res) => {
+router.delete('/:answerid', verifyToken, checkBlackList, adminConfirmation, (req, res) => {
     answer.deleteByAnswerId(req.params.answerid)
         .then(() => res.sendStatus(200))
         .catch(err => {

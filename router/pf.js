@@ -9,6 +9,7 @@ const { adminConfirmation } = require('./middlewares/adminConfirmation');
 const { formatDateSend } = require('../js/formatDateSend');
 const imageUploader = require('./controllers/image.controller').imageUpload;
 const imagesCleaner = require('./controllers/image.controller').imagesClean;
+const { checkBlackList } = require("./middlewares/authorization");
 
 router.use('/images',express.static('images/portfolios'));
 
@@ -67,7 +68,7 @@ router.get('/:portfolioId', (req, res) => {
 });
 
 // 분리하고 싶은데 .. 
-router.post("/", verifyToken, findWriter, imageUploader('images/portfolios').array('projectImages[]'), (req, res) => {
+router.post("/", verifyToken,checkBlackList, findWriter, imageUploader('images/portfolios').array('projectImages[]'), (req, res) => {
 
     let sl = req.body.students== undefined? new Array:req.body.students.split(',');
     if (sl.indexOf(req.body.teamLeaderCode) == -1) {
@@ -110,7 +111,7 @@ router.post("/", verifyToken, findWriter, imageUploader('images/portfolios').arr
 
 })
 
-router.delete("/:portfolioId", verifyToken, adminConfirmation, (req, res) => {
+router.delete("/:portfolioId", verifyToken,checkBlackList, adminConfirmation, (req, res) => {
     Portfolio.findOneAndRemove({ _id: req.params.portfolioId })
         .then((portfolio) => {
             if (portfolio) {
