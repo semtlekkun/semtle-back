@@ -7,7 +7,7 @@ const { adminConfirmation } = require('./middlewares/adminConfirmation');
 const { formatDateSend } = require('../js/formatDateSend');
 
 router.get('/list', (req, res) => {
-    Recruit.find({}, { date: false, contents: false }).sort({ _id: -1 })
+    Recruit.find({}, { contents: false }).sort({ _id: -1 })
         .then((recruitList) => {
             res.json({ status: "success", count: recruitList.length, recruitList: recruitList });
         })
