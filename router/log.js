@@ -12,7 +12,7 @@ router.post('/in', (req, res, next) => {
 });
 
 router.post('/out', verifyToken, (req, res, next) => {
-   let timeInterval = new Date(res.locals.time) - new Date() + 300000;
+   let timeInterval = new Date(res.locals.time) - new Date() + 3600000;
    blacklist.create({
       token: req.header('token')
    }, function (err) {
