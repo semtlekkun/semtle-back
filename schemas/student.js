@@ -4,12 +4,12 @@ const saltRounds = require("../config/hash").saltRounds;
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
 
-const iv = crypto.randomBytes(16);
-const salt = 'yooncastle';
-const hash = crypto.createHash("sha1");
 
-hash.update(salt);
-const key = hash.digest().slice(0, 16);
+const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY; // Must be 256 bits (32 characters)
+const IV_LENGTH = 16; // For AES, this is always 16
+
+const iv = crypto.randomBytes(IV_LENGTH);
+
 
 const studentSchema = new Schema({
     _id: {
@@ -48,10 +48,11 @@ studentSchema.pre('save', function (next) {
     // user.phoneNum = result;
 
     const cipher = crypto.createCipheriv('aes-128-cbc',
-        key, iv);
-    var crypted = cipher.update(user.phoneNum, 'utf8', 'base64');
-    crypted += cipher.final('base64')
-    user.phoneNum = crypted;
+        Buffer.from(ENCRYPTION_KEY), iv);
+    var crypted = cipher.update(user.phoneNum);
+
+    crypted = Buffer.concat([crypted, cipher.final()]);
+    user.phoneNum = iv.toString('hex') + ':' + crypted.toString('hex');
 
     //pw Hashing
     bcrypt.hash(user.pw, saltRounds, function (err, hash) {
