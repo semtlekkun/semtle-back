@@ -6,9 +6,9 @@ const { verifyToken } = require("./middlewares/authorization");
 const { adminConfirmation } = require('./middlewares/adminConfirmation');
 const { checkBlackList } = require("./middlewares/authorization");
 
-router.use('/images',express.static('images/students'));
+router.use('/images', express.static('images/students'));
 
-router.get('/list', verifyToken,checkBlackList, adminConfirmation, (req, res) => {
+router.get('/list', verifyToken, checkBlackList, adminConfirmation, (req, res) => {
 
     Student.find({}, { pw: 0 })
         .then((students) => {
@@ -20,21 +20,43 @@ router.get('/list', verifyToken,checkBlackList, adminConfirmation, (req, res) =>
         })
 });
 
-router.put('/update', verifyToken,checkBlackList, adminConfirmation, createNick, (req, res) => {
-    Student.update({ _id: req.body.studentCode },
-        { $set: { name: req.body.name, nick: res.locals.createdNick, phoneNum: req.body.phoneNum } })
-        .then((result) => {
-            console.log(result);
-            if (result.n) res.json({ status: "success" });
-            else res.status(400).json({ status: "noMatched" });
+//update를 find>>save로 변경 
+//find 한 후 nick은 기존의 것을 사용  
+router.put('/update', verifyToken, checkBlackList, adminConfirmation, createNick, (req, res) => {
+
+    Student.findOne({ _id: req.body.studentCode })
+        .then((student) => {
+            student.name = req.body.name;
+            student.phoneNum = req.body.phoneNum;
+            if (student.length) {
+                student.save()
+                    .then((student) => {
+                        console.log(student);
+                        res.json({ status: "success" });
+                    })
+            } else {
+                res.status(400).json({ status: "noMatched" });
+            }
+
         })
         .catch((err) => {
             console.log(err);
             res.status(500).json({ status: "error" });
         })
+    // Student.updateone({ _id: req.body.studentCode },
+    //     { $set: { name: req.body.name, nick: res.locals.createdNick, phoneNum: req.body.phoneNum } })
+    //     .then((result) => {
+    //         console.log(result);
+    //         if (result.n) res.json({ status: "success" });
+    //         else res.status(400).json({ status: "noMatched" });
+    //     })
+    //     .catch((err) => {
+    //         console.log(err);
+    //         res.status(500).json({ status: "error" });
+    //     })
 });
 
-router.post('/input', verifyToken,checkBlackList, adminConfirmation, createNick, (req, res) => {
+router.post('/input', verifyToken, checkBlackList, adminConfirmation, createNick, (req, res) => {
     const student = new Student({
         _id: req.body.studentCode,
         pw: req.body.studentCode,
@@ -55,7 +77,7 @@ router.post('/input', verifyToken,checkBlackList, adminConfirmation, createNick,
         });
 })
 
-router.delete('/delete', verifyToken,checkBlackList, adminConfirmation, (req, res) => {
+router.delete('/delete', verifyToken, checkBlackList, adminConfirmation, (req, res) => {
     Student.remove({ _id: { $in: req.body.ids } })
         .then((result) => {
             if (result.deletedCount) res.json({ status: "success" })
