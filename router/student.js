@@ -9,12 +9,6 @@ const crypto = require("crypto");
 
 
 
-const iv = crypto.randomBytes(16);
-const salt = 'yooncastle';
-const hash = crypto.createHash("sha1");
-
-hash.update(salt);
-const key = hash.digest().slice(0, 16);
 
 
 router.use('/images', express.static('images/students'));
@@ -23,11 +17,15 @@ router.get('/list', verifyToken, checkBlackList, adminConfirmation, (req, res) =
 
     Student.find({}, { pw: 0 })
         .then((students) => {
+            let phonNumParts = students[10].phoneNum.split(':');
+            let iv = Buffer.from(phonNumParts.shift(), 'hex');
+            let encrypted = Buffer.from(phonNumParts.join(':'), 'hex');
             //console.log("myPhoneNuber: " + students[7].phoneNum);
-            const decipher = crypto.createDecipheriv('aes-128-cbc', key, iv);
-            let result2 = decipher.update(students[9].phoneNum, 'base64', 'utf8'); // 암호화할문 (base64, ut
-            result2 += decipher.final('utf8'); // 암호화할문장 (여기도 base64대신 utf8)
-            students[9].phoneNum = result2;
+            const decipher = crypto.createDecipheriv('aes-256-cbc', Buffer.from(ENCRYPTION_KEY), iv);
+            let decrypted = decipher.update(encrypted); // 암호화할문 (base64, ut
+
+            decrypted = Buffer.concat([decrypted, decipher.final()]);
+            students[10].phoneNum = decrypted.toString();
             //console.log(students[7].phoneNum);
             res.json({ status: "success", students: students });
         })
