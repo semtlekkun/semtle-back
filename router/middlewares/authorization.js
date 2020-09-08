@@ -26,15 +26,15 @@ module.exports.verifyToken = (req, res, next) => {
 }
 
 module.exports.checkBlackList = (req, res, next) => {
-    const token = req.header('token');  
-    blacklist.find({ token: token }).count()
+    const token = req.header('token');
+    blacklist.find({ token: token }).countDocuments()
         .then((count) => {
-            if(count) res.status(401).json({ status: "tokenInBlacklist" });
+            if (count) res.status(401).json({ status: "tokenInBlacklist" });
             else next();
         })
-        .catch((err)=>{
+        .catch((err) => {
             console.log(err);
-            res.status(500).json({status:"error"});
+            res.status(500).json({ status: "error" });
         })
 }
 
