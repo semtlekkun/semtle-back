@@ -5,7 +5,7 @@ const bcrypt = require("bcrypt");
 const crypto = require("crypto");
 
 
-const ENCRYPTION_KEY = "yooncastle"; // Must be 256 bits (32 characters)
+const ENCRYPTION_KEY = "yooncastleyooncastleyooncastleyo"; // Must be 256 bits (32 characters)
 const IV_LENGTH = 16; // For AES, this is always 16
 
 const iv = crypto.randomBytes(IV_LENGTH);
