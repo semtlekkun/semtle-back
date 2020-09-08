@@ -45,8 +45,8 @@ studentSchema.pre('save', function (next) {
 
     const cipher = crypto.createCipheriv('aes-256-cbc',
         key, ivstring);
-    var crypted = cipher.update(user.phoneNum, 'utf8', 'hex');
-    crypted += cipher.final('hex')
+    var crypted = cipher.update(user.phoneNum, 'utf8', 'base64');
+    crypted += cipher.final('base64')
     user.phoneNum = crypted;
 
     //pw Hashing
