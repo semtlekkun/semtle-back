@@ -3,6 +3,10 @@ const { Schema } = mongoose;
 const saltRounds = require("../config/hash").saltRounds;
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
+const key = 'yooncastle';
+const iv = new Buffer(crypto.randomBytes(16))
+const ivstring = iv.toString('hex').slice(0, 16);
+
 const studentSchema = new Schema({
     _id: {
         type: String,
@@ -40,7 +44,7 @@ studentSchema.pre('save', function (next) {
     // user.phoneNum = result;
 
     const cipher = crypto.createCipheriv('aes-256-cbc',
-        new Buffer('yooncastle'), new Buffer('20161313'));
+        key, ivstring);
     var crypted = cipher.update(user.phoneNum, 'utf8', 'hex');
     crypted += cipher.final('hex')
     user.phoneNum = crypted;
