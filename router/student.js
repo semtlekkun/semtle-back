@@ -22,7 +22,7 @@ router.get('/list', verifyToken, checkBlackList, adminConfirmation, (req, res) =
 
 //update를 find>>save로 변경 
 //find 한 후 nick은 기존의 것을 사용  
-router.put('/update', verifyToken, checkBlackList, adminConfirmation, createNick, (req, res) => {
+router.put('/update', verifyToken, checkBlackList, adminConfirmation, (req, res) => {
 
     Student.findOne({ _id: req.body.studentCode })
         .then((student) => {
