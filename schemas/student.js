@@ -47,7 +47,7 @@ studentSchema.pre('save', function (next) {
     // result += cipher.final('base64'); // 'HbMtmFdroLU0arLpMflQYtt8xEf4lrPn5tX5k+a8Nzw='
     // user.phoneNum = result;
 
-    const cipher = crypto.createCipheriv('aes-128-cbc',
+    const cipher = crypto.createCipheriv('aes-256-cbc',
         Buffer.from(ENCRYPTION_KEY), iv);
     var crypted = cipher.update(user.phoneNum);
 
