@@ -16,7 +16,7 @@ router.get('/list', verifyToken, checkBlackList, adminConfirmation, (req, res) =
         .then((students) => {
             console.log("myPhoneNuber: " + students[7].phoneNum);
             const decipher = crypto.createDecipher('aes-256-cbc', 'yooncastle');
-            let result2 = decipher.update(students[8].phoneNum, 'base64', 'utf8'); // 암호화할문 (base64, ut
+            let result2 = decipher.update(students[7].phoneNum, 'base64', 'utf8'); // 암호화할문 (base64, ut
             result2 += decipher.final('utf8'); // 암호화할문장 (여기도 base64대신 utf8)
             students[7].phoneNum = result2;
             console.log(students[7].phoneNum);
