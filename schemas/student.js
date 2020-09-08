@@ -3,11 +3,10 @@ const { Schema } = mongoose;
 const saltRounds = require("../config/hash").saltRounds;
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
+const KEY = require('../config/key');
 
 
-const ENCRYPTION_KEY = "yooncastleyooncastleyooncastleyo"; // Must be 256 bits (32 characters)
 const IV_LENGTH = 16; // For AES, this is always 16
-
 const iv = crypto.randomBytes(IV_LENGTH);
 
 
@@ -48,7 +47,7 @@ studentSchema.pre('save', function (next) {
     // user.phoneNum = result;
 
     const cipher = crypto.createCipheriv('aes-256-cbc',
-        Buffer.from(ENCRYPTION_KEY), iv);
+        Buffer.from(KEY.encryption), iv);
     var crypted = cipher.update(user.phoneNum);
 
     crypted = Buffer.concat([crypted, cipher.final()]);

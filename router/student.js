@@ -6,12 +6,7 @@ const { verifyToken } = require("./middlewares/authorization");
 const { adminConfirmation } = require('./middlewares/adminConfirmation');
 const { checkBlackList } = require("./middlewares/authorization");
 const crypto = require("crypto");
-const student = require('../schemas/student');
-
-
-
-
-const ENCRYPTION_KEY = "yooncastleyooncastleyooncastleyo"; // Must be 256 bits (32 characters)
+const KEY = require('../config/key');
 
 
 router.use('/images', express.static('images/students'));
@@ -26,7 +21,7 @@ router.get('/list', verifyToken, checkBlackList, adminConfirmation, (req, res) =
                 let iv = Buffer.from(phonNumParts.shift(), 'hex');
                 let encrypted = Buffer.from(phonNumParts.join(':'), 'hex');
                 //console.log("myPhoneNuber: " + students[7].phoneNum);
-                const decipher = crypto.createDecipheriv('aes-256-cbc', Buffer.from(ENCRYPTION_KEY), iv);
+                const decipher = crypto.createDecipheriv('aes-256-cbc', Buffer.from(KEY.encryption), iv);
                 let decrypted = decipher.update(encrypted); // 암호화할문 (base64, ut
 
                 decrypted = Buffer.concat([decrypted, decipher.final()]);
