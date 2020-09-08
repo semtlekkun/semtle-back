@@ -9,7 +9,7 @@ const salt = 'yooncastle';
 const hash = crypto.createHash("sha1");
 
 hash.update(salt);
-const key = hash.degest().slice(0, 16);
+const key = hash.digest().slice(0, 16);
 
 const studentSchema = new Schema({
     _id: {
