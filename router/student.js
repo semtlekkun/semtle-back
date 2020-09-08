@@ -26,18 +26,18 @@ router.put('/update', verifyToken, checkBlackList, adminConfirmation, (req, res)
 
     Student.findOne({ _id: req.body.studentCode })
         .then((student) => {
-            console.log(student.length);
-            // student.name = req.body.name;
-            // student.phoneNum = req.body.phoneNum;
-            // if (student.length) {
-            //     student.save()
-            //         .then((student) => {
-            //             console.log(student);
-            //             res.json({ status: "success" });
-            //         })
-            // } else {
-            //     res.status(400).json({ status: "noMatched" });
-            // }
+            //console.log(student.length);
+            student.name = req.body.name;
+            student.phoneNum = req.body.phoneNum;
+            if (student) {
+                student.save()
+                    .then((student) => {
+                        console.log(student);
+                        res.json({ status: "success" });
+                    })
+            } else {
+                res.status(400).json({ status: "noMatched" });
+            }
 
         })
         .catch((err) => {
