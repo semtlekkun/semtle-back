@@ -21,16 +21,16 @@ router.get('/list', verifyToken, checkBlackList, adminConfirmation, (req, res) =
     Student.find({}, { pw: 0 })
         .then((students) => {
             for (let i = 0; i < students.length; i++) {
-                console.log(students[i].phoneNum);
-                // let phonNumParts = students[i].phoneNum.split(':');
-                // let iv = Buffer.from(phonNumParts.shift(), 'hex');
-                // let encrypted = Buffer.from(phonNumParts.join(':'), 'hex');
-                // //console.log("myPhoneNuber: " + students[7].phoneNum);
-                // const decipher = crypto.createDecipheriv('aes-256-cbc', Buffer.from(ENCRYPTION_KEY), iv);
-                // let decrypted = decipher.update(encrypted); // 암호화할문 (base64, ut
+                //console.log(students[i].phoneNum);
+                let phonNumParts = students[i].phoneNum.split(':');
+                let iv = Buffer.from(phonNumParts.shift(), 'hex');
+                let encrypted = Buffer.from(phonNumParts.join(':'), 'hex');
+                //console.log("myPhoneNuber: " + students[7].phoneNum);
+                const decipher = crypto.createDecipheriv('aes-256-cbc', Buffer.from(ENCRYPTION_KEY), iv);
+                let decrypted = decipher.update(encrypted); // 암호화할문 (base64, ut
 
-                // decrypted = Buffer.concat([decrypted, decipher.final()]);
-                // students[i].phoneNum = decrypted.toString();
+                decrypted = Buffer.concat([decrypted, decipher.final()]);
+                students[i].phoneNum = decrypted.toString();
             }
 
             //console.log(students[7].phoneNum);
