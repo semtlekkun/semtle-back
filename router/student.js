@@ -10,6 +10,8 @@ const crypto = require("crypto");
 
 
 
+const ENCRYPTION_KEY = "yooncastleyooncastleyooncastleyo"; // Must be 256 bits (32 characters)
+
 
 router.use('/images', express.static('images/students'));
 
