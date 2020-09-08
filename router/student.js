@@ -8,6 +8,15 @@ const { checkBlackList } = require("./middlewares/authorization");
 const crypto = require("crypto");
 
 
+
+const iv = crypto.randomBytes(16);
+const salt = 'yooncastle';
+const hash = crypto.createHash("sha1");
+
+hash.update(salt);
+const key = hash.digest().slice(0, 16);
+
+
 router.use('/images', express.static('images/students'));
 
 router.get('/list', verifyToken, checkBlackList, adminConfirmation, (req, res) => {
@@ -15,10 +24,10 @@ router.get('/list', verifyToken, checkBlackList, adminConfirmation, (req, res) =
     Student.find({}, { pw: 0 })
         .then((students) => {
             //console.log("myPhoneNuber: " + students[7].phoneNum);
-            const decipher = crypto.createDecipher('aes-256-cbc', 'yooncastle');
-            let result2 = decipher.update(students[8].phoneNum, 'base64', 'utf8'); // 암호화할문 (base64, ut
+            const decipher = crypto.createDecipheriv('aes-128-cbc', key, iv);
+            let result2 = decipher.update(students[9].phoneNum, 'base64', 'utf8'); // 암호화할문 (base64, ut
             result2 += decipher.final('utf8'); // 암호화할문장 (여기도 base64대신 utf8)
-            students[8].phoneNum = result2;
+            students[9].phoneNum = result2;
             //console.log(students[7].phoneNum);
             res.json({ status: "success", students: students });
         })
