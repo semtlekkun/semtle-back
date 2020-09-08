@@ -21,7 +21,7 @@ router.get('/list', verifyToken, checkBlackList, adminConfirmation, (req, res) =
     Student.find({}, { pw: 0 })
         .then((students) => {
             for (let i = 0; i < students.length; i++) {
-                console.log(students[i]);
+                console.log(students[i].phoneNum);
                 // let phonNumParts = students[i].phoneNum.split(':');
                 // let iv = Buffer.from(phonNumParts.shift(), 'hex');
                 // let encrypted = Buffer.from(phonNumParts.join(':'), 'hex');
