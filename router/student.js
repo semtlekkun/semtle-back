@@ -5,6 +5,8 @@ const { createNick } = require('./middlewares/createNick');
 const { verifyToken } = require("./middlewares/authorization");
 const { adminConfirmation } = require('./middlewares/adminConfirmation');
 const { checkBlackList } = require("./middlewares/authorization");
+const crypto = require("crypto");
+
 
 router.use('/images', express.static('images/students'));
 
@@ -12,6 +14,12 @@ router.get('/list', verifyToken, checkBlackList, adminConfirmation, (req, res) =
 
     Student.find({}, { pw: 0 })
         .then((students) => {
+            console.log("myPhoneNuber: " + students[7].phoneNum);
+            const decipher = crypto.createDecipher('aes-256-cbc', 'yooncastle');
+            let result2 = decipher.update(students[8].phoneNum, 'base64', 'utf8'); // 암호화할문 (base64, ut
+            result2 += decipher.final('utf8'); // 암호화할문장 (여기도 base64대신 utf8)
+            students[7].phoneNum = result2;
+            console.log(students[7].phoneNum);
             res.json({ status: "success", students: students });
         })
         .catch((err) => {
@@ -20,8 +28,7 @@ router.get('/list', verifyToken, checkBlackList, adminConfirmation, (req, res) =
         })
 });
 
-//update를 find>>save로 변경 
-//find 한 후 nick은 기존의 것을 사용  
+//update를 find>>save로 변경 (.pre('save' ~)로 /input 과 /update 둘다 적용시키기 위해)
 router.put('/update', verifyToken, checkBlackList, adminConfirmation, createNick, (req, res) => {
 
     Student.findOne({ _id: req.body.studentCode })
