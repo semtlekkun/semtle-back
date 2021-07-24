@@ -4,3 +4,4 @@ test
 images
 config
 js/hash.js
+*.pem
