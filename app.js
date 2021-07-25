@@ -8,7 +8,7 @@ const port = process.env.PORT || 3000
 const connect = require('./schemas');
 connect();
 
-app.use(cors({origin:true,credentials: true}));
+app.use(cors({ origin: true, credentials: true }));
 app.use(bodyParser.json());
 
 app.use((req, res, next) => {

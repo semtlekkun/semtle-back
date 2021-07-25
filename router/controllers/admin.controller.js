@@ -1,7 +1,7 @@
 const Admin = require("../../schemas/admin");
 const jwt = require("jsonwebtoken");
 const secretKey = require('../../config/jwt');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const { formatDate } = require('../../js/formatDate');
 
 module.exports.createToken = function (req, res, next) {

@@ -1,4 +1,4 @@
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const Student = require('../../schemas/student');
 
 module.exports.compare = function (req, res, next) {
@@ -9,12 +9,12 @@ module.exports.compare = function (req, res, next) {
                     console.log(err);
                     res.status(500).json({ status: "error" });
                 }
-                if(result) next();
-                else res.status(400).json({status: "wrong"});
+                if (result) next();
+                else res.status(400).json({ status: "wrong" });
             })
         })
-        .catch(err=>{
+        .catch(err => {
             console.log(err);
-            res.status(500).json({status:"error"});
+            res.status(500).json({ status: "error" });
         })
 }

@@ -2,7 +2,7 @@
 const Student = require('../../schemas/student');
 const jwt = require("jsonwebtoken");
 const secretKey = require("../../config/jwt");
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const saltRounds = require("../../config/hash").saltRounds;
 
 module.exports.createToken = function (req, res, next) {
