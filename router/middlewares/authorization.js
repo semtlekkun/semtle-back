@@ -5,7 +5,7 @@ const blacklist = require('../../schemas/blacklist');
 
 module.exports.verifyToken = (req, res, next) => {
     const token = req.header('token');
-    console.log("토큰" + token)
+    // console.log("토큰" + token)
     if (token == undefined) res.status(401).json({ status: "tokenMissing" })
     try {
         const decoded = jwt.verify(token, secretKey.secret);

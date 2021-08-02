@@ -9,7 +9,7 @@ const { findWriter } = require("./middlewares/findWriter");
 const { checkBlackList } = require("./middlewares/authorization");
 
 router.get('/:questionid', (req, res) => {
-    function forEachPromise(items, logItem) {
+    function forEachPromise (items, logItem) {
         return items.reduce(function (promise, item) { //promise: acc //item: cur 
             return promise.then(function () {
                 return logItem(item);
@@ -17,11 +17,10 @@ router.get('/:questionid', (req, res) => {
         }, Promise.resolve());
     }
 
-    function logItem(item) {
+    function logItem (item) {
         return new Promise((resolve, reject) => {
             process.nextTick(() => {
-                if (item.writer !== "관리자") {
-
+                if (item.writer !== "ADMIN") {
                     Student.find({ nick: item.writer })
                         .then((sts) => {
                             //console.log("test:")
@@ -34,9 +33,7 @@ router.get('/:questionid', (req, res) => {
                         });
                 }
                 else {
-
                     item.writerImage = 'default.jpg';
-
                 }
                 //console.log(item);
                 setTimeout(function () { resolve() }, 100);

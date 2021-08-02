@@ -12,7 +12,8 @@ router.post('/in', (req, res, next) => {
 });
 
 router.post('/out', verifyToken, (req, res, next) => {
-   let timeInterval = new Date(res.locals.time) - new Date() + 3600000;
+   // 남은 시간 = 토큰 유효시간 - (현재 - 토큰 생성 시점)
+   let timeInterval = 3600000 - (new Date() - new Date(res.locals.time));
    blacklist.create({
       token: req.header('token')
    }, function (err) {
@@ -24,9 +25,9 @@ router.post('/out', verifyToken, (req, res, next) => {
    });
    setTimeout(() => {
       blacklist.deleteOne({ token: req.header('token') })
-      .then(()=>{})
-      .catch((err)=>{console.log(err)})
-   }, timeInterval)
+         .then(() => { })
+         .catch((err) => { console.log(err) })
+   }, timeInterval) //timeInterval이 음수일 경우 최소 지연시간(4ms) 이후 실행  
 });
 
 module.exports = router;
