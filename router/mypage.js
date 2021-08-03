@@ -6,6 +6,7 @@ const { verifyToken } = require('./middlewares/authorization');
 const { compare } = require('./middlewares/compare');
 const imageUploader = require('./controllers/image.controller').imageUpload;
 const createHash = require('./controllers/user.controller').createHash;
+const encodePN = require('./controllers/user.controller').encodePN;
 const { checkBlackList } = require("./middlewares/authorization");
 const imageCleaner = require('./controllers/image.controller').imageClean;
 const crypto = require("crypto");
@@ -61,10 +62,9 @@ router.put('/picture/update', verifyToken, checkBlackList, imageUploader("images
         });
 });
 
-router.put('/phoneNum/update', verifyToken, checkBlackList, (req, res) => {
-
+router.put('/phoneNum/update', verifyToken, checkBlackList, encodePN, (req, res) => {
     Student.update({ _id: res.locals.id }, {
-        $set: { phoneNum: req.body.phoneNum }
+        $set: { phoneNum: res.locals.pn }
     })
         .then(() => {
             res.json({ status: "success" });

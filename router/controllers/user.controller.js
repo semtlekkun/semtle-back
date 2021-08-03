@@ -3,7 +3,12 @@ const Student = require('../../schemas/student');
 const jwt = require("jsonwebtoken");
 const secretKey = require("../../config/jwt");
 const bcrypt = require('bcryptjs');
+const crypto = require("crypto");
 const saltRounds = require("../../config/hash").saltRounds;
+const KEY = require('../../config/key');
+const IV_LENGTH = 16; // For AES, this is always 16
+const iv = crypto.randomBytes(IV_LENGTH);
+
 
 module.exports.createToken = function (req, res, next) {
     Student.findOne({ _id: req.body._id }, { pw: true })
@@ -76,4 +81,14 @@ module.exports.createHash = function (req, res, next) {
         res.locals.hash = hash;
         next();
     });
+}
+
+module.exports.encodePN = function (req, res, next) {
+    const cipher = crypto.createCipheriv('aes-256-cbc',
+        Buffer.from(KEY.encryption), iv);
+    var crypted = cipher.update(req.body.phoneNum);
+
+    crypted = Buffer.concat([crypted, cipher.final()]);
+    res.locals.pn = iv.toString('hex') + ':' + crypted.toString('hex');
+    next();
 }
