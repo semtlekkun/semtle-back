@@ -10,10 +10,7 @@ const photoSchema = new Schema({
         type: String,
         required: true
     },
-    recruitment: {
-        type: Number,
-        required: true
-    },
+
     view: {
         type: Number,
         required: false

@@ -6,6 +6,9 @@ const { findWriter } = require("./middlewares/findWriter");
 const { adminConfirmation } = require('./middlewares/adminConfirmation');
 const { formatDateSend } = require('../js/formatDateSend');
 const { checkBlackList } = require("./middlewares/authorization");
+const imageUploader = require('./controllers/image.controller').imageUpload;
+const imageCleaner = require('./controllers/image.controller').imageClean;
+router.use('/images', express.static('images/photos'));
 
 router.get('/list', (req, res) => {
     Photo.find({}, { contents: false }).sort({ _id: -1 })
@@ -17,21 +20,6 @@ router.get('/list', (req, res) => {
             res.status(500).send(err);
         });
 });
-
-// router.get('/list/:page', (req, res) => {
-//     var page = req.params.page;
-//     Photo.find({}).count()
-//         .then((count) => {
-//             Recruit.find({}, { contents: false }).sort({ "date": -1 }).skip((page - 1) * 10).limit(10)
-//                 .then((recruitList) => {
-//                     res.json({ status: "success", count: count, recruitList: recruitList });
-//                 })
-//                 .catch((err) => {
-//                     console.log(err);
-//                     res.status(500).send(err);
-//                 });
-//         })
-// });
 
 router.get('/:photoId', (req, res) => {
     var _id = req.params.photoId;
@@ -47,28 +35,24 @@ router.get('/:photoId', (req, res) => {
         });
 });
 
-// router.post('/', verifyToken, checkBlackList, findWriter, (req, res) => {
-
-//     var writer = res.locals.writer;
-//     var date = formatDateSend(new Date())
-//     var endDate = req.body.endDate;
-//     var recruitment = req.body.recruitment;
-//     var title = req.body.title;
-//     var contents = req.body.contents;
-
-//     Recruit.create({
-//         writer: writer, date: date, endDate: endDate,
-//         recruitment: recruitment, title: title,
-//         contents: contents, view: 0
-//     }, function (err) {
-//         if (err) {
-//             res.status(500).json({ status: "error" });
-//         }
-//         else {
-//             res.json({ status: "success" });
-//         }
-//     });
-// });
+router.post('/', verifyToken, checkBlackList, adminConfirmation, findWriter, imageUploader("images/photos").single("image"), (req, res, next) => {
+    Photo.create({
+        writer: res.locals.writer,
+        date: formatDateSend(new Date()),
+        image: req.file != undefined ? req.file.filename : null,
+        title: req.body.title,
+        contents: req.body.contents,
+        view: 0
+    }, function (err) {
+        if (err) {
+            console.log(err)
+            res.status(500).json({ status: "error" });
+        }
+        else {
+            res.json({ status: "success" });
+        }
+    });
+});
 
 router.delete('/:photoId', verifyToken, checkBlackList, adminConfirmation, (req, res) => {
     Photo.remove({ _id: req.params.photoId })
