@@ -30,4 +30,7 @@ router.use('/answer', answerRouter);
 const mypageRouter = require('./mypage');
 router.use('/mypage', mypageRouter);
 
+const photoRouter = require('./photo');
+router.use('/photo', photoRouter);
+
 module.exports = router;
