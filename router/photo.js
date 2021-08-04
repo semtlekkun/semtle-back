@@ -55,15 +55,19 @@ router.post('/', verifyToken, checkBlackList, adminConfirmation, findWriter, ima
 });
 
 router.delete('/:photoId', verifyToken, checkBlackList, adminConfirmation, (req, res) => {
-    Photo.remove({ _id: req.params.photoId })
+
+    Photo.findOneAndRemove({ _id: req.params.photoId })
         .then((result) => {
-            if (result.deletedCount) res.json({ status: "success" });
-            else res.status(400).json({ status: "none" });
+            if (result.image != "default.jpg") {
+                imageCleaner("images/photos/", result.image);
+            }
+            res.json({ status: "success" });
         })
-        .catch((err) => {
+        .catch(err => {
             console.log(err);
             res.status(500).json({ status: "error" });
         })
 });
+
 
 module.exports = router;
