@@ -11,7 +11,7 @@ const imageCleaner = require('./controllers/image.controller').imageClean;
 router.use('/images', express.static('images/photos'));
 
 router.get('/list', (req, res) => {
-    Photo.find({}, { contents: false }).sort({ _id: -1 })
+    Photo.find().sort({ _id: -1 })
         .then((photoList) => {
             res.json({ status: "success", count: photoList.length, photoList: photoList });
         })
